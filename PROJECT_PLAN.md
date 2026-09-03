@@ -91,11 +91,17 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 | T-2.3 | Clause-aware chunker — **hard rule: a proviso is never split from its clause** (FM-D2) | T-2.1 | `DONE` |
 | T-2.4 | Table extraction → row-serialised text, separate chunk stream (per the no-vision decision) | T-2.3 | `DONE` |
 | T-2.5 | Change-kind classifier: `NO_OP` / `EDITORIAL` / `SUBSTANTIVE` / `ADDITION` / `SUNSET` | T-2.2 | `DONE` |
-| T-2.6 | BM25 index build | T-2.3 | `TODO` |
-| T-2.7 | Vector index build — Qdrant local, `text-embedding-3` | T-2.3 | `TODO` |
-| T-2.8 | Unit tests: proviso integrity, three-clock separation, lineage linkage, normative flagging | T-2.5 | `TODO` |
+| T-2.6 | BM25 index build | T-2.3 | `DONE` |
+| T-2.7 | Vector index build — Qdrant local, `text-embedding-3` | T-2.3 | `MECHANICS DONE, LIVE RUN BLOCKED` |
+| T-2.8 | Unit tests: proviso integrity, three-clock separation, lineage linkage, normative flagging | T-2.5 | `DONE` |
 
 **Exit criterion (M2):** full corpus indexed; T-2.8 green.
+
+**Status (3 Sep 2026):** T-2.1–2.6 and T-2.8 done, 61/61 tests green. T-2.7's code, tests (against
+MockEmbedder, zero cost), and the by-hand spend script (`scripts/build_vector_index.py`, requires
+`OPENAI_API_KEY`, `--dry-run` first) are all built and committed. The one remaining action to actually
+close M2 is running that script for real, which needs Prashanth's OpenAI API key — not a code or design
+gap, a credentials gap. M2 stays WIP until the live vector index actually exists on disk.
 
 **Gate:** T-2.7 is the first step that spends OpenAI credit. Confirm the key and its balance before running it.
 
