@@ -67,10 +67,10 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 
 | ID | Task | Depends on | Status |
 |---|---|---|---|
-| T-1.1 | `docs/DELIBERATE_DEFECTS.md` manifest — non-compliant clause, decoy illustration, intentional gaps | — | `TODO` |
-| T-1.2 | Deliberate-defect clauses: R-11 (policy below statutory floor), R-20 (₹50,000 decoy illustration), R-25 (paternity-leave gap), R-23 (low-salience clause) | T-1.1 | `TODO` |
-| T-1.3 | Version-pair structures: R-01→R-09 (segmented accrual, grandfathered, future-dated, retroactive, silent + partial supersession, sunset, renumbering, vague effective date) | T-1.2 | `TODO` |
-| T-1.4 | Conflict structures: R-10→R-15 (above/below floor, free-zone annexe, near-identical cross-country, divergent definitions, governing-law clause) | T-1.3 | `TODO` |
+| T-1.1 | `docs/DELIBERATE_DEFECTS.md` manifest — non-compliant clause, decoy illustration, intentional gaps | — | `DONE` |
+| T-1.2 | Deliberate-defect clauses: R-11 (policy below statutory floor), R-20 (₹50,000 decoy illustration), R-25 (paternity-leave gap), R-23 (low-salience clause), R-15 (incomplete governing-law clause) | T-1.1 | `DONE` |
+| T-1.3 | Version-pair structures: R-01→R-09 (segmented accrual, grandfathered, future-dated, retroactive, silent + partial supersession, sunset, renumbering, vague effective date) | T-1.2 | `WIP` |
+| T-1.4 | Conflict structures: R-10→R-14 (free-zone annexe, near-identical cross-country, divergent definitions) — R-10/R-11/R-15 landed early in T-1.2 | T-1.3 | `TODO` |
 | T-1.5 | Retrieval-mechanic structures: R-16→R-24 (slab table, proviso, cross-reference, synonym spread, near-duplicate pair, scattered operands, false-premise bait) | T-1.4 | `TODO` |
 | T-1.6 | Ordinary connective policy prose — **written last**, deliberately: distractor mass is part of the test environment | T-1.5 | `TODO` |
 | T-1.7 | Coverage audit: assert every R-requirement and every probe maps to a real corpus artifact | T-1.6 | `TODO` |
@@ -230,11 +230,25 @@ Open items under the standing rule. **None may be promoted into the scored golde
 
 | # | Item | Blocks | Status |
 |---|---|---|---|
-| V-1 | India gratuity ceiling is `POINT_IN_TIME` — verify against the commencement provision of the Payment of Gratuity (Amendment) Act, 2018 | P-01 (marquee probe) | `OPEN` |
+| V-1 | India gratuity ceiling is `POINT_IN_TIME` | P-01 (marquee probe) | `CLOSED` 2026-09-03 — see below |
 | V-2 | UAE Federal Law 8/1980 → Decree-Law 33/2021 transition mechanics for accrued gratuity | Best real straddle case; no golden answer until closed | `OPEN` |
 | V-3 | DIFC / ADGM divergence from UAE mainland | P-17, R-12 | `OPEN` |
 | V-4 | Indian state-level variation — verify one state, or scope corpus explicitly to "national baseline" and say so | Corpus scope statement | `OPEN` |
 | V-5 | India Labour Codes commencement status | Already flagged in Tier-1 corpus note | `OPEN` |
+
+### V-1 closure note (2026-09-03)
+
+**Finding: `POINT_IN_TIME` confirmed.** The ceiling in force on the date gratuity becomes payable governs the entire amount. No apportionment across pre- and post-amendment service.
+
+Evidence chain:
+1. Commencement of the Payment of Gratuity (Amendment) Act, 2018 is **29 March 2018**; ceiling set at ₹20,00,000 by notification **S.O. 1420(E)** of the same date (PIB release; corroborated by two independent legal summaries).
+2. The eligibility test is stated as a **trigger-event date test**, not a service-apportionment test — the higher limit applies to employees who "retire or become incapacitated prior to such retirement or die on or after the 29th day of March, 2018, or whose employment is terminated on or after the said date."
+3. Requests to backdate the enhancement to 1 April 2016 were **explicitly rejected** on the ground that retrospective enhancement would be detrimental to employers. "Prospective" here therefore means prospective as to *terminations*, not as to *service* — which is precisely the distinction the straddle case turns on.
+4. The Act contains **no apportionment machinery** for the ceiling. A pro-rating rule would have to exist expressly; it does not.
+
+Therefore an employee joining 2014 and terminating 2026-09-30 receives the ₹20,00,000 cap applied to the whole computed gratuity. Splitting service at 2018-03-29 and blending two ceilings is wrong. Probe P-01 is unblocked and may be promoted to the scored golden set.
+
+**Residual caveat, recorded rather than hidden:** this reads S.O. 1420(E) through secondary sources. The gazette notification PDF itself has not been read. Sufficient to lock the design decision; if the marquee probe is ever challenged in an interview, the honest answer is that the commencement language was verified via three concurring secondary sources and the primary gazette was not obtained.
 
 ---
 
@@ -270,3 +284,5 @@ Metrics awaiting first measurement: Context Precision · Context Recall · Faith
 |---|---|
 | 2026-09-03 | Plan created. Phases 0–9, milestones M0–M9. |
 | 2026-09-03 | Build order inverted — probes before corpus. Phase 1 restructured to build from the requirements spec rather than writing policy prose first. |
+| 2026-09-03 | M0 closed. Phase 1 opened. V-1 closed: India gratuity ceiling confirmed `POINT_IN_TIME`; probe P-01 unblocked. |
+| 2026-09-03 | T-1.1 + T-1.2 done. Defect manifest D-1..D-5 written ahead of fixtures; Meridian global preamble and partial India chapter committed. R-10/R-11/R-15 satisfied early (the notice-clause pair carried both sides of the statutory-floor asymmetry, and the governing-law clause was needed to host D-5). |
