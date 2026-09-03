@@ -92,11 +92,11 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 | T-2.4 | Table extraction → row-serialised text, separate chunk stream (per the no-vision decision) | T-2.3 | `DONE` |
 | T-2.5 | Change-kind classifier: `NO_OP` / `EDITORIAL` / `SUBSTANTIVE` / `ADDITION` / `SUNSET` | T-2.2 | `DONE` |
 | T-2.6 | BM25 index build | T-2.3 | `DONE` |
-| T-2.7 | Vector index build — Qdrant local, `text-embedding-3` | T-2.3 | `MECHANICS DONE, LIVE RUN BLOCKED` |
+| T-2.7 | Vector index build — Qdrant local, `text-embedding-3` | T-2.3 | `DONE` |
 | T-2.8 | Unit tests: proviso integrity, three-clock separation, lineage linkage, normative flagging | T-2.5 | `DONE` |
 | T-2.9 | Non-markdown format parsers (PDF/DOCX/XLSX/CSV) — same `ChunkMetadata` shape via sidecar manifests; real generated sample files, not a full corpus rewrite | T-2.2 | `DONE` |
 
-**Exit criterion (M2):** full corpus indexed; T-2.8 green.
+**Exit criterion (M2):** full corpus indexed; T-2.8 green. **Met 3 Sep 2026** — see Results below.
 
 **T-2.9 added mid-phase (3 Sep 2026):** Prashanth flagged that an all-markdown corpus doesn't prove
 real-world document handling. `ingestion/formats/` now has tested parsers for PDF, Word, and Excel/CSV,
@@ -104,11 +104,27 @@ each producing the same validated schema the markdown parser does, proven agains
 under `corpus_samples/multi_format/` — see README's "Source document formats" section for the full
 reasoning on why this is a small representative sample, not a full 72-clause rewrite.
 
-**Status (3 Sep 2026):** T-2.1–2.6, T-2.8, T-2.9 done, 70/70 tests green. T-2.7's code, tests (against
-MockEmbedder, zero cost), and the by-hand spend script (`scripts/build_vector_index.py`, requires
-`OPENAI_API_KEY`, `--dry-run` first) are all built and committed. The one remaining action to actually
-close M2 is running that script for real, which needs Prashanth's OpenAI API key — not a code or design
-gap, a credentials gap. M2 stays WIP until the live vector index actually exists on disk.
+**Status — M2 CLOSED (3 Sep 2026):** All of T-2.1 through T-2.9 done, 70/70 tests green, and the live
+vector index actually exists on disk (`build/vector_index`, gitignored — rebuild with
+`scripts/build_vector_index.py --live`, don't commit it).
+
+**Results (live run, 3 Sep 2026):**
+- `--dry-run` (3 units) then `--live` (remaining 81 units, 3 served from embedding cache) both ran
+  successfully against the real OpenAI API, using `text-embedding-3-small`, from Prashanth's own machine.
+- Both this session's cloud container and the device-bridge shell into Prashanth's machine turned out to
+  have `api.openai.com` blocked by their network proxy (confirmed via a direct curl test and the proxy's
+  own status log: `403` on `CONNECT`, `"kind": "connect_rejected"`) — a sandbox network-policy constraint,
+  not a code or credentials problem. Prashanth ran the two script invocations himself from a plain terminal
+  outside any sandbox, where the OpenAI call went through normally.
+- That real `--live` run also surfaced a genuine bug, since neither the test suite nor `--dry-run` ever
+  exercises on-disk persistence: `VectorIndex` was passing the local index path through Qdrant's `location=`
+  parameter (meant for remote-server URLs), which on Windows misread the drive letter in
+  `C:\Project\HR policy RAG\...` as a URL scheme (`Unknown scheme: c`). Fixed by using Qdrant's `path=`
+  parameter for on-disk persistence instead (commit `dcb08b5`); 70/70 tests still green after the fix.
+- Exact dollar cost of the embedding call: not yet recorded here — the script doesn't print a running total,
+  so per this project's "witnessed, not claimed" rule this needs the actual figure from the OpenAI usage
+  dashboard before it's written down as a fact anywhere (this file, the README, or said out loud in an
+  interview).
 
 **Gate:** T-2.7 is the first step that spends OpenAI credit. Confirm the key and its balance before running it.
 
