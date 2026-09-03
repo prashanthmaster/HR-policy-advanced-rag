@@ -261,3 +261,122 @@ jurisdiction_scope: uae-difc
 references: [DIFC-L2-2019-LEAVE]
 ---
 An employee who has completed ninety (90) days of continuous employment accrues twenty-five (25) **working** days of paid annual leave per year, which exceeds the DIFC statutory minimum of twenty working days. Employees should note that this entitlement is expressed in *working* days, whereas the entitlement of employees of the mainland entity is expressed in *calendar* days; the two figures are not comparable without converting to a common basis.
+
+---
+clause_id: MER-AE-HOUSING-TABLE
+lineage_id: MER-AE-HOUSING
+country: UAE
+doc_type: policy
+source_doc: Meridian UAE HR Policy Manual — Schedule 2
+section: Schedule 2
+effective_date: 2024-01-01
+revision_date: 2023-12-04
+version: v2
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: uae-mainland
+chunk_stream: table
+corpus_requirement: R-16
+---
+<!-- R-16 two-dimensional slab table (probe P-30, failure mode FM-D1). Serialised
+     row-wise as text per the no-vision decision. This is the concrete
+     justification for hybrid retrieval: embeddings do not reliably distinguish
+     "AED 8,000" from "AED 9,500" in near-identical rows; the BM25 leg plus row
+     serialisation is what lands the correct cell. -->
+**Schedule 2 — Monthly housing allowance, by grade and completed years of service (AED).**
+
+- Grade A1–A3, under 3 years of service: 4,000 per month.
+- Grade A1–A3, 3 to 5 years of service: 4,500 per month.
+- Grade A1–A3, over 5 years of service: 5,000 per month.
+- Grade M1, under 3 years of service: 6,500 per month.
+- Grade M1, 3 to 5 years of service: 7,200 per month.
+- Grade M1, over 5 years of service: 8,000 per month.
+- Grade M2, under 3 years of service: 8,500 per month.
+- Grade M2, 3 to 5 years of service: 9,500 per month.
+- Grade M2, over 5 years of service: 10,500 per month.
+- Grade M3, under 3 years of service: 11,000 per month.
+- Grade M3, 3 to 5 years of service: 12,500 per month.
+- Grade M3, over 5 years of service: 14,000 per month.
+- Grade D1 and above, any length of service: 18,000 per month.
+
+The allowance is paid monthly with salary and is not part of basic wage for the purpose of computing end-of-service entitlements (see clause 2.11).
+
+---
+clause_id: MER-AE-DEFN-BASICWAGE
+lineage_id: MER-AE-DEFN-BASICWAGE
+country: UAE
+doc_type: policy
+source_doc: Meridian UAE HR Policy Manual — Chapter 2, Definitions
+section: 2.11
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: uae-mainland
+corpus_requirement: R-22
+---
+<!-- R-22 scattered operands (probe P-36, failure mode FM-D7). A UAE end-of-
+     service settlement needs THREE separate chunks: this wage-base definition,
+     the statutory 21/30-day rate bands, and the two-year cap. Retrieving two of
+     three yields a confident wrong number rather than a visible gap — which is
+     why partial retrieval must refuse rather than part-compute. -->
+**"Basic wage"** means the wage stated in the employment contract as basic salary, excluding housing allowance, transport allowance, education allowance, mobile allowance, and any other allowance or benefit in kind. End-of-service entitlements, and payment in lieu of notice, are computed on basic wage and not on total remuneration. An employee's basic wage is typically between 50% and 60% of total monthly remuneration.
+
+---
+clause_id: MER-AE-TRAVEL-V1
+lineage_id: MER-AE-TRAVEL
+country: UAE
+doc_type: policy
+source_doc: Meridian UAE HR Policy Manual
+section: 9.3
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+superseded_by: MER-AE-TRAVEL-V2
+normative: true
+jurisdiction_scope: uae-mainland
+corpus_requirement: R-21
+---
+<!-- R-21 near-duplicate version pair (probe P-35, failure mode FM-D6). This and
+     V2 differ by one word ("economy" -> "premium economy") and one numeral.
+     Both score almost identically on any similarity measure and flood the top-k
+     together, crowding out the clause that actually answers a broader travel
+     query. Lineage dedup before rerank is the fix. -->
+An employee travelling on Company business within the GCC travels in economy class. An employee travelling on Company business outside the GCC, where the scheduled flight time exceeds six (6) hours, travels in economy class and is entitled to one additional rest day on arrival before commencing scheduled work.
+
+---
+clause_id: MER-AE-TRAVEL-V2
+lineage_id: MER-AE-TRAVEL
+country: UAE
+doc_type: policy
+source_doc: Meridian UAE HR Policy Manual
+section: 9.3
+effective_date: 2025-01-01
+revision_date: 2024-12-10
+version: v2
+temporal_applicability: POINT_IN_TIME
+supersedes: MER-AE-TRAVEL-V1
+normative: true
+jurisdiction_scope: uae-mainland
+corpus_requirement: R-21
+---
+An employee travelling on Company business within the GCC travels in economy class. An employee travelling on Company business outside the GCC, where the scheduled flight time exceeds seven (7) hours, travels in premium economy class and is entitled to one additional rest day on arrival before commencing scheduled work.
+
+---
+clause_id: MER-AE-MEDICAL
+lineage_id: MER-AE-MEDICAL
+country: UAE
+doc_type: policy
+source_doc: Meridian UAE HR Policy Manual
+section: 10.1
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: uae-mainland
+corpus_requirement: R-26-filler
+---
+The Company provides medical insurance cover for every employee as required by law, and extends cover to a spouse and up to three dependent children at Company cost for employees in Grade M1 and above. Employees below Grade M1 may enrol dependants at their own cost through payroll deduction during the annual enrolment window each November.

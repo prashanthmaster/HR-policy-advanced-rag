@@ -247,3 +247,144 @@ corpus_requirement: R-09
      SURVIVE ingestion rather than being silently resolved to one of them.
      effective_date is recorded as UNRESOLVED deliberately. -->
 The domestic relocation grant is revised to one month's basic salary, **with immediate effect**. (Approved by the Group People Committee on 12 November 2025; published to the intranet on 20 November 2025; circulated to line managers on 1 December 2025.)
+
+---
+clause_id: MER-IN-PROBATION
+lineage_id: MER-IN-PROBATION
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 3.4
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-24
+---
+<!-- R-24 false-premise bait (probe P-23). Probation is stated plainly as six
+     months, which makes "our 60-day probation policy" checkably false. The
+     system must correct the premise before answering, not inherit it. -->
+A new employee is engaged on probation for a period of six (6) months from the date of joining. The Company may extend the probation by a further period not exceeding three (3) months where performance during the initial period has not been satisfactory. An employee remains a probationer until confirmed in writing; confirmation is not automatic on expiry of the probation period.
+
+---
+clause_id: MER-IN-GRATUITY-FORFEITURE
+lineage_id: MER-IN-GRATUITY-FORFEITURE
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 6.2
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-17
+references: [IN-GRAT-S4-6-FORFEITURE]
+---
+<!-- R-17 material proviso (probe P-31, failure mode FM-D2). THE CHUNKER MUST NOT
+     SPLIT THIS. The general rule and its provisos are separated by blank lines
+     precisely so a naive paragraph-splitting chunker WILL separate them — that
+     is the test. An answer stating the general rule and omitting the provisos is
+     grounded in a real retrieved chunk and materially wrong, which is the
+     failure Faithfulness alone cannot catch. -->
+Gratuity is payable to an employee on cessation of employment in accordance with clause 6.1 and the Payment of Gratuity Act, 1972.
+
+Provided that where an employee's services are terminated for any act, wilful omission or negligence causing damage or loss to Company property, gratuity shall be forfeited to the extent of the damage or loss so caused, and not further.
+
+Provided further that where an employee's services are terminated for riotous or disorderly conduct, any other act of violence, or an offence involving moral turpitude committed in the course of employment, gratuity may be forfeited wholly or in part at the Company's discretion.
+
+Provided also that no forfeiture shall be made under either proviso unless the termination was itself effected on the ground relied upon, and unless the employee has been given an opportunity to be heard.
+
+---
+clause_id: MER-IN-DEFN-WAGES
+lineage_id: MER-IN-DEFN-WAGES
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual — Chapter 2, Definitions
+section: 2.14
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-18
+---
+<!-- R-18 cross-referenced definition (probe P-32, failure mode FM-D3). Lives in
+     Chapter 2, referred to from Chapter 6 (gratuity) and Chapter 8 (allowances)
+     without being restated. Retrieval returning only the gratuity clause has an
+     incomplete context and must follow the reference or declare insufficiency. -->
+**"Wages"**, wherever used in this Manual in relation to the computation of gratuity, leave encashment or notice pay, means basic salary together with dearness allowance, and does **not** include house rent allowance, conveyance allowance, overtime, bonus, commission, or any other allowance by whatever name called. Where a provision of this Manual refers to "wages" without qualification, this definition applies.
+
+---
+clause_id: MER-IN-LONGSERVICE-AWARD
+lineage_id: MER-IN-LONGSERVICE
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 6.5
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-19
+---
+<!-- R-19 synonym spread (probe P-33, failure mode FM-D4). The same benefit is
+     named four ways across the corpus. All four phrasings must retrieve this. -->
+An employee who completes ten (10) years of continuous service receives a **long service award** equal to one month's wages, and a further award of the same amount on completion of each subsequent period of five years. This award is separate from and additional to gratuity, and is not affected by the statutory gratuity ceiling. It is referred to elsewhere in Company communications as the *loyalty payment*, the *continuity recognition*, or the *service milestone grant*; these are the same benefit under this clause.
+
+---
+clause_id: MER-IN-CONFIRMATION
+lineage_id: MER-IN-CONFIRMATION
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 3.5
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-26-filler
+---
+On satisfactory completion of probation an employee is confirmed in writing by the reporting manager, countersigned by Human Resources. Confirmation takes effect from the date stated in the confirmation letter. A confirmed employee becomes eligible for the Company's medical insurance scheme, the annual performance bonus, and the education assistance scheme, in each case from the effective date of confirmation.
+
+---
+clause_id: MER-IN-WORKING-HOURS
+lineage_id: MER-IN-WORKING-HOURS
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 7.1
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-26-filler
+---
+The standard working week is forty-five (45) hours, worked over five days from Monday to Friday. Core hours during which an employee is expected to be available are 11:00 to 16:00. An employee required to work on a weekly holiday is entitled to compensatory time off, to be availed within thirty days.
+
+---
+clause_id: MER-IN-GRIEVANCE
+lineage_id: MER-IN-GRIEVANCE
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 11.2
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-26-filler
+---
+An employee who wishes to raise a grievance shall do so in writing to their reporting manager in the first instance. Where the grievance concerns the reporting manager, or remains unresolved after fifteen working days, it may be escalated to the Head of Human Resources. A grievance concerning harassment is dealt with under the separate procedure in Chapter 12 and not under this clause.

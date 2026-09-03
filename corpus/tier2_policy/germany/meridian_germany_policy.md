@@ -116,3 +116,63 @@ unchanged_in_doc_v2: true
 references: [DE-KSCHG-SCOPE]
 ---
 The Company operates no general end-of-service or gratuity scheme. Severance (Abfindung) is not a contractual entitlement on ordinary termination. Where severance is agreed in settlement of a dismissal, or is provided for under a social plan (Sozialplan) agreed with the works council in the case of an operational restructuring, it is determined by that agreement.
+
+---
+clause_id: MER-DE-DEFN-REMUNERATION
+lineage_id: MER-DE-DEFN-REMUNERATION
+country: Germany
+doc_type: policy
+source_doc: Meridian Germany HR Policy Manual — Chapter 2, Definitions
+section: 2.11
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: germany-national
+unchanged_in_doc_v2: true
+corpus_requirement: R-14
+---
+<!-- R-14 divergent definitions across jurisdictions (probes P-19, P-20, P-32,
+     failure mode FM-B8). Compare MER-IN-DEFN-WAGES (basic + dearness allowance)
+     and MER-AE-DEFN-BASICWAGE (contractual basic, all allowances excluded). The
+     SAME concept is defined three materially different ways in three chapters of
+     one manual. An answer that carries one jurisdiction's definition into
+     another is wrong even when every retrieved chunk is real and current. -->
+**"Remuneration" (Vergütung)** means the employee's gross monthly salary as stated in the employment contract, together with any contractual thirteenth-month payment apportioned monthly, and any fixed monthly allowance paid without conditions. It excludes variable bonus, overtime supplements, and employer contributions to occupational pension. Where continued remuneration is payable during illness or during a notice period, it is computed on this basis.
+
+---
+clause_id: MER-DE-DEFN-PROBATION-NOTE
+lineage_id: MER-DE-DEFN-PROBATION-NOTE
+country: Germany
+doc_type: policy
+source_doc: Meridian Germany HR Policy Manual — Chapter 2, Definitions
+section: 2.12
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: germany-national
+unchanged_in_doc_v2: true
+corpus_requirement: R-14
+---
+**"Probationary period" (Probezeit)** means the period during which the shortened statutory notice period under § 622 Abs. 3 BGB applies. It is distinct in effect from the probationary arrangements of the Company's Indian and UAE entities: in Germany the probationary period governs only the *length of notice*, and does not by itself determine whether statutory dismissal protection applies — that turns separately on six months' continuous employment and the size of the establishment under the Dismissal Protection Act. An employee may therefore be past the probationary period and still outside dismissal protection.
+
+---
+clause_id: MER-DE-WORKING-TIME
+lineage_id: MER-DE-WORKING-TIME
+country: Germany
+doc_type: policy
+source_doc: Meridian Germany HR Policy Manual
+section: 7.1
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: germany-national
+unchanged_in_doc_v2: true
+corpus_requirement: R-26-filler
+---
+The standard working week is forty (40) hours, worked over five days from Monday to Friday. Working time is recorded electronically. Time worked in excess of the standard week is credited to a working-time account and taken as time off in lieu within the following three months; where this is not practicable, the balance is paid at the standard hourly rate derived from remuneration as defined in clause 2.11.

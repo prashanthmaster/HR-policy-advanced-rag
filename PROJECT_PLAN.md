@@ -31,8 +31,8 @@ This is the tracking document of record. The live task board mirrors it; where t
 | # | Milestone | Exit criterion (demonstrable) | Day | Status |
 |---|---|---|---|---|
 | **M0** | Design locked, corpus grounded | Corpus decision closed; Tier-1 real statutory corpus committed; failure register + probe set + corpus spec committed | D1 | `DONE` |
-| **M1** | Corpus complete | Every requirement R-01→R-25 has a corpus artifact; every probe has something to bite on; defect manifest exists | D1–D2 | `WIP` |
-| **M2** | Indexed | Corpus fully indexed under the extended schema; proviso-boundary and metadata tests pass | D2–D3 | `TODO` |
+| **M1** | Corpus complete | Every requirement R-01→R-25 has a corpus artifact; every probe has something to bite on; defect manifest exists | D1–D2 | `DONE` |
+| **M2** | Indexed | Corpus fully indexed under the extended schema; proviso-boundary and metadata tests pass | D2–D3 | `WIP` |
 | **M3** | Retrieval measured | Retrieval-only Context Precision + Recall **measured** against the probe set and recorded in the ledger | D3 | `TODO` |
 | **M4** | End-to-end answers | Pipeline answers the probe set with citations; clarification contract returns structured output on `MUST_CLARIFY` items | D4 | `TODO` |
 | **M5** | Baseline scored | All 5 metrics + the four-class confusion matrix run on the golden set; **first real numbers** recorded | D4–D5 | `TODO` |
@@ -61,7 +61,7 @@ This is the tracking document of record. The live task board mirrors it; where t
 
 ---
 
-### Phase 1 — Corpus construction · `WIP` · D1–D2
+### Phase 1 — Corpus construction · `DONE` · D1–D2
 
 Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, banner-labelled) to satisfy the requirements spec. Build order is from `CORPUS_REQUIREMENTS.md` §3 and is not arbitrary: things that *look like mistakes* are written first, with their intent recorded, so they don't get tidied away later.
 
@@ -70,10 +70,10 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 | T-1.1 | `docs/DELIBERATE_DEFECTS.md` manifest — non-compliant clause, decoy illustration, intentional gaps | — | `DONE` |
 | T-1.2 | Deliberate-defect clauses: R-11 (policy below statutory floor), R-20 (₹50,000 decoy illustration), R-25 (paternity-leave gap), R-23 (low-salience clause), R-15 (incomplete governing-law clause) | T-1.1 | `DONE` |
 | T-1.3 | Version-pair structures: R-01→R-09 (segmented accrual, grandfathered, future-dated, retroactive, silent + partial supersession, sunset, renumbering, vague effective date) | T-1.2 | `DONE` |
-| T-1.4 | Conflict structures: R-12/R-13/R-14 (free-zone annexe, near-identical cross-country, divergent definitions) — R-10/R-11/R-15 landed early in T-1.2 | T-1.3 | `WIP` |
-| T-1.5 | Retrieval-mechanic structures: R-16→R-24 (slab table, proviso, cross-reference, synonym spread, near-duplicate pair, scattered operands, false-premise bait) | T-1.4 | `TODO` |
-| T-1.6 | Ordinary connective policy prose — **written last**, deliberately: distractor mass is part of the test environment | T-1.5 | `TODO` |
-| T-1.7 | Coverage audit: assert every R-requirement and every probe maps to a real corpus artifact | T-1.6 | `TODO` |
+| T-1.4 | Conflict structures: R-12/R-13/R-14 (free-zone annexe, near-identical cross-country, divergent definitions) — R-10/R-11/R-15 landed early in T-1.2 | T-1.3 | `DONE` |
+| T-1.5 | Retrieval-mechanic structures: R-16→R-24 (slab table, proviso, cross-reference, synonym spread, near-duplicate pair, scattered operands, false-premise bait) | T-1.4 | `DONE` |
+| T-1.6 | Ordinary connective policy prose — **written last**, deliberately: distractor mass is part of the test environment | T-1.5 | `DONE` |
+| T-1.7 | Coverage audit: assert every R-requirement and every probe maps to a real corpus artifact | T-1.6 | `DONE` — automated, `eval/coverage_audit.py`, PASS |
 | T-1.8 | Work the `[VERIFY]` register down (see §Verification Register) | — | `TODO` |
 
 **Exit criterion (M1):** T-1.7 audit passes — no probe is unanswerable for want of a document, and no requirement is unimplemented.
@@ -82,7 +82,7 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 
 ---
 
-### Phase 2 — Ingestion & indexing · `TODO` · D2–D3
+### Phase 2 — Ingestion & indexing · `WIP` · D2–D3
 
 | ID | Task | Depends on | Status |
 |---|---|---|---|
@@ -285,6 +285,7 @@ Metrics awaiting first measurement: Context Precision · Context Recall · Faith
 | 2026-09-03 | Plan created. Phases 0–9, milestones M0–M9. |
 | 2026-09-03 | Build order inverted — probes before corpus. Phase 1 restructured to build from the requirements spec rather than writing policy prose first. |
 | 2026-09-03 | M0 closed. Phase 1 opened. V-1 closed: India gratuity ceiling confirmed `POINT_IN_TIME`; probe P-01 unblocked. |
+| 2026-09-03 | **M1 CLOSED.** T-1.4/1.5/1.6 done; 72 clauses (24 statutory, 48 policy). T-1.7 automated as `eval/coverage_audit.py` (stdlib only, CI-ready) and PASSES — so M1's exit criterion is machine-witnessed rather than asserted. On its first run the audit caught two real defects: schema drift (18 Tier-1 clauses predated the extended schema and lacked temporal_applicability / normative / lineage_id — now backfilled per-clause, not blanket-defaulted) and a false positive in its own deliberate-absence check (scoped to clause bodies, since editorial notes must be able to name the gap). Phase 2 open. |
 | 2026-09-03 | V-3 closed. DIFC added as real Tier-1 law plus a Meridian DIFC annexe. The DEWS transition (1 Feb 2020) turns out to be a genuine statutory straddle that splits — the real counterweight to the India ceiling, which does not. Two new probes added (P-3a, P-3b). |
 | 2026-09-03 | T-1.3 done — R-01→R-09 version-pair structures across all three chapters. Probe P-06 rewritten: it and P-02 had been specified against the same 18→24 leave fixture with incompatible mechanics (grandfathered vs segmented accrual); P-06 moved to a UAE end-of-service supplement. Caught by corpus construction, i.e. the corpus validating the probe set. |
 | 2026-09-03 | T-1.1 + T-1.2 done. Defect manifest D-1..D-5 written ahead of fixtures; Meridian global preamble and partial India chapter committed. R-10/R-11/R-15 satisfied early (the notice-clause pair carried both sides of the statutory-floor asymmetry, and the governing-law clause was needed to host D-5). |
