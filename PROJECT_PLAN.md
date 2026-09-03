@@ -88,9 +88,9 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 |---|---|---|---|
 | T-2.1 | Parser: metadata blocks → structured chunk records | M1 | `DONE` |
 | T-2.2 | Extended chunk schema: `temporal_applicability`, `revision_date`, `indexed_at`, `normative`, `lineage_id`, `supersedes`/`superseded_by`, `cohort_rule`, `jurisdiction_scope` | T-2.1 | `DONE` |
-| T-2.3 | Clause-aware chunker — **hard rule: a proviso is never split from its clause** (FM-D2) | T-2.1 | `TODO` |
-| T-2.4 | Table extraction → row-serialised text, separate chunk stream (per the no-vision decision) | T-2.3 | `TODO` |
-| T-2.5 | Change-kind classifier: `NO_OP` / `EDITORIAL` / `SUBSTANTIVE` / `ADDITION` / `SUNSET` | T-2.2 | `TODO` |
+| T-2.3 | Clause-aware chunker — **hard rule: a proviso is never split from its clause** (FM-D2) | T-2.1 | `DONE` |
+| T-2.4 | Table extraction → row-serialised text, separate chunk stream (per the no-vision decision) | T-2.3 | `DONE` |
+| T-2.5 | Change-kind classifier: `NO_OP` / `EDITORIAL` / `SUBSTANTIVE` / `ADDITION` / `SUNSET` | T-2.2 | `DONE` |
 | T-2.6 | BM25 index build | T-2.3 | `TODO` |
 | T-2.7 | Vector index build — Qdrant local, `text-embedding-3` | T-2.3 | `TODO` |
 | T-2.8 | Unit tests: proviso integrity, three-clock separation, lineage linkage, normative flagging | T-2.5 | `TODO` |
