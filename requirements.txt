@@ -1,0 +1,37 @@
+# Slot 4 — HR-Policy Advanced RAG
+# Core pipeline
+langchain>=0.3
+langgraph>=0.2
+langsmith
+openai>=1.40
+
+# Retrieval
+rank-bm25
+qdrant-client
+flashrank
+
+# Eval
+ragas
+datasets
+
+# Google Drive freshness
+google-api-python-client
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+
+# API / serving
+fastapi
+uvicorn[standard]
+pydantic>=2
+
+# Utilities
+python-dotenv
+tiktoken
+pypdf
+beautifulsoup4
+lxml
+
+# Testing / CI
+pytest
+pytest-asyncio

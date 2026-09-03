@@ -1,0 +1,82 @@
+# HR-Policy Advanced RAG
+
+> A retrieval system that knows when a policy has been amended and refuses to answer from the superseded version.
+
+Portfolio Slot 4 of 4 (applied AI Engineer portfolio). Domain anchored in multi-country statutory/regulatory update management from prior enterprise HRMS delivery work (India, UAE, Germany scope below).
+
+**No performance number, capability claim, or "production-grade" description in this repo (or said in an interview) unless it was personally verified against a real run or test result.**
+
+## What this is
+
+Ask a question like *"An employee in our Dubai office resigns after 3 years of service — what notice period and gratuity apply under current company policy?"* and the system answers from the **current, correctly-versioned** combination of statutory law and company policy — citing the exact clause — rather than blending an amended clause with its superseded predecessor, or hallucinating a plausible-sounding number.
+
+## Corpus design (the one open decision at kickoff, closed 3 Sep 2026)
+
+Real HR-policy questions in a multi-country company are rarely pure "what does the law say" or pure "what does our policy say" — they're law applied to a specific case, and the two can genuinely conflict. So the corpus is **hybrid, two-tier**, covering three countries chosen to be maximally different in labor-law shape (India, UAE, Germany):
+
+- **Tier 1 — real statutory law.** Public, verifiable sources only: India (Labour Codes, Payment of Gratuity Act, POSH Act, EPF/ESI), UAE (Federal Decree-Law No. 33 of 2021), Germany (Kündigungsschutzgesetz / BGB provisions on notice and termination). Covers notice period, gratuity/severance, probation, leave, and termination across all three.
+- **Tier 2 — synthetic company policy layer.** A single fictional company's HR policy manual, one chapter per country, that *applies* Tier-1 law to concrete HR situations — sometimes matching the statutory minimum, sometimes exceeding it, sometimes lagging behind a recent amendment. **This tier is clearly fictional and is labeled as such everywhere it appears** (source documents, retrieved citations, and in any description of this project). At least one deliberate amendment (old clause + new clause + effective date) per country drives the live-freshness demo and creates genuine, defensible cross-country policy conflicts for the retrieval layer to navigate.
+
+**Explicitly rejected:** a live employee database with a natural-language-to-SQL layer. Real-sounding and tempting, but it's a second, unrelated hard problem (NL→SQL translation of "simple and often broken English" queries) that would bloat this slot without adding retrieval/freshness signal — logged as an explicit non-goal, not an oversight.
+
+## Explicitly out of scope
+
+- No multi-agent/supervisor architecture (owned by Slot 3, FinGuard-MCP)
+- No MCP exposure on this slot (already proven in FinGuard-MCP)
+- No Notion/Jira connectors — Google Drive only
+- No multimodal/CLIP vision RAG — tables are extracted structurally and serialized as text in a separate chunk stream
+- No chatbot / conversational memory — stateless, single-turn by design (multi-turn already proven elsewhere)
+- No fine-tuning / LoRA
+- No live employee database or NL-to-SQL layer
+
+## Architecture
+
+```
+Source docs (Tier 1 law + Tier 2 policy, Google Drive)
+        │
+        ▼
+   Chunking + metadata tagging (country, doc_type, effective_date, version, section)
+        │
+        ├──► BM25 keyword index ──┐
+        └──► Vector index (Qdrant) ┴──► Reciprocal Rank Fusion
+                                           │
+                                           ▼
+                                    FlashRank rerank
+                                          │
+                                          ▼
+                              CRAG-style grading node
+                          (sufficient? → generate | corrective re-query)
+                                          │
+                                          ▼
+                         LLM generation (context-only, cited)
+                                          │
+                                          ▼
+                    Faithfulness score ──► below threshold: decline + surface closest match
+                                          │
+                                          ▼
+                                  Answer + citations
+```
+
+This core pipeline is deliberately the industry-standard reference architecture — not where this project's differentiation lives.
+
+**The differentiator** is the Google Drive-connected live freshness/versioning layer: detect a document change, incrementally re-index only that document, tag every chunk with an effective date/version, and on an amendment, never blend old and new text.
+
+## Evaluation
+
+Golden dataset of 20-30 HR-policy questions (known-correct answers + known-correct source clauses) spanning law-only, policy-only, and combined law+policy questions across all three countries, including amended-clause questions. Scored on exactly four RAGAS metrics plus one custom metric — deliberately not more:
+
+1. **Context Precision**
+2. **Context Recall**
+3. **Faithfulness** (the hallucination check — most important metric for this domain)
+4. **Answer Correctness**
+5. **Citation Accuracy** (custom LLM-as-judge, same G-Eval pattern as Slot 3/FinGuard-MCP) — does the cited clause/section actually match what was retrieved
+
+Gated in CI so regressions are caught automatically.
+
+## Guardrail
+
+The Faithfulness score is reused live as the runtime guardrail — one metric, two jobs (offline CI gate + live refusal gate). No separate guardrail agent (that's Slot 3's job, not this one's).
+
+## Status
+
+Build in progress. Local prototype first; GCP Cloud Run + Qdrant Cloud deployment is a fast-follow after the local pipeline is stable and demoable, not a same-day requirement.
