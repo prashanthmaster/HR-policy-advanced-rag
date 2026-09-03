@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from generation.citations import build_citations
 from generation.schema import GeneratedAnswer
+from generation.supersession import check_supersession
 from grading.temporal_reasoner import TemporalWorking
 from retrieval.hybrid_search import RetrievedPiece
 
@@ -33,8 +34,14 @@ class TemplateGenerator:
         if missing:
             lines.append(f"Cannot give a final answer: missing {', '.join(missing)}.")
 
+        notes, warning = check_supersession(pieces)
+        lines.extend(notes)
+        if warning:
+            lines.append(warning)
+
         return GeneratedAnswer(
             text="\n".join(lines),
             citations=citations,
             used_temporal_reasoning=bool(workings),
+            superseded_warning=warning,
         )
