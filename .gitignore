@@ -12,3 +12,4 @@ qdrant_storage/
 .DS_Store
 .ipynb_checkpoints/
 logs/
+build/
