@@ -41,7 +41,16 @@ def _point_id(piece_id: str) -> int:
 class VectorIndex:
     def __init__(self, embedder: Embedder, path: str | Path | None = None):
         self._embedder = embedder
-        self._client = QdrantClient(location=":memory:" if path is None else str(path))
+        # location= is for remote-server URLs; a local on-disk path must go
+        # through path= instead -- location= tries to urlparse the string and,
+        # on Windows, misreads the drive letter ('C:\\...') as a URL scheme
+        # ("Unknown scheme: c"). Found live 3 Sep 2026 on the first real
+        # --live run (tests and --dry-run only ever exercised :memory:).
+        if path is None:
+            self._client = QdrantClient(location=":memory:")
+        else:
+            self._client = QdrantClient(path=str(path))
+
         self._built = False
 
     def build(self, units: list[IndexableUnit]) -> None:
