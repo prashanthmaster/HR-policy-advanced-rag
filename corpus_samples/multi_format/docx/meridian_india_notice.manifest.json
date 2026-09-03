@@ -1,0 +1,32 @@
+[
+  {
+    "clause_id": "FMT-DOCX-MER-IN-NOTICE-SENIOR",
+    "locator": {
+      "para_start": 1,
+      "para_end": 2
+    },
+    "country": "India",
+    "doc_type": "policy",
+    "source_doc": "Meridian India HR Policy Manual (DOCX format-parser sample)",
+    "effective_date": "2023-01-01",
+    "temporal_applicability": "POINT_IN_TIME",
+    "normative": true,
+    "lineage_id": "FMT-DOCX-MER-IN-NOTICE-SENIOR",
+    "jurisdiction_scope": "india-national"
+  },
+  {
+    "clause_id": "FMT-DOCX-MER-IN-NOTICE-JUNIOR",
+    "locator": {
+      "para_start": 3,
+      "para_end": 4
+    },
+    "country": "India",
+    "doc_type": "policy",
+    "source_doc": "Meridian India HR Policy Manual (DOCX format-parser sample)",
+    "effective_date": "2023-01-01",
+    "temporal_applicability": "POINT_IN_TIME",
+    "normative": true,
+    "lineage_id": "FMT-DOCX-MER-IN-NOTICE-JUNIOR",
+    "jurisdiction_scope": "india-national"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "clause_id": "FMT-PDF-IN-GRAT-S4-ELIG",
+    "locator": {
+      "page_start": 1,
+      "page_end": 1
+    },
+    "country": "India",
+    "doc_type": "law",
+    "effective_date": "1972-09-16",
+    "temporal_applicability": "POINT_IN_TIME",
+    "normative": true,
+    "lineage_id": "FMT-PDF-IN-GRAT-S4-ELIG",
+    "jurisdiction_scope": "india-national",
+    "source_url": "corpus/tier1_law/india/india_law.md (same text, PDF format-parser sample)"
+  },
+  {
+    "clause_id": "FMT-PDF-IN-GRAT-S4-FORMULA",
+    "locator": {
+      "page_start": 2,
+      "page_end": 2
+    },
+    "country": "India",
+    "doc_type": "law",
+    "effective_date": "1972-09-16",
+    "temporal_applicability": "POINT_IN_TIME",
+    "normative": true,
+    "lineage_id": "FMT-PDF-IN-GRAT-S4-FORMULA",
+    "jurisdiction_scope": "india-national",
+    "source_url": "corpus/tier1_law/india/india_law.md (same text, PDF format-parser sample)"
+  },
+  {
+    "clause_id": "FMT-PDF-IN-GRAT-S4-CEILING",
+    "locator": {
+      "page_start": 3,
+      "page_end": 3
+    },
+    "country": "India",
+    "doc_type": "law",
+    "effective_date": "2018-03-29",
+    "temporal_applicability": "POINT_IN_TIME",
+    "normative": true,
+    "lineage_id": "FMT-PDF-IN-GRAT-S4-CEILING",
+    "jurisdiction_scope": "india-national",
+    "source_url": "corpus/tier1_law/india/india_law.md (same text, PDF format-parser sample)"
+  }
+]

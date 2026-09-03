@@ -1,0 +1,20 @@
+[
+  {
+    "clause_id": "FMT-XLSX-MER-AE-HOUSING",
+    "title": "Schedule 2 -- Monthly housing allowance, by grade and completed years of service (AED).",
+    "locator": {
+      "sheet_name": "Schedule 2",
+      "header_row": 1,
+      "row_start": 2,
+      "row_end": 14
+    },
+    "country": "UAE",
+    "doc_type": "policy",
+    "source_doc": "Meridian UAE HR Policy Manual -- Schedule 2 (XLSX format-parser sample)",
+    "effective_date": "2024-01-01",
+    "temporal_applicability": "POINT_IN_TIME",
+    "normative": true,
+    "lineage_id": "FMT-XLSX-MER-AE-HOUSING",
+    "jurisdiction_scope": "uae-mainland"
+  }
+]

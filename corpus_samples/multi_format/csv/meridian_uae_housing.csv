@@ -1,0 +1,14 @@
+Grade,Years of service,Monthly housing allowance (AED)
+A1-A3,under 3 years,4000
+A1-A3,3 to 5 years,4500
+A1-A3,over 5 years,5000
+M1,under 3 years,6500
+M1,3 to 5 years,7200
+M1,over 5 years,8000
+M2,under 3 years,8500
+M2,3 to 5 years,9500
+M2,over 5 years,10500
+M3,under 3 years,11000
+M3,3 to 5 years,12500
+M3,over 5 years,14000
+D1 and above,any length,18000

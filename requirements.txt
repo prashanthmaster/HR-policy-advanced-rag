@@ -39,6 +39,19 @@ pypdf
 beautifulsoup4
 lxml
 
+# Non-markdown source document parsers (ingestion/formats/) -- the corpus is
+# authored in markdown for speed, but real HR documents arrive as PDF, Word,
+# and Excel/CSV. These parsers are tested against real generated sample
+# files under corpus_samples/multi_format/ (scripts/generate_multiformat_samples.py),
+# not the scored 72-clause corpus itself, per the 3 Sep 2026 scope decision
+# recorded in README.md and PROJECT_PLAN.md.
+python-docx
+openpyxl
+
+# Dev/fixture-generation only -- writes the sample PDF above, never used at
+# ingestion runtime (ingestion only ever READS pdfs, via pypdf).
+fpdf2
+
 # Testing / CI
 pytest
 pytest-asyncio

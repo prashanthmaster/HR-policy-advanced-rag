@@ -94,10 +94,17 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 | T-2.6 | BM25 index build | T-2.3 | `DONE` |
 | T-2.7 | Vector index build — Qdrant local, `text-embedding-3` | T-2.3 | `MECHANICS DONE, LIVE RUN BLOCKED` |
 | T-2.8 | Unit tests: proviso integrity, three-clock separation, lineage linkage, normative flagging | T-2.5 | `DONE` |
+| T-2.9 | Non-markdown format parsers (PDF/DOCX/XLSX/CSV) — same `ChunkMetadata` shape via sidecar manifests; real generated sample files, not a full corpus rewrite | T-2.2 | `DONE` |
 
 **Exit criterion (M2):** full corpus indexed; T-2.8 green.
 
-**Status (3 Sep 2026):** T-2.1–2.6 and T-2.8 done, 61/61 tests green. T-2.7's code, tests (against
+**T-2.9 added mid-phase (3 Sep 2026):** Prashanth flagged that an all-markdown corpus doesn't prove
+real-world document handling. `ingestion/formats/` now has tested parsers for PDF, Word, and Excel/CSV,
+each producing the same validated schema the markdown parser does, proven against real generated files
+under `corpus_samples/multi_format/` — see README's "Source document formats" section for the full
+reasoning on why this is a small representative sample, not a full 72-clause rewrite.
+
+**Status (3 Sep 2026):** T-2.1–2.6, T-2.8, T-2.9 done, 70/70 tests green. T-2.7's code, tests (against
 MockEmbedder, zero cost), and the by-hand spend script (`scripts/build_vector_index.py`, requires
 `OPENAI_API_KEY`, `--dry-run` first) are all built and committed. The one remaining action to actually
 close M2 is running that script for real, which needs Prashanth's OpenAI API key — not a code or design
