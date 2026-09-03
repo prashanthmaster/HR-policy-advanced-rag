@@ -1,4 +1,11 @@
 # Slot 4 — HR-Policy Advanced RAG
+#
+# Model choices are budget-constrained, confirmed 2026-09-03 ($4.98 OpenAI
+# balance): gpt-4o-mini (or gpt-5-nano if available) for all generation/
+# grading/judge calls, text-embedding-3-small for all embeddings. Never the
+# larger variants until a real measured cost says the budget allows it.
+# See PROJECT_PLAN.md Phase 2 gate note and risk RK-4.
+#
 # Core pipeline
 langchain>=0.3
 langgraph>=0.2

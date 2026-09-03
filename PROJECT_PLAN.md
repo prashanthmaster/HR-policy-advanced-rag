@@ -86,8 +86,8 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 
 | ID | Task | Depends on | Status |
 |---|---|---|---|
-| T-2.1 | Parser: metadata blocks → structured chunk records | M1 | `TODO` |
-| T-2.2 | Extended chunk schema: `temporal_applicability`, `revision_date`, `indexed_at`, `normative`, `lineage_id`, `supersedes`/`superseded_by`, `cohort_rule`, `jurisdiction_scope` | T-2.1 | `TODO` |
+| T-2.1 | Parser: metadata blocks → structured chunk records | M1 | `DONE` |
+| T-2.2 | Extended chunk schema: `temporal_applicability`, `revision_date`, `indexed_at`, `normative`, `lineage_id`, `supersedes`/`superseded_by`, `cohort_rule`, `jurisdiction_scope` | T-2.1 | `DONE` |
 | T-2.3 | Clause-aware chunker — **hard rule: a proviso is never split from its clause** (FM-D2) | T-2.1 | `TODO` |
 | T-2.4 | Table extraction → row-serialised text, separate chunk stream (per the no-vision decision) | T-2.3 | `TODO` |
 | T-2.5 | Change-kind classifier: `NO_OP` / `EDITORIAL` / `SUBSTANTIVE` / `ADDITION` / `SUNSET` | T-2.2 | `TODO` |
@@ -98,6 +98,18 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 **Exit criterion (M2):** full corpus indexed; T-2.8 green.
 
 **Gate:** T-2.7 is the first step that spends OpenAI credit. Confirm the key and its balance before running it.
+
+**Budget confirmed (2026-09-03):** $4.98 balance. Locked-in model choices for every OpenAI call in this
+project (embeddings, generation, CRAG grading, Citation Accuracy G-Eval) — chosen for cost, not capability,
+and this constraint gets stated as such wherever these models are named, per the project's own ground rule
+on unverified capability claims:
+- Embeddings: `text-embedding-3-small` (not `-large` — no measurement yet justifies the larger model's cost).
+- Generation / grading / judge: `gpt-4o-mini`, or `gpt-5-nano` if/when confirmed available on this account —
+  never a larger model, until a real cost measurement (T-2.7's actual embedding spend, then Phase 5's eval
+  run) says the budget allows more.
+- Before T-2.7 runs: batch-embed with caching (never re-embed an unchanged chunk), and dry-run T-2.6/T-2.7
+  end-to-end against a 2-3 clause slice first to see one real cost number before committing the full 72-clause
+  corpus to the API.
 
 ---
 
@@ -271,7 +283,7 @@ Metrics awaiting first measurement: Context Precision · Context Recall · Faith
 | RK-1 | Synthetic corpus drifts to uniform, easy prose and stops being a real test | P1 | Defects-first build order; deliberate variation in drafting register; T-1.7 coverage audit |
 | RK-2 | Guardrail threshold ratchets toward refuse-everything | P6 | Over-refusal counter gates T-6.6 |
 | RK-3 | Deliberate fixtures get "fixed" by a later session | P1+ | `DELIBERATE_DEFECTS.md` manifest (T-1.1) written *before* the fixtures |
-| RK-4 | OpenAI spend runs ahead of budget during indexing / eval loops | P2, P5 | Confirm key + balance at T-2.7; cache embeddings; dry-run mode for harness iteration |
+| RK-4 | OpenAI spend runs ahead of budget during indexing / eval loops | P2, P5 | Confirmed $4.98 balance (2026-09-03); locked to gpt-4o-mini/gpt-5-nano + text-embedding-3-small; cache embeddings; dry-run on a small slice before full-corpus T-2.6/2.7 |
 | RK-5 | Drive API setup consumes a disproportionate share of D5 | P6 | T-6.1 can start any time — it has no upstream dependency; pull it forward if a phase runs short |
 | RK-6 | Deployment pulls time from local-prototype quality | P8 | Held as fast-follow by design |
 | RK-7 | Unmeasured claims leak into README or interview answers | All | Ledger is the single source of numbers; T-9.3 audits against it |
