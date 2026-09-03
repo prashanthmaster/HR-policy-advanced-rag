@@ -232,7 +232,7 @@ Open items under the standing rule. **None may be promoted into the scored golde
 |---|---|---|---|
 | V-1 | India gratuity ceiling is `POINT_IN_TIME` | P-01 (marquee probe) | `CLOSED` 2026-09-03 — see below |
 | V-2 | UAE Federal Law 8/1980 → Decree-Law 33/2021 transition mechanics for accrued gratuity | Best real straddle case; no golden answer until closed | `OPEN` |
-| V-3 | DIFC / ADGM divergence from UAE mainland | P-17, R-12 | `OPEN` |
+| V-3 | DIFC divergence from UAE mainland | P-17, R-12 | `CLOSED` 2026-09-03 — two concurring sources on notice (7/30/90 by service), leave (20 working days vs 30 calendar), DEWS from 2020-02-01 at 5.83%/8.33% with pre-transition service paid as legacy gratuity, probation 6 months (same as mainland). Article numbers other than Art. 62 not verified and deliberately omitted rather than guessed. ADGM not examined — out of scope unless raised. |
 | V-4 | Indian state-level variation — verify one state, or scope corpus explicitly to "national baseline" and say so | Corpus scope statement | `OPEN` |
 | V-5 | India Labour Codes commencement status | Already flagged in Tier-1 corpus note | `OPEN` |
 
@@ -285,5 +285,6 @@ Metrics awaiting first measurement: Context Precision · Context Recall · Faith
 | 2026-09-03 | Plan created. Phases 0–9, milestones M0–M9. |
 | 2026-09-03 | Build order inverted — probes before corpus. Phase 1 restructured to build from the requirements spec rather than writing policy prose first. |
 | 2026-09-03 | M0 closed. Phase 1 opened. V-1 closed: India gratuity ceiling confirmed `POINT_IN_TIME`; probe P-01 unblocked. |
+| 2026-09-03 | V-3 closed. DIFC added as real Tier-1 law plus a Meridian DIFC annexe. The DEWS transition (1 Feb 2020) turns out to be a genuine statutory straddle that splits — the real counterweight to the India ceiling, which does not. Two new probes added (P-3a, P-3b). |
 | 2026-09-03 | T-1.3 done — R-01→R-09 version-pair structures across all three chapters. Probe P-06 rewritten: it and P-02 had been specified against the same 18→24 leave fixture with incompatible mechanics (grandfathered vs segmented accrual); P-06 moved to a UAE end-of-service supplement. Caught by corpus construction, i.e. the corpus validating the probe set. |
 | 2026-09-03 | T-1.1 + T-1.2 done. Defect manifest D-1..D-5 written ahead of fixtures; Meridian global preamble and partial India chapter committed. R-10/R-11/R-15 satisfied early (the notice-clause pair carried both sides of the statutory-floor asymmetry, and the governing-law clause was needed to host D-5). |

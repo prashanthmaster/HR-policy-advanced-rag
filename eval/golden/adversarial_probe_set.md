@@ -35,6 +35,21 @@ Same surface shape as P-01, opposite applicability class. This one **is** `SEGME
 
 Third shape in the family, and the one that catches over-correction: UAE gratuity **is** segmented (21 days/year for the first 5 years, 30 days/year after) — but segmented by **tenure band**, not by amendment date. Splitting is correct here for a reason unrelated to versioning. Tests whether the system distinguishes *why* it is splitting.
 
+**P-3a · FM-A1, FM-B5, FM-D7 · `MUST_ANSWER`**
+
+> "I've been with the DIFC entity since 2017 and I'm leaving this year. What's my end of service?"
+
+**The best straddle case in the corpus, and it is entirely real.** DIFC replaced end-of-service gratuity with the DEWS defined-contribution scheme on **1 February 2020**. Service before that date remains payable as legacy gratuity on the old 21/30-day basis; service from that date accrues as employer contributions (5.83% of basic rising to 8.33% after five years). An employee with 2017→2026 service receives **both components**, covering two consecutive segments of one continuous service.
+
+- **Expected:** split at 2020-02-01, compute each segment on its own basis, state both, and do not blend them into a single formula.
+- **Why it matters:** this is `SEGMENTED_ACCRUAL` in real statute — and it sits directly against P-01, which is `POINT_IN_TIME` in real statute and must *not* be split. Two genuine straddle cases, opposite correct answers, both independently checkable by an interviewer. Neither is invented.
+
+**P-3b · FM-B5, FM-B8, FM-D1 · `MUST_ANSWER`**
+
+> "How much annual leave do I get? I'm in Dubai."
+
+A unit trap inside a single city. DIFC grants **20 working days**; UAE mainland grants **30 calendar days**. Same words, same country, different units, and the smaller number is not the smaller entitlement once converted. An answer that reports a figure without its unit, or that compares the two by magnitude, is wrong even when it retrieves the right clause.
+
 ---
 
 ## Family A — Temporal & versioning
@@ -59,7 +74,7 @@ Third shape in the family, and the one that catches over-correction: UAE gratuit
 | P-14 | B2 | "I'm a German national on the Indian payroll but I work out of the Dubai office. Which notice period applies?" | `MUST_CLARIFY` | The jurisdiction triangle. Identify which axis governs, or state the corpus doesn't determine it. Picking one axis silently is the failure. |
 | P-15 | B3 | "Company policy gives 45 days notice but I heard the law says 30. Which one do I get?" | `MUST_ANSWER` | Policy exceeds the statutory floor → policy governs. Note it is above the minimum. |
 | P-16 | B4 | "Policy says 15 days notice for my grade. Is that what I get?" *(statute floors at 30)* | `MUST_ANSWER` | **Asymmetric with P-15.** Statute governs; the policy clause is unenforceable to the extent it undercuts the floor. A system that applies "the specific document wins" uniformly fails exactly one of P-15/P-16. |
-| P-17 | B5 | "I'm in the DIFC office. Same rules as the rest of UAE?" | `MUST_FLAG` | Free zone runs a separate regime. Must not answer mainland law. `[VERIFY]` specifics before locking. |
+| P-17 | B5 | "I'm in the DIFC office. Same rules as the rest of UAE?" | `MUST_FLAG` | Separate regime (DIFC Law No. 2 of 2019). Notice at 5+ yrs is 90 days, not 30; leave is 20 *working* days, not 30 *calendar*; end-of-service is DEWS, not gratuity. Must not answer mainland law. **Verified 2026-09-03.** Note the trap in the question: "in the DIFC office" describes a *location*, but the governing regime follows the employing entity — so strictly this is `MUST_CLARIFY` if the entity is unstated. |
 | P-18 | B6 | "What's the gratuity in Germany?" | `MUST_REFUSE` | No statutory equivalent. Must not return the India or UAE clause — the strongest semantic-contamination probe in the set, because "gratuity" embeds nearly identically across countries. |
 | P-19 | B8 | "How long is probation?" *(no country)* | `MUST_CLARIFY` | Same word, three different legal constructs and durations. |
 | P-20 | B6/D1 | "Is my gratuity calculated on basic or total salary?" | `MUST_CLARIFY` | Wage base differs by country. Country determines the answer. |
@@ -112,7 +127,7 @@ Caught during corpus construction (T-1.3), which is the reverse-engineering loop
 
 ## Coverage and composition
 
-41 probes over 39 failure modes. Target composition for the scored golden set (20–30 items drawn from these, per the locked eval design):
+43 probes over 39 failure modes. Target composition for the scored golden set (20–30 items drawn from these, per the locked eval design):
 
 | Class | Share | Purpose |
 |---|---|---|

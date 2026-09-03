@@ -81,6 +81,8 @@ This manifest is written **before** the fixtures it describes, so the intent is 
 
 **Do not add a paternity leave policy.** It is the highest-value absence in the corpus. If a future requirement genuinely needs one, add it to a *different* topic and leave this gap intact.
 
+**This applies to Tier-1 as well, notwithstanding the scope note above.** Some real statutes in the corpus's jurisdictions *do* provide parental leave — DIFC Law No. 2 of 2019 is one. Those provisions are deliberately outside the bounded slice this corpus covers. Adding them while extending Tier-1 would make P-39 answerable and destroy the fixture just as surely as adding a company policy would. The corpus covers notice, end-of-service, probation and leave *quantum* only.
+
 ---
 
 ## D-5 · Deliberately incomplete governing-law clause

@@ -186,3 +186,78 @@ jurisdiction_scope: uae-mainland
 corpus_requirement: R-08
 ---
 **7.5 Remote Working.** An employee may work remotely for up to two days in each calendar week with the written agreement of their line manager. (Renumbered from 7.2 on reorganisation of Chapter 7; substance unchanged.)
+
+---
+clause_id: MER-AE-DIFC-ANNEXE-SCOPE
+lineage_id: MER-AE-DIFC-SCOPE
+country: UAE
+doc_type: policy
+source_doc: Meridian UAE HR Policy Manual — DIFC Annexe
+section: Annexe A.1
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: uae-difc
+corpus_requirement: R-12
+---
+This Annexe applies to employees of **Meridian Global Services (DIFC) Limited**, registered in the Dubai International Financial Centre. Those employees are governed by the DIFC Employment Law, DIFC Law No. 2 of 2019, and **not** by UAE Federal Decree-Law No. 33 of 2021. Where this Annexe is silent, the main UAE chapter applies only to the extent it is not inconsistent with DIFC law. An employee's applicable regime is determined by the Meridian entity with which they hold their contract of employment, not by the office building in which they work — an employee of the mainland entity seconded to the DIFC office remains subject to the mainland regime, and the converse also holds.
+
+---
+clause_id: MER-AE-DIFC-NOTICE
+lineage_id: MER-AE-DIFC-NOTICE
+country: UAE
+doc_type: policy
+source_doc: Meridian UAE HR Policy Manual — DIFC Annexe
+section: Annexe A.4
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: uae-difc
+corpus_requirement: R-13
+references: [DIFC-L2-2019-NOTICE]
+---
+<!-- R-13 near-identical clause, different numbers, SAME COUNTRY (probe P-17,
+     failure mode FM-B5/FM-B6). Compare with MER-AE-NOTICE-V2 in the main
+     chapter: near-identical wording, materially different entitlement at
+     5+ years (90 days here, 30 there). Country filtering alone does NOT
+     separate these — the filter must be on jurisdiction_scope. This is a
+     harder version of the cross-country contamination case. -->
+An employee who wishes to resign, or whose employment the Company terminates, is entitled to and shall give written notice in accordance with the statutory minimum periods under the DIFC Employment Law, namely: seven (7) days where continuous employment is less than three months; thirty (30) days where continuous employment is three months or more but less than five years; and **ninety (90) days where continuous employment is five years or more**. The Company does not apply a shorter period.
+
+---
+clause_id: MER-AE-DIFC-EOSB
+lineage_id: MER-AE-DIFC-EOSB
+country: UAE
+doc_type: policy
+source_doc: Meridian UAE HR Policy Manual — DIFC Annexe
+section: Annexe A.6
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: SEGMENTED_ACCRUAL
+normative: true
+jurisdiction_scope: uae-difc
+references: [DIFC-L2-2019-DEWS, DIFC-EOSB-LEGACY-GRATUITY]
+---
+The Company enrols every employee of the DIFC entity in the DIFC Employee Workplace Savings plan and makes the mandatory monthly contributions. An employee whose continuous service commenced **before 1 February 2020** additionally retains an entitlement to legacy end-of-service gratuity in respect of the service accrued up to that date, computed on the pre-transition basis. Such an employee's total end-of-service entitlement is therefore the sum of two separately computed components covering two consecutive periods of the same continuous service. The Company end-of-service supplement described in clause 6.3 of the main chapter does **not** apply to employees of the DIFC entity.
+
+---
+clause_id: MER-AE-DIFC-LEAVE
+lineage_id: MER-AE-DIFC-LEAVE
+country: UAE
+doc_type: policy
+source_doc: Meridian UAE HR Policy Manual — DIFC Annexe
+section: Annexe A.5
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: SEGMENTED_ACCRUAL
+normative: true
+jurisdiction_scope: uae-difc
+references: [DIFC-L2-2019-LEAVE]
+---
+An employee who has completed ninety (90) days of continuous employment accrues twenty-five (25) **working** days of paid annual leave per year, which exceeds the DIFC statutory minimum of twenty working days. Employees should note that this entitlement is expressed in *working* days, whereas the entitlement of employees of the mainland entity is expressed in *calendar* days; the two figures are not comparable without converting to a common basis.
