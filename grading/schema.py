@@ -42,3 +42,38 @@ class SufficiencyResult:
     @property
     def is_sufficient(self) -> bool:
         return self.verdict is GradeVerdict.SUFFICIENT
+
+
+# --- T-4.5: stateless clarification contract (Finding 5) ---------------
+
+
+@dataclass
+class MissingFact:
+    fact: str
+    """Short machine-stable name, e.g. "country", "service_start_date" --
+    matches the strings T-4.3's TemporalWorking.missing_facts already
+    uses, so the two layers speak the same vocabulary."""
+    why: str
+    """Human-readable explanation of why this fact is determinative --
+    part of the contract, not decoration: Finding 5 requires the missing
+    fact to come with its reason, not just its name."""
+
+
+@dataclass
+class ConditionalAnswer:
+    condition: str
+    """e.g. "if country = India" -- one branch per plausible value of
+    the missing fact."""
+    answer: "GeneratedAnswer"  # generation/schema.py -- string-annotated to avoid a circular import
+
+
+@dataclass
+class ClarificationResponse:
+    """The whole point of Finding 5: this is returned as ONE terminal
+    response in a single turn -- never a follow-up question that waits
+    for a reply. The caller re-asks a self-contained question if they
+    want a single answer; nothing here is remembered between turns."""
+
+    status: str = "NEEDS_CLARIFICATION"
+    missing_facts: list[MissingFact] = field(default_factory=list)
+    conditional_answers: list[ConditionalAnswer] = field(default_factory=list)
