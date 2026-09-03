@@ -47,7 +47,10 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from ingestion.logging_setup import ErrorCollector, get_logger
 from ingestion.schema import Chunk, ChunkMetadata
+
+_log = get_logger("ingestion.parser")
 
 _FENCE_RE = re.compile(r"^[ \t]*---[ \t]*$", re.MULTILINE)
 _META_LINE_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*):[ \t]*(.*)$")
@@ -152,6 +155,10 @@ def parse_file(path: Path, *, repo_root: Path | None = None) -> list[Chunk]:
         seg = segments[i]
         if _looks_like_metadata_block(seg.text):
             if i + 1 >= len(segments):
+                _log.error(
+                    "%s:%d: metadata block has no following body",
+                    source_file, seg.start_line,
+                )
                 raise CorpusParseError(
                     f"{source_file}:{seg.start_line}: metadata block for a "
                     "clause is the last segment in the file -- it has no body"
@@ -163,6 +170,11 @@ def parse_file(path: Path, *, repo_root: Path | None = None) -> list[Chunk]:
 
             body = _HTML_COMMENT_RE.sub("", body_seg.text).strip()
             if not body:
+                _log.error(
+                    "%s:%d: clause %r has an empty body after stripping "
+                    "HTML comments",
+                    source_file, body_seg.start_line, metadata.clause_id,
+                )
                 raise CorpusParseError(
                     f"{source_file}:{body_seg.start_line}: clause "
                     f"{metadata.clause_id!r} has an empty body after "
@@ -188,9 +200,40 @@ def parse_file(path: Path, *, repo_root: Path | None = None) -> list[Chunk]:
 def parse_corpus(corpus_dir: Path, *, repo_root: Path | None = None) -> list[Chunk]:
     """Parse every .md file under corpus_dir, in sorted path order (stable
     across OSes/filesystems, which matters for order_in_file/lineage
-    debugging reproducibility)."""
+    debugging reproducibility). Strict: the first file that fails to parse
+    raises immediately. For a mode that keeps going past a bad file and
+    reports everything that failed, use parse_corpus_collecting()."""
     repo_root = repo_root or corpus_dir.parent
     chunks: list[Chunk] = []
     for md_path in sorted(corpus_dir.rglob("*.md")):
+        _log.debug("parsing %s", md_path)
         chunks.extend(parse_file(md_path, repo_root=repo_root))
+    _log.info("parsed %d chunks from %s", len(chunks), corpus_dir)
     return chunks
+
+
+def parse_corpus_collecting(
+    corpus_dir: Path, *, repo_root: Path | None = None
+) -> tuple[list[Chunk], ErrorCollector]:
+    """Same as parse_corpus(), but a file that fails to parse (structural
+    error or schema validation error) is logged and recorded rather than
+    aborting the whole run -- so one malformed file doesn't hide problems in
+    every other file. Returns (chunks parsed successfully, the collector).
+    Callers that want strict all-or-nothing behaviour should use
+    parse_corpus() instead and let the exception propagate; this function is
+    for batch/CI contexts where a full error report is more useful than a
+    single stack trace from whichever file happened to be sorted first."""
+    repo_root = repo_root or corpus_dir.parent
+    collector = ErrorCollector(_log)
+    chunks: list[Chunk] = []
+    for md_path in sorted(corpus_dir.rglob("*.md")):
+        rel = str(md_path.relative_to(repo_root)) if repo_root else str(md_path)
+        with collector.item(rel):
+            chunks.extend(parse_file(md_path, repo_root=repo_root))
+    _log.info(
+        "parsed %d chunks from %s (%d file(s) failed)",
+        len(chunks),
+        corpus_dir,
+        len(collector.errors),
+    )
+    return chunks, collector
