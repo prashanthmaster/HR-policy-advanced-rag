@@ -36,6 +36,7 @@ class IndexableUnit:
     source_file: str
     country: str
     doc_type: str
+    jurisdiction_scope: str | None
     normative: bool
     temporal_applicability: str | None
     effective_date: dt.date | None
@@ -54,6 +55,7 @@ def _unit_from_metadata(piece_id: str, clause: Chunk, text: str) -> IndexableUni
         source_file=clause.source_file,
         country=m.country,
         doc_type=m.doc_type.value,
+        jurisdiction_scope=m.jurisdiction_scope,
         normative=m.normative,
         temporal_applicability=m.temporal_applicability.value if m.temporal_applicability else None,
         effective_date=m.effective_date,

@@ -74,6 +74,7 @@ class VectorIndex:
                     "clause_id": u.clause_id,
                     "country": u.country,
                     "doc_type": u.doc_type,
+                    "jurisdiction_scope": u.jurisdiction_scope,
                     "normative": u.normative,
                     "temporal_applicability": u.temporal_applicability,
                     "effective_date": u.effective_date.isoformat() if u.effective_date else None,
@@ -86,6 +87,19 @@ class VectorIndex:
         self._client.upsert(collection_name=_COLLECTION, points=points)
         self._built = True
         _log.info("built vector index over %d units", len(units))
+
+    def open_existing(self) -> None:
+        """Mark an on-disk collection built by a previous run() as ready
+        to search, without re-embedding or re-upserting anything. Use
+        this (not build()) when reopening build/vector_index -- build()
+        deletes and recreates the collection, which would discard the
+        real, already-paid-for embeddings."""
+        if not self._client.collection_exists(_COLLECTION):
+            raise RuntimeError(
+                f"VectorIndex.open_existing: collection {_COLLECTION!r} does not exist at this path -- "
+                "run scripts/build_vector_index.py --live first."
+            )
+        self._built = True
 
     def search(self, query: str, top_k: int = 10) -> list[dict]:
         if not self._built:

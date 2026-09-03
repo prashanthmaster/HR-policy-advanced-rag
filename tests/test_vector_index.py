@@ -63,3 +63,26 @@ def test_build_covers_all_units():
     all_hits = index.search(units[0].text, top_k=len(units))
     hit_clause_ids = {r["clause_id"] for r in all_hits}
     assert "MER-AE-HOUSING-TABLE" in hit_clause_ids
+
+
+def test_open_existing_reopens_a_persisted_collection_without_rebuilding(tmp_path):
+    chunks = parse_corpus(CORPUS_DIR, repo_root=REPO_ROOT)
+    units = build_indexable_units(chunks)[:3]
+    path = tmp_path / "idx"
+
+    builder = VectorIndex(MockEmbedder(dimension=8), path=path)
+    builder.build(units)
+    builder._client.close()  # local on-disk Qdrant single-locks the storage folder;
+    # release it first, exactly as the real workflow does across two separate
+    # process invocations (build_vector_index.py, then run_retrieval_harness.py).
+
+    reopened = VectorIndex(MockEmbedder(dimension=8), path=path)
+    reopened.open_existing()
+    results = reopened.search(units[0].text, top_k=1)
+    assert results and results[0]["clause_id"] == units[0].clause_id
+
+
+def test_open_existing_without_a_prior_build_raises():
+    index = VectorIndex(MockEmbedder(dimension=8))
+    with pytest.raises(RuntimeError):
+        index.open_existing()

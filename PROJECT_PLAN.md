@@ -32,7 +32,7 @@ This is the tracking document of record. The live task board mirrors it; where t
 |---|---|---|---|---|
 | **M0** | Design locked, corpus grounded | Corpus decision closed; Tier-1 real statutory corpus committed; failure register + probe set + corpus spec committed | D1 | `DONE` |
 | **M1** | Corpus complete | Every requirement R-01→R-25 has a corpus artifact; every probe has something to bite on; defect manifest exists | D1–D2 | `DONE` |
-| **M2** | Indexed | Corpus fully indexed under the extended schema; proviso-boundary and metadata tests pass | D2–D3 | `WIP` |
+| **M2** | Indexed | Corpus fully indexed under the extended schema; proviso-boundary and metadata tests pass | D2–D3 | `DONE` |
 | **M3** | Retrieval measured | Retrieval-only Context Precision + Recall **measured** against the probe set and recorded in the ledger | D3 | `TODO` |
 | **M4** | End-to-end answers | Pipeline answers the probe set with citations; clarification contract returns structured output on `MUST_CLARIFY` items | D4 | `TODO` |
 | **M5** | Baseline scored | All 5 metrics + the four-class confusion matrix run on the golden set; **first real numbers** recorded | D4–D5 | `TODO` |
@@ -142,20 +142,63 @@ on unverified capability claims:
 
 ---
 
-### Phase 3 — Retrieval core · `TODO` · D3
+### Phase 3 — Retrieval core · `WIP` · D3
 
 | ID | Task | Depends on | Status |
 |---|---|---|---|
-| T-3.1 | Reciprocal Rank Fusion over BM25 + vector | M2 | `TODO` |
-| T-3.2 | Hard metadata filters: country, `jurisdiction_scope` (FM-B6 — soft embedding preference is not sufficient) | T-3.1 | `TODO` |
-| T-3.3 | As-of-date filter on `effective_date`, overridable, default today (Finding 2) | T-3.2 | `TODO` |
-| T-3.4 | Lineage dedup + top-k diversity before rerank (FM-D6) | T-3.3 | `TODO` |
-| T-3.5 | FlashRank rerank; record the cutoff and the reason for it | T-3.4 | `TODO` |
-| T-3.6 | Retrieval-only harness: Context Precision + Recall over the probe set | T-3.5 | `TODO` |
+| T-3.1 | Reciprocal Rank Fusion over BM25 + vector | M2 | `DONE` |
+| T-3.2 | Hard metadata filters: country, `jurisdiction_scope` (FM-B6 — soft embedding preference is not sufficient) | T-3.1 | `DONE` |
+| T-3.3 | As-of-date filter on `effective_date`, overridable, default today (Finding 2) | T-3.2 | `DONE` |
+| T-3.4 | Lineage dedup + top-k diversity before rerank (FM-D6) | T-3.3 | `DONE` |
+| T-3.5 | FlashRank rerank; record the cutoff and the reason for it | T-3.4 | `WIP` — code done, model not yet downloaded (network-blocked in sandbox) |
+| T-3.6 | Retrieval-only harness: Context Precision + Recall over the probe set | T-3.5 | `WIP` — harness built + unit-tested; not yet run against real embeddings |
 
 **Exit criterion (M3):** T-3.6 produces real numbers, recorded in the ledger. This is the first entry in §Results.
 
 **Why retrieval is measured before generation exists:** a generation bug and a retrieval bug produce the same symptom — a wrong answer. Measuring retrieval alone first means the later end-to-end numbers are attributable. This is also the honest answer to "how do you know the reranker earns its place?"
+
+**Status — Phase 3 WIP (3 Sep 2026):** T-3.1 through T-3.4 done and unit-tested — `retrieval/fusion.py`
+(RRF, k=60, the standard unmeasured default), `retrieval/filters.py` (hard country/`jurisdiction_scope`
+filters per FM-B6; `select_current_as_of()` resolving each `lineage_id` to the version in force on a given
+date, closing both directions of Finding 2; `dedup_by_lineage()` for FM-D6), and `retrieval/hybrid_search.py`
+(`HybridRetriever` composing all of the above into the one entry point Phase 4 and T-3.6 both call).
+`ingestion/index_units.py`'s `IndexableUnit` gained a `jurisdiction_scope` field it was missing (needed for
+T-3.2's DIFC-vs-mainland split; docstring already claimed it carried this field, code didn't). 103/103 tests
+green (33 new).
+
+**T-3.5 (rerank) — code done, model not downloaded yet.** `retrieval/reranker.py` has a `Reranker` Protocol,
+`FlashRankReranker` (real, `ms-marco-TinyBERT-L-2-v2`, lazy-imported), and `MockReranker` (deterministic
+lexical-overlap scorer, used by every test — same split as `ingestion/embedder.py`'s `Embedder`/`MockEmbedder`
+pattern). **Same network block as T-2.7's OpenAI calls, confirmed again**: FlashRank downloads its model
+weights from `huggingface.co` on first use, and that host is blocked by this sandbox's proxy in the device-
+bridge shell too (`ProxyError` / `403 Forbidden` on the `CONNECT`, same shape as the `api.openai.com` block).
+Handoff, same pattern as T-2.7: `scripts/prefetch_reranker_model.py`, run once by Prashanth from a plain
+terminal outside any sandbox, caches the weights; every later `FlashRankReranker()` call then works offline.
+
+**T-3.6 (retrieval harness) — built and unit-tested against the real probe set, not yet run for real
+numbers.** `eval/retrieval_harness.py` parses all 43 probe queries straight out of
+`eval/golden/adversarial_probe_set.md` (both its narrative-header and table-row formats) and scores each
+against its known-correct `clause_id` set from `eval/probe_fixture_map.json`, using plain set-overlap
+Context Precision/Recall (retrieval-only, deliberately simpler than Phase 5's RAGAS-judged versions over
+generated answers — there's no generated answer yet to judge). P-21/P-26/P-29/P-41 (empty expected set) and
+P-39 (`DELIBERATE_ABSENCE`) are excluded from scoring rather than silently scored as zero — recorded as
+`excluded_probe_ids`, not dropped. `scripts/run_retrieval_harness.py` is the real-run script (needs
+`OPENAI_API_KEY`, the persisted `build/vector_index`, and — optionally — the prefetched rerank model); it has
+not been run yet, so **no Context Precision/Recall number exists anywhere in this project as of 3 Sep 2026**.
+M3 stays open until it has.
+
+**Real finding, not worked around:** on-disk Qdrant single-locks its storage folder — two `QdrantClient`s
+can't hold `build/vector_index` open at once. `VectorIndex.open_existing()` was added (reopen a persisted
+collection without the destructive delete-and-recreate `build()` does) specifically so
+`run_retrieval_harness.py` can be run as its own process, after `build_vector_index.py`'s process has
+already exited — which is how the real workflow works anyway, but is now also asserted by a test rather than
+assumed.
+
+**Handoff to Prashanth (same shape as T-2.7):**
+1. `.venv/bin/python scripts/prefetch_reranker_model.py` — one-time FlashRank model download.
+2. `.venv/bin/python scripts/run_retrieval_harness.py` — the real T-3.6 measurement; writes
+   `build/retrieval_harness_result.json` and prints the summary. Copy the mean Context Precision/Recall
+   numbers into this file's Results ledger by hand once that's done — M3 closes then, not before.
 
 ---
 
@@ -323,6 +366,7 @@ Metrics awaiting first measurement: Context Precision · Context Recall · Faith
 
 | Date | Change |
 |---|---|
+| 2026-09-03 | Phase 3 opened. T-3.1–T-3.4 done and tested (RRF fusion, hard country/jurisdiction_scope filters, as-of-date lineage resolution, FM-D6 dedup). T-3.5/T-3.6 code-complete and unit-tested but not yet run for real: FlashRank's model download hit the same huggingface.co sandbox block that api.openai.com hit in Phase 2 — handed off to Prashanth (`scripts/prefetch_reranker_model.py` then `scripts/run_retrieval_harness.py`). M3 stays open until that real run produces a number. |
 | 2026-09-03 | Plan created. Phases 0–9, milestones M0–M9. |
 | 2026-09-03 | Build order inverted — probes before corpus. Phase 1 restructured to build from the requirements spec rather than writing policy prose first. |
 | 2026-09-03 | M0 closed. Phase 1 opened. V-1 closed: India gratuity ceiling confirmed `POINT_IN_TIME`; probe P-01 unblocked. |
