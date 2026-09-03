@@ -33,3 +33,20 @@ def test_unit_carries_filtering_metadata():
 
     illustration = next(u for u in units if u.clause_id == "MER-IN-GRATUITY-ILLUSTRATION")
     assert illustration.normative is False
+
+
+def test_unit_carries_citation_and_cohort_fields():
+    """Phase 4 gap: version/section/source_doc/source_act/source_url/cohort_rule
+    were sitting in ChunkMetadata's model_extra but never propagated onto
+    IndexableUnit -- the same class of gap T-3.2 caught for jurisdiction_scope.
+    Generation (T-4.4) needs doc/section/version/effective_date for citations;
+    the temporal reasoner (T-4.3) needs cohort_rule for the GRANDFATHERED class."""
+    chunks = parse_corpus(CORPUS_DIR, repo_root=REPO_ROOT)
+    units = build_indexable_units(chunks)
+
+    ceiling = next(u for u in units if u.clause_id == "IN-GRAT-S4-CEILING")
+    assert ceiling.section is not None
+    assert ceiling.source_act is not None
+
+    grandfathered = next(u for u in units if u.cohort_rule is not None)
+    assert "service_commenced_before" in grandfathered.cohort_rule

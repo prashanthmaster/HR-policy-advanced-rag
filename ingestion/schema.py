@@ -173,6 +173,14 @@ class ChunkMetadata(BaseModel):
     source_act: Optional[str] = None
     section: Optional[str] = None
     source_url: Optional[str] = None
+    cohort_rule: Optional[str] = Field(
+        default=None,
+        description="Population-scoped test for GRANDFATHERED clauses, e.g. "
+        "'service_commenced_before(2025-01-01)' (Finding 1/P-06). Was living "
+        "in model_extra via extra=allow until Phase 4 needed it as a typed, "
+        "propagated field for the temporal reasoner -- same class of gap as "
+        "jurisdiction_scope was before T-3.2.",
+    )
 
     # --- retrieval mechanics ----------------------------------------------
     chunk_stream: ChunkStream = ChunkStream.PROSE

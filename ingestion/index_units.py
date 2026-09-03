@@ -44,6 +44,17 @@ class IndexableUnit:
     lineage_id: str | None
     supersedes: str | None
     superseded_by: str | None
+    # Added for Phase 4 (T-4.4 citations, T-4.3 temporal reasoning) -- these
+    # were sitting in ChunkMetadata already but not propagated onto the
+    # retrieval-time unit, same class of gap T-3.2 caught for
+    # jurisdiction_scope. Citations need doc/section/version/effective_date;
+    # the GRANDFATHERED temporal-applicability class needs cohort_rule.
+    version: str | None = None
+    section: str | None = None
+    source_doc: str | None = None
+    source_act: str | None = None
+    source_url: str | None = None
+    cohort_rule: str | None = None
 
 
 def _unit_from_metadata(piece_id: str, clause: Chunk, text: str) -> IndexableUnit:
@@ -63,6 +74,12 @@ def _unit_from_metadata(piece_id: str, clause: Chunk, text: str) -> IndexableUni
         lineage_id=m.lineage_id,
         supersedes=m.supersedes,
         superseded_by=m.superseded_by,
+        version=m.version,
+        section=m.section,
+        source_doc=m.source_doc,
+        source_act=m.source_act,
+        source_url=m.source_url,
+        cohort_rule=m.cohort_rule,
     )
 
 

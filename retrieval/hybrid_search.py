@@ -53,6 +53,17 @@ class HybridRetriever:
         self._units_by_piece_id: dict[str, IndexableUnit] = {u.piece_id: u for u in units}
         self._text_by_piece_id: dict[str, str] = {u.piece_id: u.text for u in units}
 
+    def lineage_versions(self, lineage_id: str) -> list[IndexableUnit]:
+        """T-4.2: every indexed unit sharing a lineage_id, bypassing
+        select_current_as_of's single-version-per-lineage collapse. The
+        corrective re-query path uses this to pull in a SEGMENTED_ACCRUAL
+        clause's other segment(s) once grading (T-4.1) has flagged that
+        the as-of-resolved retrieval only surfaced one of them -- it is
+        not a fresh search, just a direct lookup against what is already
+        indexed, since the missing piece was never absent from the
+        index, only filtered out of THIS query's result by design."""
+        return [u for u in self._units_by_piece_id.values() if u.lineage_id == lineage_id]
+
     def retrieve(
         self,
         query: str,
