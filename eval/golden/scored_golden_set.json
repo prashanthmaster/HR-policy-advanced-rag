@@ -1,0 +1,440 @@
+{
+  "_comment": "Phase 5 scored golden set (T-5.1/T-5.2). Selected from the 43-item adversarial_probe_set.md. Every golden_answer here is derived from real corpus clause text (quoted/paraphrased, not invented) plus the two closed verification items (V-1 India gratuity ceiling, V-3 DIFC divergence) recorded in PROJECT_PLAN.md's Verification register. Items still needing a live pipeline run to compare against (RAGAS + Citation Accuracy, T-5.3/T-5.4) are unscored until that by-hand run happens on Prashanth's own machine, per the standing OpenAI-sandbox-block pattern from Phases 2-3.",
+  "selection_date": "2026-09-03",
+  "target_mix": {
+    "MUST_ANSWER": "~45%",
+    "MUST_CLARIFY": "~25%",
+    "MUST_FLAG": "~20%",
+    "MUST_REFUSE": "~10%"
+  },
+  "actual_mix": {
+    "MUST_ANSWER": "11/24 (46%)",
+    "MUST_CLARIFY": "6/24 (25%)",
+    "MUST_FLAG": "5/24 (21%)",
+    "MUST_REFUSE": "2/24 (8%)"
+  },
+  "t1_8_note": "V-2 (UAE 1980→2021 transition), V-4 (Indian state variation), V-5 (Labour Codes commencement) remain OPEN but do not block any item in this set — see PROJECT_PLAN.md Phase 5 detail, checked 2026-09-03.",
+  "known_findings_applied": [
+    "P-01's stale [VERIFY] tag removed from adversarial_probe_set.md (V-1 closed 2026-09-03).",
+    "P-33 excluded from this golden set for now: its probe wording (EOSB/severance) does not match its fixture's real synonym set (long service award/loyalty payment/continuity recognition/service milestone grant) — corrected in adversarial_probe_set.md, but held out of the scored set this round pending Prashanth's sign-off on the corrected wording."
+  ],
+  "items": [
+    {
+      "probe_id": "P-01",
+      "family": "Marquee",
+      "country": "India",
+      "query": "I joined 1 Jan 2014 and I'm resigning 30 Sep 2026. Basic + DA is ₹3,00,000/month. India. What gratuity do I get?",
+      "expected_clause_ids": [
+        "IN-GRAT-S4-ELIG",
+        "IN-GRAT-S4-FORMULA",
+        "IN-GRAT-S4-CEILING"
+      ],
+      "golden_answer": "temporal_applicability = POINT_IN_TIME for the ceiling: do NOT split service at the 2018-03-29 amendment. Completed service 2014-01-01→2026-09-30 = 12y8m → 13 completed years (the >6-month remainder rounds up, per MER-IN-GRATUITY-ENTITLEMENT). Uncapped: (300000÷26)×15×13 = ₹22,50,000. The ceiling in force on the payout date (2026-09-30, i.e. post-2018-03-29) is ₹20,00,000 (Payment of Gratuity (Amendment) Act 2018, notification S.O. 1420(E)) — so the final answer is ₹20,00,000, capped. Must cite the formula clause and the ceiling clause separately and state which ceiling applied and why.",
+      "must_not_include": [
+        "blending a ₹10,00,000 pre-2018 ceiling with the ₹20,00,000 post-2018 ceiling",
+        "splitting service at 2018-03-29 and computing two partial amounts"
+      ],
+      "verification_status": "V-1 CLOSED 2026-09-03 — confirmed via 3 concurring secondary sources; primary gazette S.O. 1420(E) not read (caveat carried forward)",
+      "rationale": "The marquee probe. Contrasts with P-02 (same surface shape, opposite class) to prove reasoning rather than pattern-matching.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-02",
+      "family": "Marquee",
+      "country": "India",
+      "query": "Our leave policy changed from 18 to 24 days a year partway through my service. I've been here the whole time. How many days did I accrue?",
+      "expected_clause_ids": [
+        "MER-IN-LEAVE-ANNUAL-V1",
+        "MER-IN-LEAVE-ANNUAL-V2"
+      ],
+      "golden_answer": "temporal_applicability = SEGMENTED_ACCRUAL (opposite of P-01): split service at the amendment boundary, 2024-07-01. Service before that date accrues privilege leave at 18 days/completed year (V1, MER-IN-LEAVE-ANNUAL-V1); service from 2024-07-01 accrues at 24 days/completed year (V2, which explicitly preserves the pre-amendment rate for pre-boundary service). Sum the two segments — never apply 24/yr retroactively to the pre-2024-07-01 portion.",
+      "must_not_include": [
+        "applying 24 days/year to the whole tenure",
+        "applying 18 days/year to the whole tenure",
+        "treating this like P-01 and refusing to split"
+      ],
+      "verification_status": "n/a — Tier-2 synthetic policy, not statutory",
+      "rationale": "As posed the query gives no join date, so a numeric total cannot be produced — the golden item scores the METHOD (correct segmentation logic and boundary date), not a specific day count. Worth noting in the judge rubric: a system that asks for the join date to produce a number is not wrong, only stricter than the probe requires.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-03",
+      "family": "Marquee",
+      "country": "UAE",
+      "query": "Dubai. 7 years service. How is my end of service calculated?",
+      "expected_clause_ids": [
+        "UAE-DL33-ART51-GRATUITY-FORMULA",
+        "UAE-DL33-ART51-CEILING"
+      ],
+      "golden_answer": "Splits by TENURE BAND (Federal Decree-Law 33/2021, Art. 51(2)), not by amendment date: 21 days' basic wage for each of the first 5 years, 30 days' basic wage for each year beyond — for 7 years that is (21×5) + (30×2) = 105 + 60 = 165 days' basic wage total. Subject to the Art. 51(6) cap of 2 years' wage (will not bind here at typical salary levels, but the cap must be named). Must state explicitly that the reason for splitting is tenure banding, not a policy/law version change.",
+      "must_not_include": [
+        "treating the 21/30-day split as an amendment-boundary SEGMENTED_ACCRUAL case"
+      ],
+      "verification_status": "Tier-1 real UAE statute (Federal Decree-Law 33/2021), source_url in corpus metadata",
+      "rationale": "Catches over-correction: a system that learns 'splitting = amendment handling' from P-01/P-02 fails this.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-3a",
+      "family": "Marquee",
+      "country": "UAE-DIFC",
+      "query": "I've been with the DIFC entity since 2017 and I'm leaving this year. What's my end of service?",
+      "expected_clause_ids": [
+        "DIFC-L2-2019-DEWS",
+        "DIFC-EOSB-LEGACY-GRATUITY",
+        "MER-AE-DIFC-EOSB"
+      ],
+      "golden_answer": "Genuine real-statute SEGMENTED_ACCRUAL straddle. DIFC replaced end-of-service gratuity with the DEWS defined-contribution scheme on 2020-02-01. Split at that date: service 2017→2020-02-01 (~3y1m) is payable as legacy gratuity on the old 21/30-day basis; service 2020-02-01→today (~6y8m) accrued as employer DEWS contributions (5.83% of basic rising to 8.33% after 5 years). Both components must be stated separately and NOT blended into one formula.",
+      "must_not_include": [
+        "computing a single 21/30-day figure over the whole 2017-today span",
+        "computing a single DEWS-contribution figure over the whole span"
+      ],
+      "verification_status": "V-3 CLOSED 2026-09-03 — two concurring sources; article numbers beyond Art. 62 not verified and deliberately omitted",
+      "rationale": "The best real straddle case in the corpus — sits directly against P-01 (opposite class, opposite real statute) as the strongest single pair in the project.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-3b",
+      "family": "Marquee",
+      "country": "UAE (entity-dependent)",
+      "query": "How much annual leave do I get? I'm in Dubai.",
+      "expected_clause_ids": [
+        "DIFC-L2-2019-LEAVE",
+        "UAE-DL33-ART29-LEAVE",
+        "MER-AE-DIFC-LEAVE"
+      ],
+      "golden_answer": "Unit trap inside one city. DIFC entity: 20 WORKING days. UAE mainland entity: 30 CALENDAR days. The two are not directly comparable by the raw number (working vs. calendar days), and \"in Dubai\" is a location, not the employing entity — per MER-AE-DIFC-ANNEXE-SCOPE, the entity governs, not the office building. Correct answer states both figures with their units and flags that entity determines which applies (ideally asks which entity, since the query doesn't say).",
+      "must_not_include": [
+        "reporting a bare number with no unit",
+        "comparing 20 vs 30 by magnitude and calling 30 the larger entitlement"
+      ],
+      "verification_status": "V-3 CLOSED 2026-09-03 (same verification as P-3a)",
+      "rationale": "Same words, same city, two different real regimes — direct test of jurisdiction_scope filtering.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-40",
+      "family": "E — Answer integrity",
+      "country": "UAE",
+      "query": "What is the notice period during probation in the UAE?",
+      "expected_clause_ids": [
+        "UAE-DL33-ART9-PROBATION"
+      ],
+      "golden_answer": "14 days' written notice (Federal Decree-Law 33/2021, Art. 9(1)), within a probation period not exceeding 6 months.",
+      "must_not_include": [
+        "refusing or asking for clarification — this is unambiguous, single-clause, and present"
+      ],
+      "verification_status": "Tier-1 real UAE statute",
+      "rationale": "The anti-over-refusal canary (Finding 3). This item exists specifically to make sure the confusion matrix and threshold tuning cannot ratchet toward silence — refusing or clarifying here is scored as an over-refusal defect, not a safe default.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-15",
+      "family": "B — Jurisdiction & conflict",
+      "country": "India",
+      "query": "Company policy gives 45 days notice but I heard the law says 30. Which one do I get?",
+      "expected_clause_ids": [
+        "MER-IN-NOTICE-SENIOR",
+        "IN-STANDING-NOTICE"
+      ],
+      "golden_answer": "Policy (45 days, MER-IN-NOTICE-SENIOR, Grade M1+) exceeds the statutory floor (one month/30 days, Model Standing Order 13) — policy governs. Answer: 45 days, and note this is above the statutory minimum.",
+      "must_not_include": [],
+      "verification_status": "Policy clause Tier-2; statutory floor Tier-1 (Standing Orders Act 1946)",
+      "rationale": "Forms an asymmetric pair with P-16 — must NOT resolve both by a single uniform rule.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-16",
+      "family": "B — Jurisdiction & conflict",
+      "country": "India",
+      "query": "Policy says 15 days notice for my grade. Is that what I get?",
+      "expected_clause_ids": [
+        "MER-IN-NOTICE-JUNIOR",
+        "IN-STANDING-NOTICE"
+      ],
+      "golden_answer": "Policy (15 days, MER-IN-NOTICE-JUNIOR, Grade A1-A3) UNDERCUTS the statutory floor (one month/30 days, Model Standing Order 13) — statute governs. Answer: 30 days, not 15; the policy clause is unenforceable to the extent it falls short of the floor (deliberate defect D-1).",
+      "must_not_include": [
+        "answering 15 days on the grounds that the specific policy document wins"
+      ],
+      "verification_status": "Deliberate defect (D-1) — the 15-day figure is intentionally non-compliant; statutory floor is Tier-1",
+      "rationale": "Asymmetric counterpart to P-15. A system applying 'specific document always wins' fails exactly one of this pair.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-30",
+      "family": "D — Retrieval mechanics",
+      "country": "UAE",
+      "query": "Grade M3, 6 years, Dubai — what's my housing allowance?",
+      "expected_clause_ids": [
+        "MER-AE-HOUSING-TABLE"
+      ],
+      "golden_answer": "AED 14,000/month (Grade M3, over 5 years of service band, Schedule 2). Exact cell of a two-dimensional slab table.",
+      "must_not_include": [
+        "any other cell of the table (e.g. AED 12,500 for the 3-5yr M3 band, or another grade's figure)"
+      ],
+      "verification_status": "Tier-2 synthetic policy",
+      "rationale": "Direct justification for hybrid retrieval — near-identical rows differ only by AED 500-1500; pure semantic search does not reliably land the right row+column.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-31",
+      "family": "D — Retrieval mechanics",
+      "country": "India",
+      "query": "Do I get gratuity if I was terminated for misconduct?",
+      "expected_clause_ids": [
+        "MER-IN-GRATUITY-FORFEITURE",
+        "IN-GRAT-S4-6-FORFEITURE"
+      ],
+      "golden_answer": "Not a blanket yes/no. Two provisos, not the general rule alone: (1) if terminated for an act/wilful omission/negligence causing Company property damage or loss, gratuity is forfeited only to the extent of that damage/loss, not further; (2) if terminated for riotous/disorderly/violent conduct or an offence involving moral turpitude committed in the course of employment, gratuity MAY be forfeited wholly or in part at the Company's discretion. Either way, forfeiture requires that the termination was actually effected on that ground, and that the employee was given an opportunity to be heard.",
+      "must_not_include": [
+        "stating the general 5-year entitlement rule and stopping there (omitting both provisos)",
+        "asserting full forfeiture is automatic on any misconduct termination"
+      ],
+      "verification_status": "Policy proviso Tier-2; statutory proviso is real Payment of Gratuity Act 1972 s.4(6) (Tier-1)",
+      "rationale": "The chunker deliberately separates the general rule from its provisos by blank lines — stating only the rule is grounded-but-wrong, the exact failure Faithfulness alone can't catch.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-34",
+      "family": "D — Retrieval mechanics",
+      "country": "India",
+      "query": "How much gratuity for someone earning ₹50,000 a month?",
+      "expected_clause_ids": [
+        "MER-IN-GRATUITY-ENTITLEMENT"
+      ],
+      "golden_answer": "Must cite the NORMATIVE entitlement clause (MER-IN-GRATUITY-ENTITLEMENT: 5-year minimum service, 15 days' wages/completed year, subject to the statutory ceiling in force at payout, death/disablement waives the 5-year test) — never the worked-example illustration (MER-IN-GRATUITY-ILLUSTRATION, normative: false), even though the illustration lexically matches ₹50,000 far better and even omits the ceiling entirely. Since tenure is not given, state the formula and required inputs rather than fabricating a total.",
+      "must_not_include": [
+        "citing MER-IN-GRATUITY-ILLUSTRATION as authority",
+        "reproducing the illustration's ₹3,17,308 figure as if it answers this query"
+      ],
+      "verification_status": "Deliberate defect (D-2) — illustration intentionally the more lexically retrievable chunk",
+      "rationale": "Direct test of the normative/non-normative citation gate; a Faithfulness-only check would pass a citation of the illustration since its text is 'grounded'.",
+      "class": "MUST_ANSWER"
+    },
+    {
+      "probe_id": "P-06",
+      "family": "A — Temporal & versioning",
+      "country": "UAE",
+      "query": "My colleague in Dubai gets an end-of-service supplement on top of gratuity. HR says I don't get it. Who's right?",
+      "expected_clause_ids": [
+        "MER-AE-EOS-TOPUP-V1",
+        "MER-AE-EOS-TOPUP-V2"
+      ],
+      "golden_answer": "GRANDFATHERED: both versions are simultaneously current for different populations. Employees whose continuous service commenced before 2025-01-01 keep the Company supplement (7 days' basic wage/completed year, 3+ years' service); employees commencing on/after 2025-01-01 get statutory gratuity only, no supplement. missing_facts: [date_of_joining] (determinative: which side of the 2025-01-01 cohort boundary). Return one conditional_answer per branch, not a follow-up question.",
+      "must_not_include": [
+        "picking a side without the joining date",
+        "treating this as a contradiction to resolve by picking whichever colleague is 'more right'"
+      ],
+      "verification_status": "Tier-2 synthetic policy",
+      "rationale": "The stateless-clarification exemplar (Finding 5) — golden answer is scored as the exact missing-fact set plus both conditional branches.",
+      "class": "MUST_CLARIFY"
+    },
+    {
+      "probe_id": "P-13",
+      "family": "B — Jurisdiction & conflict",
+      "country": null,
+      "query": "How many days notice do I need to give?",
+      "expected_clause_ids": [
+        "MER-IN-NOTICE-SENIOR",
+        "MER-AE-NOTICE-V2",
+        "MER-DE-NOTICE-V2"
+      ],
+      "golden_answer": "Three materially different regimes exist and no country is given. missing_facts: [country, grade (for India)]. conditional_answers — India: 45 days if Grade M1+ (MER-IN-NOTICE-SENIOR), else the statutory floor of 30 days/one month applies (Model Standing Order 13) even though the written junior-grade clause says 15; UAE mainland: 30 days (MER-AE-NOTICE-V2); Germany: 4 weeks to the 15th or end of month for most grades, 3 months to end of month for Grade M1+ (MER-DE-NOTICE-V2, §622 BGB, current since 2025-03-01).",
+      "must_not_include": [
+        "silently answering for one country only"
+      ],
+      "verification_status": "Tier-2 policy figures; Germany's §622 BGB reference is real statute, article text itself not independently re-verified this session",
+      "rationale": "The base case for country ambiguity (Finding 5's country-ambiguity trigger).",
+      "class": "MUST_CLARIFY"
+    },
+    {
+      "probe_id": "P-41",
+      "family": "E — Answer integrity",
+      "country": null,
+      "query": "How much notice do I owe?",
+      "expected_clause_ids": [],
+      "golden_answer": "Same shape as P-13 but the trap is different: the corpus is India-heavy, so a system relying on retrieval-frequency or embedding density can silently default to the India answer. Correct behaviour: missing_facts: [country]; must not default to India because the corpus leans that way. Offer the same three-way conditional split as P-13.",
+      "must_not_include": [
+        "defaulting to India without asking, even implicitly by only retrieving Indian clauses and answering from them"
+      ],
+      "verification_status": "n/a — tests retrieval bias behaviour, not a specific clause",
+      "rationale": "Named explicitly in the design as the corpus-imbalance bias probe; a MUST_ANSWER-style default-to-India response here is the specific failure this item exists to catch.",
+      "class": "MUST_CLARIFY"
+    },
+    {
+      "probe_id": "P-10",
+      "family": "A — Temporal & versioning",
+      "country": "UAE",
+      "query": "What does clause 7.2 say?",
+      "expected_clause_ids": [
+        "MER-AE-S72-V1-REMOTEWORK",
+        "MER-AE-S72-V2-BUSINESSTRAVEL",
+        "MER-AE-S75-REMOTEWORK"
+      ],
+      "golden_answer": "Clause number 7.2 is reused across manual versions with unrelated content: in the manual valid 2023-01-01→2025-05-31, §7.2 is Remote Working (max 2 remote days/week); from 2025-06-01, §7.2 is Business Travel (expense reimbursement per Schedule 3) and Remote Working was renumbered to §7.5 with unchanged substance. missing_facts: [as_of_date or manual version]. Must never resolve by clause number alone; either ask which version or state both explicitly labelled by version/effective date.",
+      "must_not_include": [
+        "answering with only one version's content without labelling it",
+        "merging both meanings into one answer"
+      ],
+      "verification_status": "Tier-2 synthetic policy",
+      "rationale": "Tests version-scoped clause-number resolution, a different mechanic from country/date ambiguity.",
+      "class": "MUST_CLARIFY"
+    },
+    {
+      "probe_id": "P-19",
+      "family": "B — Jurisdiction & conflict",
+      "country": null,
+      "query": "How long is probation?",
+      "expected_clause_ids": [
+        "MER-IN-PROBATION",
+        "MER-AE-PROBATION-V2",
+        "MER-DE-PROBATION"
+      ],
+      "golden_answer": "Three different durations/constructs. missing_facts: [country]. conditional_answers — India: 6 months, extendable by up to 3 more months on unsatisfactory performance (MER-IN-PROBATION); UAE mainland: 3 months, terminable on 14 days' notice during probation (MER-AE-PROBATION-V2, current since 2024-04-01); Germany: 6 months (Probezeit), terminable on 2 weeks' notice during probation (MER-DE-PROBATION).",
+      "must_not_include": [
+        "answering with a single duration"
+      ],
+      "verification_status": "Tier-2 policy figures (Germany's Probezeit convention is a real BGB §622(3) concept, article text not independently re-verified this session)",
+      "rationale": "Same word ('probation'), three different legal constructs and durations — companion to P-13/P-41 on a different topic.",
+      "class": "MUST_CLARIFY"
+    },
+    {
+      "probe_id": "P-21",
+      "family": "C — Query pathology",
+      "country": null,
+      "query": "What's my gratuity?",
+      "expected_clause_ids": [],
+      "golden_answer": "Three determinative facts are all missing: country (different statutes/formulas entirely — India 15 days'/yr with a ceiling, UAE mainland 21/30-day tenure bands with a 2-year-wage cap, DIFC DEWS contributions), tenure/years of service (drives the formula and any tenure banding), and wage/wage base (basic+DA for India vs. basic wage for UAE, and the figure itself). Name all three explicitly rather than presenting a formula and inviting the user to fill it in.",
+      "must_not_include": [
+        "answering with a generic formula and no explicit list of missing inputs",
+        "guessing a country from account/session context not present in the query"
+      ],
+      "verification_status": "n/a — tests exhaustive missing-fact enumeration",
+      "rationale": "The purest MUST_CLARIFY item — nothing is given at all; scores whether the system names every determinative gap, not just the most obvious one.",
+      "class": "MUST_CLARIFY"
+    },
+    {
+      "probe_id": "P-04",
+      "family": "A — Temporal & versioning",
+      "country": "India",
+      "query": "Policy doc says effective 1 Jan 2026 but it was only uploaded last week. I was terminated in March. Which applies to me?",
+      "expected_clause_ids": [
+        "MER-IN-SHIFT-ALLOWANCE",
+        "MER-IN-SHIFT-ALLOWANCE-V1"
+      ],
+      "golden_answer": "Govern from effective_date (2026-01-01), never revision/upload date (2026-06-01). A March 2026 case falls after the effective date and before publication — the revised ₹750/shift rate (V2) already governs March, even though the document announcing it was not yet published. Flag this explicitly as a retroactive-effective-date case and note arrears are payable for shifts worked between the effective date and publication, per the clause's own arrears instruction.",
+      "must_not_include": [
+        "applying the old ₹500/shift rate (V1) to March because the new document 'wasn't out yet'"
+      ],
+      "verification_status": "Tier-2 synthetic policy",
+      "rationale": "Tests the three-clocks discipline (Finding 2) on the retroactive-amendment side, opposite direction from P-05's future-dated case.",
+      "class": "MUST_FLAG"
+    },
+    {
+      "probe_id": "P-05",
+      "family": "A — Temporal & versioning",
+      "country": "UAE",
+      "query": "What's my notice period?",
+      "expected_clause_ids": [
+        "MER-AE-NOTICE-V2",
+        "MER-AE-NOTICE-V3-PENDING"
+      ],
+      "golden_answer": "Answer from the CURRENTLY in-force clause (MER-AE-NOTICE-V2: 30 days, all grades) — not from the newest document in the lineage, which is V3 and is NOT YET in force (effective 2027-01-01, published 2026-08-15, raises Grade M1+ to 60 days). Flag the pending change and its effective date.",
+      "must_not_include": [
+        "answering 60 days for a Grade M1+ employee today, before 2027-01-01"
+      ],
+      "verification_status": "Tier-2 synthetic policy",
+      "rationale": "Future-dated-amendment case — one of the original Session-2 zero-recall probes (P-05); worth re-checking end-to-end once the harness runs for real.",
+      "class": "MUST_FLAG"
+    },
+    {
+      "probe_id": "P-17",
+      "family": "B — Jurisdiction & conflict",
+      "country": "UAE-DIFC",
+      "query": "I'm in the DIFC office. Same rules as the rest of UAE?",
+      "expected_clause_ids": [
+        "DIFC-L2-2019-NOTICE",
+        "MER-AE-DIFC-NOTICE",
+        "MER-AE-DIFC-ANNEXE-SCOPE",
+        "MER-AE-NOTICE-V2"
+      ],
+      "golden_answer": "No — DIFC is a separate regime (DIFC Law No. 2 of 2019), not mainland Decree-Law 33/2021. Notice: DIFC scales with tenure — 7 days (<3mo), 30 days (3mo-5yr), 90 days (5yr+) — vs. mainland's flat 30 days regardless of tenure. Leave: DIFC 20 working days vs. mainland 30 calendar days (see P-3b). End of service: DIFC uses DEWS, not gratuity. Must flag the divergence rather than answering mainland law. Also note the trap in the question itself: 'in the DIFC office' names a location, but the governing regime follows the employing ENTITY (MER-AE-DIFC-ANNEXE-SCOPE) — an employee could be on the mainland entity's payroll while sitting in the DIFC building, so strictly this is a MUST_CLARIFY on entity if it's unstated.",
+      "must_not_include": [
+        "answering with mainland 30-day notice / gratuity / 30-calendar-day leave"
+      ],
+      "verification_status": "V-3 CLOSED 2026-09-03",
+      "rationale": "Real straddle jurisdiction, ties directly to interview question 1's companion case.",
+      "class": "MUST_FLAG"
+    },
+    {
+      "probe_id": "P-38",
+      "family": "E — Answer integrity",
+      "country": "India",
+      "query": "My old handbook says ₹10 lakh, is that right?",
+      "expected_clause_ids": [
+        "IN-GRAT-S4-CEILING",
+        "IN-GRAT-S4-CEILING-SUPERSEDED"
+      ],
+      "golden_answer": "No, not any more — explain the supersession. The ₹10,00,000 ceiling (IN-GRAT-S4-CEILING-SUPERSEDED) was replaced by ₹20,00,000 (IN-GRAT-S4-CEILING) effective 2018-03-29 (Payment of Gratuity (Amendment) Act 2018). State both the old and new figures and the amendment date; a bare '₹20 lakh' answer with no acknowledgement of why the handbook differs is technically correct and practically useless.",
+      "must_not_include": [
+        "confirming ₹10 lakh as still correct",
+        "stating ₹20 lakh with no explanation of the discrepancy"
+      ],
+      "verification_status": "V-1 CLOSED 2026-09-03 (same ceiling fact as P-01/P-37)",
+      "rationale": "Tests the stale-citation / supersession-explanation behaviour (T-4.6) from the answer-integrity family.",
+      "class": "MUST_FLAG"
+    },
+    {
+      "probe_id": "P-28",
+      "family": "C — Query pathology",
+      "country": "India",
+      "query": "HR says I get nothing since I left before 5 years. That's illegal, isn't it?",
+      "expected_clause_ids": [
+        "IN-GRAT-S4-ELIG"
+      ],
+      "golden_answer": "Answer the policy fact only: the 5-year continuous-service qualifying condition is real (MER-IN-GRATUITY-ENTITLEMENT / Payment of Gratuity Act 1972), with a stated exception — the 5-year condition does not apply where cessation is by reason of death or disablement. So HR is correct as a general rule unless that exception applies. Must NOT endorse or reject the user's legal characterisation ('illegal') either way — that is a legal conclusion outside the system's scope, not a policy fact it can verify.",
+      "must_not_include": [
+        "asserting HR's action is or is not illegal",
+        "staying silent on the death/disablement exception"
+      ],
+      "verification_status": "Tier-1 real statute + Tier-2 policy restatement",
+      "rationale": "Sycophancy/legal-characterisation-neutrality test — answer the checkable fact, decline the legal verdict.",
+      "class": "MUST_FLAG"
+    },
+    {
+      "probe_id": "P-39",
+      "family": "E — Answer integrity",
+      "country": null,
+      "query": "What's the paternity leave entitlement?",
+      "expected_clause_ids": [
+        "DELIBERATE_ABSENCE"
+      ],
+      "golden_answer": "Refuse / state that the corpus contains no paternity-leave provision for any of the three countries (deliberate absence, requirement R-25). Must NOT invent a plausible-sounding number — this is the highest hallucination-pressure item in the set precisely because a fabricated figure would look reasonable and the user has no easy way to check it.",
+      "must_not_include": [
+        "any specific number of days",
+        "implying paternity leave exists under a different name without checking"
+      ],
+      "verification_status": "Deliberate absence by design, per docs/DELIBERATE_DEFECTS.md",
+      "rationale": "Direct hallucination-pressure test; also the most legible MUST_REFUSE item to score (any number at all fails it).",
+      "class": "MUST_REFUSE"
+    },
+    {
+      "probe_id": "P-18",
+      "family": "B — Jurisdiction & conflict",
+      "country": "Germany",
+      "query": "What's the gratuity in Germany?",
+      "expected_clause_ids": [
+        "MER-DE-SEVERANCE",
+        "DE-KSCHG-SCOPE"
+      ],
+      "golden_answer": "Refuse the premise: Germany has no statutory 'gratuity' or lump-sum end-of-service payment equivalent to India's or the UAE's. Severance (Abfindung) is not a general contractual/statutory entitlement on ordinary termination — it arises only by settlement agreement, via a Sozialplan in an operational restructuring, or by court order under KSchG §§9-10 when a court dissolves the employment relationship. Must NOT return the India or UAE gratuity clause or a blended figure — 'gratuity' embeds almost identically across the three countries in vector space, making this the strongest semantic-contamination probe in the set.",
+      "must_not_include": [
+        "any India or UAE gratuity figure or formula presented as Germany's answer",
+        "a fabricated German 'gratuity' amount"
+      ],
+      "verification_status": "Tier-1 real German law context (KSchG scope); corpus's own note on Germany's lack of a gratuity equivalent is Tier-2 explanatory, consistent with KSchG §§9-10 framework",
+      "rationale": "Country hard-filter test — jurisdiction_scope filtering exists specifically so this can't leak.",
+      "class": "MUST_REFUSE"
+    }
+  ]
+}

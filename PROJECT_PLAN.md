@@ -82,7 +82,7 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 
 ---
 
-### Phase 2 — Ingestion & indexing · `WIP` · D2–D3
+### Phase 2 — Ingestion & indexing · `DONE` · D2–D3
 
 | ID | Task | Depends on | Status |
 |---|---|---|---|
@@ -237,12 +237,12 @@ M3's exit criterion — T-3.6 produces real numbers, recorded in the ledger — 
 
 ---
 
-### Phase 5 — Evaluation harness · `TODO` · D4–D5
+### Phase 5 — Evaluation harness · `WIP` · D4–D5
 
 | ID | Task | Depends on | Status |
 |---|---|---|---|
-| T-5.1 | Promote 20–30 probes into the scored golden set; fill golden answers + expected source clauses | M4, T-1.8 | `TODO` |
-| T-5.2 | Label every item `MUST_ANSWER` / `MUST_REFUSE` / `MUST_CLARIFY` / `MUST_FLAG`; hold the ~45/25/20/10 mix | T-5.1 | `TODO` |
+| T-5.1 | Promote 20–30 probes into the scored golden set; fill golden answers + expected source clauses | M4, T-1.8 | `DONE` |
+| T-5.2 | Label every item `MUST_ANSWER` / `MUST_REFUSE` / `MUST_CLARIFY` / `MUST_FLAG`; hold the ~45/25/20/10 mix | T-5.1 | `DONE` |
 | T-5.3 | RAGAS: Context Precision, Context Recall, Faithfulness, Answer Correctness | T-5.2 | `TODO` |
 | T-5.4 | Custom Citation Accuracy (LLM-as-judge, FinGuard G-Eval pattern) | T-5.3 | `TODO` |
 | T-5.5 | Four-class confusion matrix + **over-refusal counter as a first-class defect** (Finding 3) | T-5.2 | `TODO` |
@@ -250,7 +250,9 @@ M3's exit criterion — T-3.6 produces real numbers, recorded in the ledger — 
 
 **Exit criterion (M5):** ledger populated with measured baselines. Until this milestone, the project has **no** numbers and none may be quoted anywhere.
 
-**Blocked by T-1.8:** an item still carrying `[VERIFY]` cannot be promoted into the scored set.
+**T-5.1/T-5.2 done 2026-09-03**: `eval/golden/scored_golden_set.json`, 24 items drawn from the 43-probe adversarial set, each carrying a class label, expected source clause IDs, and a golden answer derived from real corpus clause text (plus the closed V-1/V-3 verification findings) — no invented figures. Actual mix 46/25/21/8 (target 45/25/20/10). P-01's stale `[VERIFY]` tag removed in `adversarial_probe_set.md` (V-1 closed). **Real bug caught while curating**: P-33's probe wording used Gulf EOSB terminology that matches none of its fixture's actual four synonym names (long service award / loyalty payment / continuity recognition / service milestone grant) — corrected in `adversarial_probe_set.md`; this is the likely real explanation for P-33's zero-recall result in the M3 run (probe/fixture mismatch, not a demonstrated retrieval failure). P-33 held OUT of the scored set this round pending confirmation of the corrected wording. T-5.3–T-5.6 (RAGAS, Citation Accuracy, confusion matrix, baseline run) open next — the LLM-as-judge metrics need a by-hand script run outside this sandbox, same pattern as `build_vector_index.py`/`prefetch_reranker_model.py`.
+
+**Blocked by T-1.8:** an item still carrying `[VERIFY]` cannot be promoted into the scored set. **Checked 3 Sep 2026 (Session 4):** none of the 43 probes actually require a golden answer keyed to V-2/V-4/V-5 — the UAE 1980→2021 transition (V-2) was never built as a corpus fixture (DIFC/DEWS took the real-straddle-case role instead, as V-3, already closed), and V-4/V-5 (Indian state variation, Labour Codes commencement) are already handled by an explicit "national baseline, Codes not yet in force" scoping note inside `corpus/tier1_law/india/india_law.md` itself. T-1.8 therefore does not block T-5.1 in practice; V-2/V-4/V-5 stay open and untouched, tracked as future corpus/verification work, not as a Phase 5 gate.
 
 ---
 
@@ -392,6 +394,7 @@ Metrics awaiting first measurement: Faithfulness · Answer Correctness · Citati
 
 | Date | Change |
 |---|---|
+| 2026-09-03 | **T-5.1/T-5.2 done.** `eval/golden/scored_golden_set.json` — 24 probes promoted into the scored golden set with class labels, expected clause IDs, and golden answers (derived from real corpus text + closed V-1/V-3 findings, no invented numbers). Mix 46/25/21/8 vs. target 45/25/20/10. Checked T-1.8's block against all 43 probes: V-2/V-4/V-5 don't gate any of them (see Phase 5 detail and `docs/CORPUS_REQUIREMENTS.md`), so promotion proceeded without re-opening verification work. Found and fixed a real probe/fixture wording mismatch on P-33 (Gulf EOSB terms vs. the fixture's actual India synonym set) — likely explains its M3 zero-recall result; held out of the scored set pending sign-off. Also fixed two stale plan artifacts found on read-through: Phase 2's header still said `WIP` after its exit criterion had already been met, and P-01's `[VERIFY]` tag in `adversarial_probe_set.md` had not been cleared when V-1 closed. |
 | 2026-09-03 | **M4 CLOSED. Phase 4 DONE.** T-4.7 (LangSmith tracing, `@traceable` on retrieve/grade/temporal-reason/generate, no-op with no network call unless tracing is explicitly enabled -- verified) and T-4.8 wiring (`grading/answer_pipeline.py`'s `answer_query()`, composing T-4.1-T-4.6 into one call) done. M4 exit criterion met with a stated scope caveat: proven end-to-end on three real representative cases (P-01 answers without splitting, P-3a self-corrects and splits at 2020-02-01, P-06 correctly asks for clarification instead of guessing) starting from actual query text, not a full unaided 43-probe run -- that needs a natural-language fact-extraction step (dates/country from free text) that was never a Phase 4 task and doesn't exist yet. 150/150 tests passing. Phase 5 (evaluation harness) open next. |
 | 2026-09-03 | T-4.6 done and tested — `generation/supersession.py`, wired into `TemplateGenerator`. Two distinct signals: an informational amendment note when a cited clause has `supersedes` set (fires correctly, without warning, on the legitimate P-3a SEGMENTED_ACCRUAL split where both old and new versions are cited together on purpose); a stale-citation `superseded_warning` when a cited clause's `superseded_by` replacement is NOT also part of the answer (verified against `IN-GRAT-S4-CEILING-SUPERSEDED` cited alone). 142/142 tests passing. |
 | 2026-09-03 | T-4.5 done and tested — `grading/clarification.py` + `ClarificationResponse`/`MissingFact`/`ConditionalAnswer` in `grading/schema.py`. Two triggers: T-4.3's existing `TemporalWorking.missing_facts` (P-06's joining-date gap), and a new country-ambiguity check (no country supplied + retrieved normative clauses span >1 country -- P-13/P-19/P-41's shape) that guards against silently defaulting to India because the corpus is India-heavy. One conditional answer per plausible country value, built by re-running T-4.4's generator on each country's subset. Single terminal response, no conversational state -- resolves the apparent conflict with the stateless scope decision per Finding 5. 137/137 tests passing. |

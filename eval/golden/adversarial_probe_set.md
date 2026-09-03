@@ -12,9 +12,11 @@ Questions are written in the register real employees use, not in clean legal Eng
 
 ## The marquee probe
 
-**P-01 · FM-A1, FM-D7, FM-E2 · `MUST_ANSWER` · [VERIFY]**
+**P-01 · FM-A1, FM-D7, FM-E2 · `MUST_ANSWER`**
 
 > "I joined 1 Jan 2014 and I'm resigning 30 Sep 2026. Basic + DA is ₹3,00,000/month. India. What gratuity do I get?"
+
+V-1 closed 2026-09-03 — see `PROJECT_PLAN.md` Verification register. Unblocked for the scored golden set.
 
 *Why this is the best item in the set:* the intuitive answer is wrong, and it is wrong in the same direction for a naive RAG and a naive human. Service spans the 2018-03-29 ceiling amendment (₹10L → ₹20L), so the tempting move is to split service at the boundary and blend two ceilings.
 
@@ -100,7 +102,7 @@ A unit trap inside a single city. DIFC grants **20 working days**; UAE mainland 
 | P-30 | D1 | "Grade M3, 6 years, Dubai — what's my housing allowance?" *(slab table)* | `MUST_ANSWER` | Exact cell from a two-dimensional table. Direct test of the hybrid retrieval rationale: pure semantic will not reliably land the right row+column. |
 | P-31 | D2 | "Do I get gratuity if I was terminated for misconduct?" | `MUST_ANSWER` | The proviso, not the main clause, is the answer. Stating the general rule and omitting the exception is grounded-but-wrong — the exact failure Faithfulness alone will not catch. |
 | P-32 | D3 | "What counts as 'wages' for my gratuity?" *(definition in a different section)* | `MUST_ANSWER` | Follow the cross-reference, or declare context incomplete. |
-| P-33 | D4 | "What's my EOSB?" / "What's my end of service benefit?" / "What's my severance?" *(three phrasings, one answer)* | `MUST_ANSWER` | All three retrieve the same clause. Divergent answers across synonyms is the failure. |
+| P-33 | D4 | "What's my long service award?" / "What's my loyalty payment?" / "What's my continuity recognition?" *(three phrasings, one answer — corrected 2026-09-03: original wording used Gulf EOSB terminology that matches none of the fixture's actual synonym set; MER-IN-LONGSERVICE-AWARD's real four names are long service award / loyalty payment / continuity recognition / service milestone grant)* | `MUST_ANSWER` | All three retrieve the same clause. Divergent answers across synonyms is the failure. **Likely explains the P-33 zero-recall result in the Phase 3 M3 run — the old query terms did not appear in the fixture at all, so that was a probe/fixture mismatch, not a demonstrated retrieval failure.** |
 | P-34 | D5 | "How much gratuity for someone earning ₹50,000 a month?" *(a worked example in the corpus uses exactly ₹50,000)* | `MUST_ANSWER` | Must cite the **normative clause**, not the illustration. Illustrations are tagged non-normative and must never be cited as authority — even when they match the query far better lexically. |
 | P-35 | D6 | "What's the notice period?" *(v1 and v2 ~95% identical, both flood top-k)* | `MUST_ANSWER` | Deduplicate by lineage before rerank so the answer is not crowded out by its own near-duplicate. |
 | P-36 | D7 | "Full and final settlement for 8 years in Dubai on 20,000 AED basic?" | `MUST_ANSWER` | Operands scattered across ≥3 clauses (rate bands, wage base, 2-year cap). Partial retrieval must refuse, not produce a confident partial computation. |
