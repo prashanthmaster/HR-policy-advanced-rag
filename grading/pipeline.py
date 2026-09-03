@@ -38,6 +38,8 @@ from __future__ import annotations
 import datetime as dt
 from dataclasses import dataclass, field
 
+from langsmith import traceable
+
 from grading.crag_grader import grade_sufficiency
 from grading.schema import GradeVerdict, MissingReason, SufficiencyResult
 from ingestion.logging_setup import get_logger
@@ -61,6 +63,7 @@ class GradedRetrieval:
     not it actually resolved sufficiency)."""
 
 
+@traceable(name="retrieve_and_grade", run_type="chain")
 def retrieve_and_grade(
     retriever: HybridRetriever,
     query: str,

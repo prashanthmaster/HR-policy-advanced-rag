@@ -25,6 +25,8 @@ from __future__ import annotations
 import datetime as dt
 from dataclasses import dataclass
 
+from langsmith import traceable
+
 from ingestion.index_units import IndexableUnit
 from ingestion.logging_setup import get_logger
 from retrieval.bm25_index import BM25Index
@@ -64,6 +66,7 @@ class HybridRetriever:
         index, only filtered out of THIS query's result by design."""
         return [u for u in self._units_by_piece_id.values() if u.lineage_id == lineage_id]
 
+    @traceable(name="hybrid_retrieve", run_type="retriever")
     def retrieve(
         self,
         query: str,

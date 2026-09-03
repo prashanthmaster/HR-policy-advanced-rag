@@ -51,6 +51,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 
+from langsmith import traceable
+
 from grading.schema import GradeVerdict, MissingReason, SufficiencyResult
 from ingestion.logging_setup import get_logger
 from ingestion.schema import TemporalApplicability
@@ -63,6 +65,7 @@ _log = get_logger("grading.crag_grader")
 _MULTI_VERSION_CLASSES = {TemporalApplicability.SEGMENTED_ACCRUAL, TemporalApplicability.ELECTIVE}
 
 
+@traceable(name="grade_sufficiency", run_type="chain")
 def grade_sufficiency(pieces: list[RetrievedPiece]) -> SufficiencyResult:
     """Pure function over an already-retrieved piece list -- no I/O, no
     network, no LLM call. Takes the *rule-based* grading approach the

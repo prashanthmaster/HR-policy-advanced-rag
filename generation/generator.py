@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from langsmith import traceable
+
 from generation.citations import build_citations
 from generation.schema import GeneratedAnswer
 from generation.supersession import check_supersession
@@ -12,6 +14,7 @@ class TemplateGenerator:
     together clause text and T-4.3's narrative lines -- nothing here is
     invented, so nothing here can hallucinate."""
 
+    @traceable(name="generate_answer", run_type="chain")
     def generate(
         self,
         query: str,

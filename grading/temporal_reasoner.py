@@ -27,6 +27,8 @@ import datetime as dt
 import re
 from dataclasses import dataclass, field
 
+from langsmith import traceable
+
 from ingestion.logging_setup import get_logger
 from ingestion.schema import TemporalApplicability
 from retrieval.hybrid_search import RetrievedPiece
@@ -261,6 +263,7 @@ def reason_elective(pieces: list[RetrievedPiece], facts: ServiceFacts) -> Tempor
     )
 
 
+@traceable(name="temporal_reasoning", run_type="chain")
 def reason_over_pieces(pieces: list[RetrievedPiece], facts: ServiceFacts) -> list[TemporalWorking]:
     """Entry point: group the (already graded-sufficient) normative
     pieces by lineage and dispatch each group to its class's reasoner.
