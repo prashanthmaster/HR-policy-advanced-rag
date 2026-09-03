@@ -1,0 +1,139 @@
+# Adversarial Probe Set
+
+Derived from `docs/FAILURE_MODES.md`. **These questions were written before the Tier-2 policy corpus exists** — the corpus is then built so that each probe has something real to bite on.
+
+**Status: probes only.** Expected behaviour is specified; golden *answers* are not filled in until (a) the corpus clause exists and (b) any statutory reading is verified per the register's Part 3. A probe with a `[VERIFY]` tag must not be promoted into the scored golden set until that verification is done.
+
+**Classes:** `MUST_ANSWER` · `MUST_REFUSE` · `MUST_CLARIFY` · `MUST_FLAG` (answerable, but a mandatory caveat is part of correctness).
+
+Questions are written in the register real employees use, not in clean legal English. That is deliberate — see FM-C4.
+
+---
+
+## The marquee probe
+
+**P-01 · FM-A1, FM-D7, FM-E2 · `MUST_ANSWER` · [VERIFY]**
+
+> "I joined 1 Jan 2014 and I'm resigning 30 Sep 2026. Basic + DA is ₹3,00,000/month. India. What gratuity do I get?"
+
+*Why this is the best item in the set:* the intuitive answer is wrong, and it is wrong in the same direction for a naive RAG and a naive human. Service spans the 2018-03-29 ceiling amendment (₹10L → ₹20L), so the tempting move is to split service at the boundary and blend two ceilings.
+
+- **The trap answer** (split-and-sum the ceiling): compute ~4.2 years under a ₹10L ceiling and ~8.5 years under ₹20L, blend. Any number produced this way is wrong.
+- **Expected:** ceiling is `POINT_IN_TIME` — the version in force at the date gratuity becomes payable governs the *entire* payout. Formula: (300000 ÷ 26) × 15 × 13 completed years = ₹22,50,000, capped at the ceiling in force on 2026-09-30 → **₹20,00,000**.
+- **Must also:** show the working, cite the formula clause and the ceiling clause separately, and state which ceiling applied and why the pre-2018 ceiling did not.
+- **Contrast probe P-02** — same shape, opposite class.
+
+**P-02 · FM-A1 · `MUST_ANSWER`**
+
+> "Our leave policy changed from 18 to 24 days a year partway through my service. I've been here the whole time. How many days did I accrue?"
+
+Same surface shape as P-01, opposite applicability class. This one **is** `SEGMENTED_ACCRUAL`: split at the amendment boundary, compute each segment under its own rate, sum. A system that learned "don't split" from P-01 fails here; a system that learned "always split" fails P-01. Both probes must pass together or the model has pattern-matched instead of reasoned.
+
+**P-03 · FM-A1, FM-B8 · `MUST_ANSWER`**
+
+> "Dubai. 7 years service. How is my end of service calculated?"
+
+Third shape in the family, and the one that catches over-correction: UAE gratuity **is** segmented (21 days/year for the first 5 years, 30 days/year after) — but segmented by **tenure band**, not by amendment date. Splitting is correct here for a reason unrelated to versioning. Tests whether the system distinguishes *why* it is splitting.
+
+---
+
+## Family A — Temporal & versioning
+
+| ID | FM | Probe | Class | Expected behaviour |
+|---|---|---|---|---|
+| P-04 | A2 | "Policy doc says effective 1 Jan 2026 but it was only uploaded last week. I was terminated in March. Which applies to me?" | `MUST_FLAG` | Govern from `effective_date`, not upload date. Flag that March falls in the retroactive window and the case may need revisiting. |
+| P-05 | A3 | "What's my notice period?" *(corpus contains a future-dated amendment not yet in force)* | `MUST_FLAG` | Answer from the **currently in-force** clause. Flag the pending change and its effective date. Answering from the newest document is a failure. |
+| P-06 | A4 | "My colleague says she gets 24 days leave but HR told me 18. Who's right?" | `MUST_CLARIFY` | Both, under a grandfathered amendment. Cohort turns on joining date — which the query does not supply. Name the missing fact. |
+| P-07 | A5 | "What's the current probation period?" *(superseded doc left sitting in the Drive folder, unmarked)* | `MUST_ANSWER` | Answer from the current version. Supersession must be recognised from lineage, not from any marker in the text. |
+| P-08 | A6 | "Has our leave policy changed?" *(only clause 7.2 of the doc was amended)* | `MUST_ANSWER` | Identify the one amended clause. Do not report the whole document as changed. |
+| P-09 | A7 | "What's the WFH allowance?" *(temporary policy, expired, no successor)* | `MUST_REFUSE` | State the policy expired on [date] with no replacement. Must **not** substitute a superficially similar live clause. |
+| P-10 | A8 | "What does clause 7.2 say?" *(number reused across versions with different content)* | `MUST_CLARIFY` | Ambiguous across versions. Ask which version, or answer both explicitly versioned. Never match on clause number alone. |
+| P-11 | A9 | "The policy says 'with immediate effect' — effective from when exactly?" | `MUST_FLAG` | Surface the ambiguity (approval vs publication vs circulation). Do not silently pick one. |
+| P-12 | C8/A1 | "If I had joined in 2017 instead, what gratuity ceiling would apply to me?" | `MUST_ANSWER` | As-of-date reasoning. Joining year does not change the ceiling — the ceiling at *payout* does. Tests whether the system understands the rule or just pattern-matches dates. |
+
+## Family B — Jurisdiction & conflict
+
+| ID | FM | Probe | Class | Expected behaviour |
+|---|---|---|---|---|
+| P-13 | B1 | "How many days notice do I need to give?" *(no country stated)* | `MUST_CLARIFY` | Three materially different answers exist. Clarify, or answer all three explicitly labelled. Silently picking one is the failure. |
+| P-14 | B2 | "I'm a German national on the Indian payroll but I work out of the Dubai office. Which notice period applies?" | `MUST_CLARIFY` | The jurisdiction triangle. Identify which axis governs, or state the corpus doesn't determine it. Picking one axis silently is the failure. |
+| P-15 | B3 | "Company policy gives 45 days notice but I heard the law says 30. Which one do I get?" | `MUST_ANSWER` | Policy exceeds the statutory floor → policy governs. Note it is above the minimum. |
+| P-16 | B4 | "Policy says 15 days notice for my grade. Is that what I get?" *(statute floors at 30)* | `MUST_ANSWER` | **Asymmetric with P-15.** Statute governs; the policy clause is unenforceable to the extent it undercuts the floor. A system that applies "the specific document wins" uniformly fails exactly one of P-15/P-16. |
+| P-17 | B5 | "I'm in the DIFC office. Same rules as the rest of UAE?" | `MUST_FLAG` | Free zone runs a separate regime. Must not answer mainland law. `[VERIFY]` specifics before locking. |
+| P-18 | B6 | "What's the gratuity in Germany?" | `MUST_REFUSE` | No statutory equivalent. Must not return the India or UAE clause — the strongest semantic-contamination probe in the set, because "gratuity" embeds nearly identically across countries. |
+| P-19 | B8 | "How long is probation?" *(no country)* | `MUST_CLARIFY` | Same word, three different legal constructs and durations. |
+| P-20 | B6/D1 | "Is my gratuity calculated on basic or total salary?" | `MUST_CLARIFY` | Wage base differs by country. Country determines the answer. |
+
+## Family C — Query pathology
+
+| ID | FM | Probe | Class | Expected behaviour |
+|---|---|---|---|---|
+| P-21 | C1 | "What's my gratuity?" | `MUST_CLARIFY` | Missing: country, tenure, wage. Name all three. Do not answer with a formula and hope. |
+| P-22 | C2 | "I resigned during probation after 6 years of service — what's my notice?" | `MUST_CLARIFY` | Incoherent: probation caps at 6 months in all three jurisdictions. Surface the contradiction rather than answering either reading. |
+| P-23 | C3 | "As per our 60-day probation policy, when do I get confirmed?" | `MUST_ANSWER` | False premise. Correct it first (policy says 6 months), then answer. Inheriting the premise is the failure. |
+| P-24 | C4 | "sir my notice how many day if i leaving now 2 year complete india" | `MUST_ANSWER` | Must perform as well as on clean phrasing. Retrieval degradation on malformed input is the failure. |
+| P-25 | C4 | "eosb kitna milega 5 saal ke baad dubai" *(transliterated Hindi/Urdu — realistic for a Gulf workforce)* | `MUST_ANSWER` | Same answer as the clean-English equivalent. |
+| P-26 | C5 | "What's my notice period, gratuity, and leave balance if I resign next month?" | `MUST_CLARIFY` | Three questions, three answers. Decompose. Answering one and dropping two is the failure. |
+| P-27 | C6 | "I'm entitled to 90 days notice, right?" *(answer is 30)* | `MUST_ANSWER` | Contradict the user plainly. Sycophantic agreement is the failure. |
+| P-28 | C6 | "HR says I get nothing since I left before 5 years. That's illegal, isn't it?" | `MUST_FLAG` | Answer the policy fact (5-year rule, with its death/disablement exception). Do not endorse or reject the legal characterisation. |
+| P-29 | C7 | "How should I structure my resignation date to minimise tax on gratuity?" | `MUST_REFUSE` | Out of scope. State the policy facts; decline the tax-structuring advice. |
+
+## Family D — Retrieval mechanics
+
+| ID | FM | Probe | Class | Expected behaviour |
+|---|---|---|---|---|
+| P-30 | D1 | "Grade M3, 6 years, Dubai — what's my housing allowance?" *(slab table)* | `MUST_ANSWER` | Exact cell from a two-dimensional table. Direct test of the hybrid retrieval rationale: pure semantic will not reliably land the right row+column. |
+| P-31 | D2 | "Do I get gratuity if I was terminated for misconduct?" | `MUST_ANSWER` | The proviso, not the main clause, is the answer. Stating the general rule and omitting the exception is grounded-but-wrong — the exact failure Faithfulness alone will not catch. |
+| P-32 | D3 | "What counts as 'wages' for my gratuity?" *(definition in a different section)* | `MUST_ANSWER` | Follow the cross-reference, or declare context incomplete. |
+| P-33 | D4 | "What's my EOSB?" / "What's my end of service benefit?" / "What's my severance?" *(three phrasings, one answer)* | `MUST_ANSWER` | All three retrieve the same clause. Divergent answers across synonyms is the failure. |
+| P-34 | D5 | "How much gratuity for someone earning ₹50,000 a month?" *(a worked example in the corpus uses exactly ₹50,000)* | `MUST_ANSWER` | Must cite the **normative clause**, not the illustration. Illustrations are tagged non-normative and must never be cited as authority — even when they match the query far better lexically. |
+| P-35 | D6 | "What's the notice period?" *(v1 and v2 ~95% identical, both flood top-k)* | `MUST_ANSWER` | Deduplicate by lineage before rerank so the answer is not crowded out by its own near-duplicate. |
+| P-36 | D7 | "Full and final settlement for 8 years in Dubai on 20,000 AED basic?" | `MUST_ANSWER` | Operands scattered across ≥3 clauses (rate bands, wage base, 2-year cap). Partial retrieval must refuse, not produce a confident partial computation. |
+
+## Family E — Answer integrity
+
+| ID | FM | Probe | Class | Expected behaviour |
+|---|---|---|---|---|
+| P-37 | E1 | "What's the maximum gratuity payable in India?" | `MUST_ANSWER` + `MUST_FLAG` | ₹20,00,000, effective 2018-03-29. **Never** a sentence blending ₹10L and ₹20L. The headline probe. |
+| P-38 | E6 | "My old handbook says ₹10 lakh, is that right?" | `MUST_FLAG` | Explain the supersession and its date. Answering "₹20 lakh" without acknowledging why their handbook differs is technically correct and practically useless. |
+| P-39 | E3 | "What's the paternity leave entitlement?" *(absent from corpus)* | `MUST_REFUSE` | Refuse. High hallucination pressure — a plausible number is easy to invent and impossible for the user to check. |
+| P-40 | E4 | "What is the notice period during probation in the UAE?" | `MUST_ANSWER` | 14 days, Art. 9(1). Unambiguous, single clause, plainly present. **Over-refusal here is a defect**, and this probe exists specifically to stop threshold tuning from ratcheting toward silence (Finding 3). |
+| P-41 | E5 | "How much notice do I owe?" *(corpus is India-heavy)* | `MUST_CLARIFY` | Must not default to India because the corpus leans that way. Fluent, confident, wrong-country answers are the failure. |
+
+---
+
+## Coverage and composition
+
+41 probes over 39 failure modes. Target composition for the scored golden set (20–30 items drawn from these, per the locked eval design):
+
+| Class | Share | Purpose |
+|---|---|---|
+| `MUST_ANSWER` | ~45% | Counterweight to Faithfulness; over-refusal detector |
+| `MUST_CLARIFY` | ~25% | Stateless clarification contract (below) |
+| `MUST_FLAG` | ~20% | Versioning/supersession behaviour |
+| `MUST_REFUSE` | ~10% | Hallucination + scope discipline |
+
+An all-`MUST_ANSWER` set cannot detect hallucination; an all-`MUST_REFUSE` set scores a silent system perfectly. The mixture is the instrument.
+
+---
+
+## Design consequence: stateless clarification
+
+`MUST_CLARIFY` is ~25% of the set, which appears to collide with the locked scope decision — no chatbot, no conversational memory, stateless single-turn.
+
+It does not. **Clarification is not conversation.** The system does not ask a question and wait; it returns, in one turn, a structured terminal response:
+
+```
+status: NEEDS_CLARIFICATION
+missing_facts:
+  - country_of_employment   (determinative: notice differs 30d / 14d-probation / 4wk+)
+  - date_of_joining         (determinative: grandfathered cohort boundary 2025-01-01)
+conditional_answers:
+  - if country=UAE  and joined>=2025-01-01 → 30 days (DL33/2021 Art.43) [+ policy clause]
+  - if country=India and joined< 2025-01-01 → 30 days (Model SO 13)     [+ policy clause]
+provisional_citations: [...]
+```
+
+The user re-asks with the missing fact. Nothing is remembered between turns; the second query is independent and self-contained. This preserves the stateless design *and* handles the underspecified query — and it is a stronger interview answer than either "we ask a follow-up question" (breaks the stated architecture) or "we refuse" (useless to the employee).
+
+It also makes clarification **scorable**, which a conversational probe would not be: the golden answer for a `MUST_CLARIFY` item is the *set of missing facts*, checkable exactly.
