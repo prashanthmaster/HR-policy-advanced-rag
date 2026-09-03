@@ -69,8 +69,8 @@ Builds the Tier-2 synthetic layer (**Meridian Global Services**, fictional, bann
 |---|---|---|---|
 | T-1.1 | `docs/DELIBERATE_DEFECTS.md` manifest — non-compliant clause, decoy illustration, intentional gaps | — | `DONE` |
 | T-1.2 | Deliberate-defect clauses: R-11 (policy below statutory floor), R-20 (₹50,000 decoy illustration), R-25 (paternity-leave gap), R-23 (low-salience clause), R-15 (incomplete governing-law clause) | T-1.1 | `DONE` |
-| T-1.3 | Version-pair structures: R-01→R-09 (segmented accrual, grandfathered, future-dated, retroactive, silent + partial supersession, sunset, renumbering, vague effective date) | T-1.2 | `WIP` |
-| T-1.4 | Conflict structures: R-10→R-14 (free-zone annexe, near-identical cross-country, divergent definitions) — R-10/R-11/R-15 landed early in T-1.2 | T-1.3 | `TODO` |
+| T-1.3 | Version-pair structures: R-01→R-09 (segmented accrual, grandfathered, future-dated, retroactive, silent + partial supersession, sunset, renumbering, vague effective date) | T-1.2 | `DONE` |
+| T-1.4 | Conflict structures: R-12/R-13/R-14 (free-zone annexe, near-identical cross-country, divergent definitions) — R-10/R-11/R-15 landed early in T-1.2 | T-1.3 | `WIP` |
 | T-1.5 | Retrieval-mechanic structures: R-16→R-24 (slab table, proviso, cross-reference, synonym spread, near-duplicate pair, scattered operands, false-premise bait) | T-1.4 | `TODO` |
 | T-1.6 | Ordinary connective policy prose — **written last**, deliberately: distractor mass is part of the test environment | T-1.5 | `TODO` |
 | T-1.7 | Coverage audit: assert every R-requirement and every probe maps to a real corpus artifact | T-1.6 | `TODO` |
@@ -285,4 +285,5 @@ Metrics awaiting first measurement: Context Precision · Context Recall · Faith
 | 2026-09-03 | Plan created. Phases 0–9, milestones M0–M9. |
 | 2026-09-03 | Build order inverted — probes before corpus. Phase 1 restructured to build from the requirements spec rather than writing policy prose first. |
 | 2026-09-03 | M0 closed. Phase 1 opened. V-1 closed: India gratuity ceiling confirmed `POINT_IN_TIME`; probe P-01 unblocked. |
+| 2026-09-03 | T-1.3 done — R-01→R-09 version-pair structures across all three chapters. Probe P-06 rewritten: it and P-02 had been specified against the same 18→24 leave fixture with incompatible mechanics (grandfathered vs segmented accrual); P-06 moved to a UAE end-of-service supplement. Caught by corpus construction, i.e. the corpus validating the probe set. |
 | 2026-09-03 | T-1.1 + T-1.2 done. Defect manifest D-1..D-5 written ahead of fixtures; Meridian global preamble and partial India chapter committed. R-10/R-11/R-15 satisfied early (the notice-clause pair carried both sides of the statutory-floor asymmetry, and the governing-law clause was needed to host D-5). |

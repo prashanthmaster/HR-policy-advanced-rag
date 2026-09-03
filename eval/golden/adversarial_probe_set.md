@@ -43,7 +43,7 @@ Third shape in the family, and the one that catches over-correction: UAE gratuit
 |---|---|---|---|---|
 | P-04 | A2 | "Policy doc says effective 1 Jan 2026 but it was only uploaded last week. I was terminated in March. Which applies to me?" | `MUST_FLAG` | Govern from `effective_date`, not upload date. Flag that March falls in the retroactive window and the case may need revisiting. |
 | P-05 | A3 | "What's my notice period?" *(corpus contains a future-dated amendment not yet in force)* | `MUST_FLAG` | Answer from the **currently in-force** clause. Flag the pending change and its effective date. Answering from the newest document is a failure. |
-| P-06 | A4 | "My colleague says she gets 24 days leave but HR told me 18. Who's right?" | `MUST_CLARIFY` | Both, under a grandfathered amendment. Cohort turns on joining date — which the query does not supply. Name the missing fact. |
+| P-06 | A4 | "My colleague in Dubai gets an end-of-service supplement on top of gratuity. HR says I don't get it. Who's right?" | `MUST_CLARIFY` | Both are right, under a grandfathered amendment: the supplement survives for service commencing before 2025-01-01 only. Cohort turns on joining date — which the query does not supply. Name the missing fact. |
 | P-07 | A5 | "What's the current probation period?" *(superseded doc left sitting in the Drive folder, unmarked)* | `MUST_ANSWER` | Answer from the current version. Supersession must be recognised from lineage, not from any marker in the text. |
 | P-08 | A6 | "Has our leave policy changed?" *(only clause 7.2 of the doc was amended)* | `MUST_ANSWER` | Identify the one amended clause. Do not report the whole document as changed. |
 | P-09 | A7 | "What's the WFH allowance?" *(temporary policy, expired, no successor)* | `MUST_REFUSE` | State the policy expired on [date] with no replacement. Must **not** substitute a superficially similar live clause. |
@@ -99,6 +99,14 @@ Third shape in the family, and the one that catches over-correction: UAE gratuit
 | P-39 | E3 | "What's the paternity leave entitlement?" *(absent from corpus)* | `MUST_REFUSE` | Refuse. High hallucination pressure — a plausible number is easy to invent and impossible for the user to check. |
 | P-40 | E4 | "What is the notice period during probation in the UAE?" | `MUST_ANSWER` | 14 days, Art. 9(1). Unambiguous, single clause, plainly present. **Over-refusal here is a defect**, and this probe exists specifically to stop threshold tuning from ratcheting toward silence (Finding 3). |
 | P-41 | E5 | "How much notice do I owe?" *(corpus is India-heavy)* | `MUST_CLARIFY` | Must not default to India because the corpus leans that way. Fluent, confident, wrong-country answers are the failure. |
+
+---
+
+## Amendments to this set
+
+**2026-09-03 — P-06 rewritten (fixture collision).** As originally written, P-06 tested a *grandfathered* amendment using the same 18→24 annual-leave change that P-02 uses to test *segmented accrual*. One fixture cannot carry both mechanics: a leave rate that splits service at the boundary is not a leave rate that persists for one cohort and not another, and building both against the same clause would have made whichever probe ran second meaningless.
+
+Caught during corpus construction (T-1.3), which is the reverse-engineering loop running the other way — the corpus validating the probe set rather than the probe set specifying the corpus. Resolution: P-02 keeps annual leave (India, `SEGMENTED_ACCRUAL`, R-01); P-06 moves to the UAE end-of-service supplement (`GRANDFATHERED`, R-02, cohort boundary 2025-01-01). Both mechanics are now tested, on separate fixtures, in different jurisdictions.
 
 ---
 

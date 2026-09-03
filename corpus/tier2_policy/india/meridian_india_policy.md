@@ -124,3 +124,126 @@ Section 5 of this Manual addresses: annual/privilege leave (5.1), casual leave (
      coverage is otherwise complete, which creates maximum hallucination
      pressure for P-39. DO NOT ADD A PATERNITY LEAVE POLICY.
      See docs/DELIBERATE_DEFECTS.md. -->
+
+---
+clause_id: MER-IN-LEAVE-ANNUAL-V1
+lineage_id: MER-IN-LEAVE-ANNUAL
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 5.1
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+temporal_applicability: SEGMENTED_ACCRUAL
+superseded_by: MER-IN-LEAVE-ANNUAL-V2
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-01
+---
+A confirmed employee accrues privilege leave at the rate of eighteen (18) days for each completed year of service, accruing proportionately month by month. Privilege leave may be carried forward to a maximum of forty-five (45) days.
+
+---
+clause_id: MER-IN-LEAVE-ANNUAL-V2
+lineage_id: MER-IN-LEAVE-ANNUAL
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 5.1
+effective_date: 2024-07-01
+revision_date: 2024-06-14
+version: v2
+temporal_applicability: SEGMENTED_ACCRUAL
+supersedes: MER-IN-LEAVE-ANNUAL-V1
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-01
+---
+A confirmed employee accrues privilege leave at the rate of twenty-four (24) days for each completed year of service, accruing proportionately month by month. Privilege leave may be carried forward to a maximum of forty-five (45) days. **Leave accrued in respect of service rendered before 1 July 2024 is unaffected by this revision and remains credited at the rate then applicable.** For an employee in service on that date, entitlement is therefore computed at the former rate for service up to 30 June 2024 and at the revised rate thereafter.
+
+---
+clause_id: MER-IN-SHIFT-ALLOWANCE
+lineage_id: MER-IN-SHIFT-ALLOWANCE
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 8.4
+effective_date: 2026-01-01
+revision_date: 2026-06-01
+version: v2
+supersedes: MER-IN-SHIFT-ALLOWANCE-V1
+temporal_applicability: SEGMENTED_ACCRUAL
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-04
+---
+<!-- R-04 retroactive amendment (probe P-04, failure mode FM-A2): effective_date
+     2026-01-01 PRECEDES revision_date 2026-06-01. A pipeline that treats Drive
+     modifiedTime as the effective date will date this rule from June and get
+     five months of cases wrong. -->
+The night shift allowance payable to employees rostered on the 22:00–06:00 shift is revised to ₹750 per shift, **with effect from 1 January 2026**. This revision was approved and published on 1 June 2026. Arrears in respect of shifts worked between the effective date and the date of publication shall be computed and paid in the payroll cycle following publication.
+
+---
+clause_id: MER-IN-SHIFT-ALLOWANCE-V1
+lineage_id: MER-IN-SHIFT-ALLOWANCE
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 8.4
+effective_date: 2023-01-01
+revision_date: 2023-01-01
+version: v1
+superseded_by: MER-IN-SHIFT-ALLOWANCE
+temporal_applicability: SEGMENTED_ACCRUAL
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-04
+---
+The night shift allowance payable to employees rostered on the 22:00–06:00 shift is ₹500 per shift.
+
+---
+clause_id: MER-IN-WFH-ALLOWANCE
+lineage_id: MER-IN-WFH-ALLOWANCE
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual — Temporary Measures Annexe
+section: TM-3
+effective_date: 2021-04-01
+revision_date: 2021-04-01
+sunset_date: 2023-03-31
+version: v1 (EXPIRED)
+temporal_applicability: POINT_IN_TIME
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-07
+---
+<!-- R-07 sunset with no successor (probe P-09, failure mode FM-A7). This policy
+     EXPIRED on 2023-03-31 and was deliberately not replaced. Correct behaviour
+     for a query about WFH allowance is to state that it expired and no
+     replacement exists — NOT to substitute a superficially similar live
+     allowance clause. Do not add a successor policy. -->
+**Temporary measure.** An employee required to work from home is entitled to a work-from-home allowance of ₹2,000 per month toward connectivity and utilities. This measure is issued under the Temporary Measures Annexe and **shall cease to have effect on 31 March 2023** unless expressly extended by the Group People Committee. No extension was issued.
+
+---
+clause_id: MER-IN-RELOCATION
+lineage_id: MER-IN-RELOCATION
+country: India
+doc_type: policy
+source_doc: Meridian India HR Policy Manual
+section: 9.2
+effective_date: UNRESOLVED
+revision_date: 2025-11-20
+version: v2
+temporal_applicability: POINT_IN_TIME
+effective_date_ambiguity: true
+normative: true
+jurisdiction_scope: india-national
+corpus_requirement: R-09
+---
+<!-- R-09 vague effective date (probe P-11, failure mode FM-A9). The amending
+     instrument says "with immediate effect" without specifying whether that
+     means the date of Committee approval, the date of publication, or the date
+     of circulation to employees — and the three differ. The ambiguity must
+     SURVIVE ingestion rather than being silently resolved to one of them.
+     effective_date is recorded as UNRESOLVED deliberately. -->
+The domestic relocation grant is revised to one month's basic salary, **with immediate effect**. (Approved by the Group People Committee on 12 November 2025; published to the intranet on 20 November 2025; circulated to line managers on 1 December 2025.)
