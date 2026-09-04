@@ -87,3 +87,21 @@ def test_p06_end_to_end_needs_clarification_not_a_guess():
     assert result.status == "NEEDS_CLARIFICATION"
     assert any(mf.fact == "service_start_date" for mf in result.clarification.missing_facts)
     assert result.answer is None
+
+
+def test_p01_result_exposes_retrieved_pieces_for_eval():
+    """Phase 5's eval harness needs the retrieved pieces (for RAGAS
+    "contexts") without re-retrieving -- PipelineResult.pieces exposes
+    exactly what generation/clarification/insufficiency was based on."""
+    retriever = _build_retriever()
+    facts = ServiceFacts(service_start_date=dt.date(2014, 1, 1), valuation_date=dt.date(2026, 9, 30))
+    result = answer_query(
+        retriever,
+        "gratuity ceiling maximum amount payable on termination -- joined 1 Jan 2014, resigning 30 Sep 2026",
+        country="India",
+        facts=facts,
+        reranker=MockReranker(),
+    )
+    assert result.pieces is not None
+    assert len(result.pieces) > 0
+    assert any(p.clause_id == "IN-GRAT-S4-CEILING" for p in result.pieces)

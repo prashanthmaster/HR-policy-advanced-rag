@@ -45,6 +45,13 @@ class PipelineResult:
     answer: GeneratedAnswer | None = None
     clarification: ClarificationResponse | None = None
     sufficiency: SufficiencyResult | None = None
+    pieces: list = None  # list[RetrievedPiece] actually retrieved -- added for Phase 5 eval
+    """The retrieved pieces behind this result, whatever the status. Not used by
+    answer_query's own control flow (that's graded.pieces internally); exposed
+    so Phase 5's eval harness can build RAGAS "contexts" without re-retrieving.
+    Untyped as list (not list[RetrievedPiece]) to avoid a retrieval.hybrid_search
+    import here purely for a type hint -- grading/answer_pipeline.py otherwise
+    has no reason to import RetrievedPiece."""
 
 
 def answer_query(
@@ -67,7 +74,7 @@ def answer_query(
     )
     if not graded.sufficiency.is_sufficient:
         _log.info("answer_query: INSUFFICIENT even after correction (%s)", [r.value for r in graded.sufficiency.reasons])
-        return PipelineResult(status="INSUFFICIENT", sufficiency=graded.sufficiency)
+        return PipelineResult(status="INSUFFICIENT", sufficiency=graded.sufficiency, pieces=graded.pieces)
 
     workings = reason_over_pieces(graded.pieces, facts)
     missing = detect_missing_facts(graded.pieces, workings, query_country=country)
@@ -75,7 +82,7 @@ def answer_query(
     if missing:
         clarification = build_clarification(query, graded.pieces, workings, missing, generator)
         _log.info("answer_query: NEEDS_CLARIFICATION (%s)", [m.fact for m in missing])
-        return PipelineResult(status="NEEDS_CLARIFICATION", clarification=clarification, sufficiency=graded.sufficiency)
+        return PipelineResult(status="NEEDS_CLARIFICATION", clarification=clarification, sufficiency=graded.sufficiency, pieces=graded.pieces)
 
     answer = generator.generate(query, graded.pieces, workings)
-    return PipelineResult(status="ANSWERED", answer=answer, sufficiency=graded.sufficiency)
+    return PipelineResult(status="ANSWERED", answer=answer, sufficiency=graded.sufficiency, pieces=graded.pieces)
