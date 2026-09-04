@@ -13,11 +13,50 @@ composition, not new logic):
   4. T-3.3 as-of-date resolution against effective_date (Finding 2).
   5. T-3.4 lineage dedup (FM-D6), applied to whatever survives 3-4.
   6. Truncate to rerank_candidate_k, then T-3.5 FlashRank rerank.
-  7. Truncate to top_k.
+  7. Drop pieces below min_rerank_score (Session 5 fix, see below), THEN
+     truncate to top_k.
 
 Steps 3 and 4 filter a SET (order doesn't matter, they only decide
 membership); the fused rank order from step 2 is what determines each
 kept piece's position before rerank.
+
+Reopened 2026-09-04 (Session 5) -- real bug, found downstream on Phase 5's
+first live T-5.4 run, traced back here: step 7 used to be an unconditional
+truncate to exactly top_k, with NO floor on relevance. Every query got
+padded out to top_k candidates regardless of how low a low-ranked piece's
+rerank_score actually was -- so a query about housing allowance still
+returned 10 pieces including DIFC leave, notice, probation, gratuity-
+ceiling clauses that had nothing to do with it. This was silently
+compatible with everything downstream: grading/crag_grader.py's own
+docstring already documents its assumption that "whether a clause is
+topically ON-TOPIC for a free-text query... already happened at rerank"
+-- that assumption was correct about WHERE the filtering should happen,
+just wrong that it actually did. grading/temporal_reasoner.py then wraps
+every retrieved normative piece with a temporal_applicability tag into
+its own trivial TemporalWorking (by design, for pieces with no amendment
+pair/alternative to reason over), so the padded-out irrelevant pieces
+each became their own "governing_piece" and generation/generator.py's
+citation-narrowing fix (48daa40) narrowed nothing in practice.
+
+min_rerank_score (new parameter, default None = OLD behaviour unchanged)
+is the fix: once a reranker has scored the candidate pool, drop anything
+scoring below the floor BEFORE truncating to top_k, so top_k becomes a
+ceiling rather than a fixed target. Deliberately does NOT apply to the
+fused_score (RRF-based) fallback path when no reranker is supplied --
+fused_score is a reciprocal-RANK score, not a calibrated relevance
+magnitude, so a floor on it would need its own separate calibration
+work and isn't attempted here; that path stays explicitly unfloored and
+documented as such, not silently assumed equivalent.
+
+The actual floor VALUE is not set as a new default here on purpose --
+this project's standing rule is no constant without calibration against
+real data (same status rrf_k=60 and rerank_candidate_k=20 already have).
+scripts/dump_rerank_scores.py is the calibration script: it prints real
+FlashRankReranker score distributions for a few representative queries
+(a genuinely single-topic one like P-30's housing-allowance query, and
+genuinely multi-clause ones like P-02/P-3a that legitimately need 2+
+pieces) so the floor can be picked from real numbers, not guessed, and
+so it doesn't accidentally cut a legitimate segmented-accrual pair.
 """
 
 from __future__ import annotations
@@ -77,6 +116,7 @@ class HybridRetriever:
         reranker: Reranker | None = None,
         rrf_k: int = DEFAULT_RRF_K,
         rerank_candidate_k: int = 20,
+        min_rerank_score: float | None = None,
     ) -> list[RetrievedPiece]:
         if as_of_date is None:
             as_of_date = dt.date.today()
@@ -102,9 +142,27 @@ class HybridRetriever:
             reranked = reranker.rerank(query, candidates)
             rerank_score_by_id = {pid: score for pid, score in reranked}
             final_order = [pid for pid, _ in reranked]
+            if min_rerank_score is not None:
+                before = len(final_order)
+                final_order = [pid for pid in final_order if rerank_score_by_id[pid] >= min_rerank_score]
+                _log.info(
+                    "min_rerank_score=%.4f dropped %d/%d reranked candidate(s)",
+                    min_rerank_score, before - len(final_order), before,
+                )
         else:
             rerank_score_by_id = {}
             final_order = pre_rerank
+            if min_rerank_score is not None:
+                # Documented scope limit, not an oversight: fused_score is a
+                # reciprocal-RANK score (fusion.py), not a calibrated relevance
+                # magnitude the way a cross-encoder's rerank_score is -- a
+                # floor on it needs its own separate calibration and isn't
+                # attempted here. See this module's docstring.
+                _log.warning(
+                    "min_rerank_score=%.4f requested but no reranker ran -- ignored "
+                    "(fused_score is not a relevance-floored signal; see module docstring)",
+                    min_rerank_score,
+                )
 
         results: list[RetrievedPiece] = []
         for pid in final_order[:top_k]:

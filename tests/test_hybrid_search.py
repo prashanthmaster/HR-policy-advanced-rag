@@ -95,3 +95,49 @@ def test_retrieve_never_raises_on_a_query_with_no_hits():
     retriever, _units = _build_retriever()
     results = retriever.retrieve("zzz_no_such_token_qqq", top_k=5, country="Germany")
     assert isinstance(results, list)
+
+
+# --- Session 5 fix: min_rerank_score (top_k as a ceiling, not a target) ---
+
+
+def test_min_rerank_score_none_by_default_preserves_old_padding_behaviour():
+    """Regression guard: the default must stay backward-compatible so
+    every existing call site (grading/pipeline.py, eval scripts) keeps
+    its already-tested behaviour unless it deliberately opts in."""
+    retriever, units = _build_retriever()
+    results = retriever.retrieve("gratuity", top_k=10, reranker=MockReranker())
+    assert len(results) == 10
+
+
+def test_min_rerank_score_drops_low_scoring_pieces_before_truncating():
+    # MockReranker scores by exact query-token overlap count (see
+    # retrieval/reranker.py) -- a query with only one on-topic token
+    # scores the on-topic piece(s) >=1 and everything else 0.
+    retriever, units = _build_retriever()
+    target = next(u for u in units if u.clause_id == "MER-AE-HOUSING-TABLE")
+    no_floor = retriever.retrieve(target.text[:40], top_k=10, reranker=MockReranker())
+    floored = retriever.retrieve(target.text[:40], top_k=10, reranker=MockReranker(), min_rerank_score=1.0)
+    assert len(floored) <= len(no_floor)
+    assert all(r.rerank_score >= 1.0 for r in floored)
+    # the floor must not silently return nothing when something real qualifies
+    assert any(r.clause_id == "MER-AE-HOUSING-TABLE" for r in floored)
+
+
+def test_min_rerank_score_can_legitimately_return_fewer_than_top_k():
+    """top_k becomes a CEILING, not a fixed target -- this is the actual
+    behaviour change the bug fix makes. A very high floor should return
+    few or zero results rather than padding out with irrelevant pieces."""
+    retriever, _units = _build_retriever()
+    results = retriever.retrieve("gratuity", top_k=10, reranker=MockReranker(), min_rerank_score=999.0)
+    assert results == []
+
+
+def test_min_rerank_score_ignored_without_a_reranker():
+    """Documented scope limit: fused_score is a reciprocal-rank score,
+    not a calibrated relevance magnitude, so the floor only applies to
+    real rerank_score values -- passing it with no reranker must not
+    raise and must not change the unfloored fallback behaviour."""
+    retriever, _units = _build_retriever()
+    without_floor = retriever.retrieve("gratuity", top_k=10)
+    with_floor_but_no_reranker = retriever.retrieve("gratuity", top_k=10, min_rerank_score=0.5)
+    assert [r.piece_id for r in without_floor] == [r.piece_id for r in with_floor_but_no_reranker]

@@ -221,6 +221,35 @@ M3's exit criterion — T-3.6 produces real numbers, recorded in the ledger — 
 
 **Reopened, 2026-09-04 (Session 5)**: a real bug was found downstream, on Phase 5's first live T-5.4 run, that traces all the way back here. Symptom: every ANSWERED item cited 9-12 clauses when the golden set expected 1-3 (e.g. a query asking only about housing allowance also narrated DIFC leave, notice, probation, and gratuity-ceiling clauses). Root-caused through three layers: `generation/generator.py` cited everything retrieval handed it (patched, commit `48daa40`) -> `grading/temporal_reasoner.py`'s `reason_over_pieces()` wraps EVERY retrieved normative piece in its own trivial working regardless of topical relevance, so narrowing citations to "governing pieces" narrowed nothing -> `HybridRetriever.retrieve()` here in Phase 3 always truncates to exactly `top_k`, with **no floor on `rerank_score`** (its own docstring says step 7 is "truncate to top_k," unconditionally). The precision-bound note above ("top_k is a knob Phase 5's golden-set run should reconsider") flagged this exact class of issue at M3's original close and it was left as a follow-up rather than fixed then -- this is that follow-up landing for real. Fix proposed (make `top_k` a ceiling, not a target: drop pieces below a `rerank_score` floor before truncating) but deliberately NOT implemented in this session -- handed to a fresh Phase 3-focused session with full context, since this reopens an already-`DONE`, already-measured milestone and deserves that phase's own design rationale in the loop, not a downstream patch. **The 0.134/0.682 numbers above are now provisional** -- do not quote them as final, and re-run `scripts/run_retrieval_harness.py` for real once the fix lands. T-5.3/T-5.4 (RAGAS, Citation Accuracy) both need a fresh run afterward too; neither of Citation Accuracy's first two real runs (0.106, then 0.151 mean, this session) should be trusted or entered into the Results Ledger -- both ran against this pre-fix, over-broad retrieval.
 
+**Fix implemented, 2026-09-04 (new Phase-3-focused session)**: confirmed the fix approach *does* match
+Phase 3's own design intent before touching anything -- `grading/crag_grader.py`'s own docstring already
+states its assumption that "whether a clause is topically ON-TOPIC for a free-text query... already
+happened at rerank." That assumption was always correct about *where* relevance filtering belonged; step 7
+just never actually did it. So this is retrieval finally delivering the contract Phase 4 was already built
+against, not a new behavioural decision layered on top.
+
+`HybridRetriever.retrieve()` gained a `min_rerank_score: float | None = None` parameter. When a reranker
+runs, candidates scoring below the floor are dropped **before** truncating to `top_k` -- `top_k` is now a
+ceiling, not a fixed target. Default is `None` (old, unfixed behaviour) deliberately: this project's
+standing rule is no constant without calibration against real data (same status `rrf_k=60` and
+`rerank_candidate_k=20` already carry), so the mechanism is built and tested, but **not yet wired in as the
+actual default anywhere** -- `grading/pipeline.py`/`grading/answer_pipeline.py`/the eval scripts still call
+`retrieve()` without it, so the bug is not yet fixed in practice, only fixable. The no-reranker fallback path
+(`fused_score`) is explicitly left unfloored -- it's a reciprocal-rank score, not a relevance magnitude, and
+flooring it would need its own separate calibration this session didn't attempt.
+
+`scripts/dump_rerank_scores.py` is the calibration script (by-hand, real `FlashRankReranker` + real
+`text-embedding-3-small` query embeddings, same pattern as every other real-API script in this project):
+prints per-candidate `rerank_score` for a representative mix of single-topic queries (P-30, housing
+allowance -- where a floor should cut almost everything but the target) and genuinely multi-clause ones
+(P-02, P-3a -- where a SECOND piece legitimately belongs and must not get cut). **Not yet run.** Once it is,
+the reported numbers pick the actual floor value, that value gets wired into the real call sites, 171/171
+tests re-confirmed, then `scripts/run_retrieval_harness.py` (T-3.6) and both T-5.3/T-5.4 scripts re-run for
+real, honest before/after numbers recorded here (not a silent overwrite of the provisional 0.134/0.682).
+
+171/171 tests passing (167 + 4 new: default-unchanged regression guard, floor actually drops low-scoring
+pieces, floor can legitimately return fewer than `top_k`, floor is a documented no-op without a reranker).
+
 ---
 
 ### Phase 4 — Grading, generation & clarification · `DONE` · D4
@@ -413,6 +442,7 @@ Metrics awaiting first measurement: Faithfulness · Answer Correctness · Citati
 
 | Date | Change |
 |---|---|
+| 2026-09-04 | Phase 3 reopened bug: built the fix mechanism. `HybridRetriever.retrieve()` gained `min_rerank_score` (drop below-floor candidates before truncating to `top_k`, so `top_k` is a ceiling not a target), default `None` (old behaviour) until calibrated. `scripts/dump_rerank_scores.py` written for the real-data calibration run. Not yet the actual fix in production -- no call site passes the new parameter yet, and no floor value is chosen. 171/171 tests passing. |
 | 2026-09-04 | **Two real bugs found on the first live T-5.3/T-5.4 run.** (1) RAGAS scoring returned `n/a` for all four metrics on every item -- root-caused to `ragas`'s unconditional `nest_asyncio.apply()` being incompatible with Python 3.11+'s `asyncio.timeout()` (confirmed by reading `ragas/executor.py` directly, not guessed); fixed via `allow_nest_asyncio=False` in `eval/run_ragas_eval.py`, not yet re-run. (2) Citation Accuracy scored 0.106 mean with 7/7 ANSWERED items over-citing -- root-caused to `generation/citations.py`'s `build_citations()` attaching every retrieved normative piece regardless of whether the answer's narrative actually used it, a real defect in Phase 4/5 generation code that the existing test suite never caught (it checked expected clauses were present, never that extraneous ones were absent). Found and root-caused; fix proposed (restrict citations to pieces actually referenced by `workings`) but deliberately NOT applied without Prashanth's sign-off, since it changes production generation output. Also resolved the `langchain_community.chat_models.vertexai` `ModuleNotFoundError` blocking `ragas` from importing at all -- root-caused to a dead top-level import (`ragas/llms/base.py` only uses `ChatVertexAI`/`VertexAI` in an `isinstance()` support-list, never instantiates either) against a `langchain-community` version where that submodule was removed in LangChain's provider-package split; fixed with a 5-line local compatibility shim in the venv rather than downgrading `langchain-community` (which would have risked real incompatibility with the already-installed `langchain-core 1.5.1`/`langchain 1.3.14`). |
 | 2026-09-04 | **Phase 8 scope confirmed IN SCOPE by Prashanth** -- this is an end-to-end project with real deployment, not a HOLD/fast-follow to skip for the postmortem. Updated the milestone table (M8 `HOLD`->`TODO`) and Phase 8's own header/detail accordingly. Also fixed a stale M5 row in the same milestone table -- still said `TODO` even though the Phase 5 detail section had said `WIP` since Session 4/5's work (golden set, arithmetic layer, T-5.3/T-5.4 scripts) -- same milestone-table-vs-phase-detail drift pattern caught in prior sessions for M2. |
 | 2026-09-04 | **Arithmetic gap closed (Session 5).** Found `TemplateGenerator` never computed an actual rupee amount or day count (only structural reasoning existed) while scoping T-5.3/T-5.4 -- a real scope gap, not a bug. Built `generation/formula.py` (deterministic, LLM-free) and wired it through `ServiceFacts`/`TemporalWorking`/`GeneratedAnswer`/`TemplateGenerator.generate()` (commit `1ff410c`, +15 tests, 166/166 passing), after exposing `PipelineResult.pieces` for Phase 5's eval harness (commit `49f533f`). Wired verified `facts`/`expected_computation` into P-01/P-02/P-03 in `scored_golden_set.json` (commit `fe9e305`): P-01 amount=₹20,00,000 (uncapped ₹22,50,000), P-02 45+52=97 days, P-03 165 days -- all three re-verified independently against `generation/formula.py` directly, not just carried over from an earlier hand-check. Standing working mode from this session: Claude writes and commits code directly via the device bridge; Prashanth is pulled in only for real terminal runs needing network this sandbox blocks. |
