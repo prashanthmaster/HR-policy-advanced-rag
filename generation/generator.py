@@ -3,16 +3,86 @@ from __future__ import annotations
 from langsmith import traceable
 
 from generation.citations import build_citations
+from generation.formula import (
+    FORMULAS,
+    compute_flat_gratuity,
+    compute_leave_segment,
+    compute_tenure_banded_days,
+)
 from generation.schema import GeneratedAnswer
 from generation.supersession import check_supersession
 from grading.temporal_reasoner import TemporalWorking
 from retrieval.hybrid_search import RetrievedPiece
 
 
+def _compute_from_workings(workings: list[TemporalWorking], pieces_clause_ids: set[str]) -> tuple[list[str], float | None, float | None]:
+    """Phase 5 addition: turn TemporalWorking's structural output into a
+    number, where generation/formula.py has a matching formula AND the
+    needed ServiceFacts were actually supplied. Returns extra narrative
+    lines plus (computed_amount, computed_days) -- either or both may
+    stay None, which is the correct behaviour when a formula or a fact
+    is missing (report the method, never invent a figure).
+
+    Deliberately handles two distinct shapes, matching the two real
+    formula kinds in generation/formula.FORMULAS:
+      - a single POINT_IN_TIME/self-contained working whose
+        governing_piece has a formula (India gratuity, UAE's
+        tenure-banded gratuity day-count);
+      - a SEGMENTED_ACCRUAL working with >1 segment, each segment's
+        governing_piece looked up separately and summed (India leave
+        18->24 days).
+    """
+    lines: list[str] = []
+    amount: float | None = None
+    days: float | None = None
+
+    for w in workings:
+        if w.governing_piece is not None and w.service_start_date and w.valuation_date:
+            formula = FORMULAS.get(w.governing_piece.clause_id)
+            if formula is None:
+                continue
+            if formula.kind == "flat_days_per_year":
+                comp = compute_flat_gratuity(
+                    formula, w.service_start_date, w.valuation_date, w.monthly_wage, pieces_clause_ids,
+                )
+                if comp.amount is not None:
+                    amount = (amount or 0.0) + comp.amount
+                    if comp.ceiling_applied:
+                        lines.append(
+                            f"Computed: uncapped {comp.uncapped_amount:,.2f}, capped to {comp.amount:,.2f} "
+                            f"by {comp.ceiling_applied}."
+                        )
+                    else:
+                        lines.append(f"Computed amount: {comp.amount:,.2f}.")
+                elif comp.note:
+                    lines.append(comp.note)
+            elif formula.kind == "tenure_banded_days_per_year":
+                comp = compute_tenure_banded_days(formula, w.service_start_date, w.valuation_date)
+                if comp.total_days is not None:
+                    days = (days or 0.0) + comp.total_days
+                    lines.append(f"Computed: {comp.total_days:g} days total. {comp.note}")
+
+        if w.segments:
+            segment_total = 0.0
+            all_have_formula = True
+            for seg in w.segments:
+                formula = FORMULAS.get(seg.governing_piece.clause_id)
+                if formula is None or formula.kind != "flat_days_per_year_proportional" or seg.start is None or seg.end is None:
+                    all_have_formula = False
+                    break
+                segment_total += compute_leave_segment(formula, seg.start, seg.end)
+            if all_have_formula and w.segments:
+                days = (days or 0.0) + segment_total
+                lines.append(f"Computed: {segment_total:g} days total across {len(w.segments)} segment(s).")
+
+    return lines, amount, days
+
+
 class TemplateGenerator:
     """Deterministic, no LLM. Assembles an answer purely by stitching
-    together clause text and T-4.3's narrative lines -- nothing here is
-    invented, so nothing here can hallucinate."""
+    together clause text, T-4.3's narrative lines, and (Phase 5) a small
+    deterministic arithmetic layer (generation/formula.py) -- nothing
+    here is invented, so nothing here can hallucinate."""
 
     @traceable(name="generate_answer", run_type="chain")
     def generate(
@@ -34,6 +104,13 @@ class TemplateGenerator:
                 lines.extend(w.narrative)
                 missing.extend(w.missing_facts)
 
+        computed_amount: float | None = None
+        computed_days: float | None = None
+        if not missing and workings:
+            pieces_clause_ids = {p.clause_id for p in pieces}
+            compute_lines, computed_amount, computed_days = _compute_from_workings(workings, pieces_clause_ids)
+            lines.extend(compute_lines)
+
         if missing:
             lines.append(f"Cannot give a final answer: missing {', '.join(missing)}.")
 
@@ -46,5 +123,7 @@ class TemplateGenerator:
             text="\n".join(lines),
             citations=citations,
             used_temporal_reasoning=bool(workings),
+            computed_amount=computed_amount,
+            computed_days=computed_days,
             superseded_warning=warning,
         )

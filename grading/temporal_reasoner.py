@@ -51,6 +51,12 @@ class ServiceFacts:
     """The trigger/termination/'as of' date the computation is anchored
     to -- what Finding 1 calls the trigger-event date for POINT_IN_TIME,
     and the end of the period being segmented for SEGMENTED_ACCRUAL."""
+    monthly_wage: float | None = None
+    """Phase 5 addition: last-drawn monthly wage (whatever wage base the
+    governing clause specifies -- basic+DA for India, basic wage for
+    UAE), needed only to turn a day-count formula into a rupee figure.
+    None means generation reports a day-count/method only, never an
+    invented amount."""
 
 
 @dataclass
@@ -78,6 +84,15 @@ class TemporalWorking:
     """Facts this reasoning needed but ServiceFacts didn't supply --
     T-4.5's clarification contract is the consumer of this list, not an
     error condition raised here."""
+    service_start_date: dt.date | None = None
+    valuation_date: dt.date | None = None
+    monthly_wage: float | None = None
+    """Phase 5 addition: the ServiceFacts this working was reasoned from,
+    carried forward so generation/generator.py can do arithmetic
+    (generation/formula.py) without generate() needing its own separate
+    ServiceFacts parameter threaded through every call site -- see
+    generator.py's docstring for why this is cleaner than the
+    alternative."""
 
 
 def _lineage_pair(pieces: list[RetrievedPiece]) -> tuple[RetrievedPiece, RetrievedPiece]:
@@ -126,6 +141,9 @@ def reason_point_in_time(piece: RetrievedPiece, facts: ServiceFacts) -> Temporal
         applicability=TemporalApplicability.POINT_IN_TIME,
         narrative=narrative,
         governing_piece=piece,
+        service_start_date=facts.service_start_date,
+        valuation_date=facts.valuation_date,
+        monthly_wage=facts.monthly_wage,
     )
 
 
@@ -190,6 +208,9 @@ def reason_segmented_accrual(pieces: list[RetrievedPiece], facts: ServiceFacts) 
         narrative=narrative,
         segments=segments,
         missing_facts=missing_facts,
+        service_start_date=facts.service_start_date,
+        valuation_date=facts.valuation_date,
+        monthly_wage=facts.monthly_wage,
     )
 
 
@@ -305,7 +326,10 @@ def reason_over_pieces(pieces: list[RetrievedPiece], facts: ServiceFacts) -> lis
             seen_clause_ids.update(p.clause_id for p in group)
         else:
             # SEGMENTED_ACCRUAL/ELECTIVE without an amendment pair/pair of
-            # alternatives (e.g. DIFC-LEAVE): self-contained, no split.
+            # alternatives (e.g. DIFC-LEAVE, UAE's tenure-banded gratuity
+            # formula): self-contained, no split -- but still carry facts
+            # forward (Phase 5) so generation/formula.py can compute a
+            # tenure-banded day-count from service_start_date/valuation_date.
             for p in group:
                 workings.append(
                     TemporalWorking(
@@ -316,6 +340,9 @@ def reason_over_pieces(pieces: list[RetrievedPiece], facts: ServiceFacts) -> lis
                             "already states how the rate accrues)."
                         ],
                         governing_piece=p,
+                        service_start_date=facts.service_start_date,
+                        valuation_date=facts.valuation_date,
+                        monthly_wage=facts.monthly_wage,
                     )
                 )
                 seen_clause_ids.add(p.clause_id)
