@@ -35,10 +35,10 @@ This is the tracking document of record. The live task board mirrors it; where t
 | **M2** | Indexed | Corpus fully indexed under the extended schema; proviso-boundary and metadata tests pass | D2–D3 | `DONE` |
 | **M3** | Retrieval measured | Retrieval-only Context Precision + Recall **measured** against the probe set and recorded in the ledger | D3 | `DONE` |
 | **M4** | End-to-end answers | Pipeline answers the probe set with citations; clarification contract returns structured output on `MUST_CLARIFY` items | D4 | `DONE` (composition proven on representative real cases -- see caveat in Phase 4 detail) |
-| **M5** | Baseline scored | All 5 metrics + the four-class confusion matrix run on the golden set; **first real numbers** recorded | D4–D5 | `TODO` |
+| **M5** | Baseline scored | All 5 metrics + the four-class confusion matrix run on the golden set; **first real numbers** recorded | D4–D5 | `WIP` (golden set + arithmetic layer done; T-5.3/T-5.4 scripts written, awaiting real run) |
 | **M6** | Freshness demoable | A document edited in Drive is picked up, re-indexed incrementally, and the answer changes correctly on camera | D5–D6 | `TODO` |
 | **M7** | Regression-gated | CI runs the eval on push and fails the build on regression from recorded baseline | D6 | `TODO` |
-| **M8** | Deployed | Public Cloud Run URL answers a query end-to-end; LangSmith trace inspectable | D7 | `HOLD` |
+| **M8** | Deployed | Public Cloud Run URL answers a query end-to-end; LangSmith trace inspectable | D7 | `TODO` (confirmed IN SCOPE by Prashanth 2026-09-04 -- real deployment, not a fast-follow) |
 | **M9** | Defensible | Full cold narration, unaided, no notes | D7+2 | `TODO` |
 
 ---
@@ -297,7 +297,9 @@ The differentiator. Everything before this is table stakes.
 
 ---
 
-### Phase 8 — Deployment · `HOLD` (fast-follow) · D7
+### Phase 8 — Deployment · `TODO` · D7
+
+**Scope confirmed 2026-09-04**: Prashanth explicitly confirmed Phase 8 is IN SCOPE for "finish the project" -- this is an end-to-end project with real deployment, not a fast-follow to skip for the portfolio postmortem. The original HOLD/fast-follow framing below is historical context for why it was sequenced last, not a statement that it can be dropped.
 
 | ID | Task | Depends on | Status |
 |---|---|---|---|
@@ -309,7 +311,7 @@ The differentiator. Everything before this is table stakes.
 
 **Exit criterion (M8):** public URL answers end-to-end; LangSmith trace inspectable for that answer.
 
-Explicitly a fast-follow. Local prototype quality outranks deployment speed.
+Originally sequenced last because local prototype quality outranks deployment speed -- still true as a sequencing rationale (M5/M6/M7 come first), but not a reason to skip it.
 
 ---
 
@@ -400,6 +402,7 @@ Metrics awaiting first measurement: Faithfulness · Answer Correctness · Citati
 
 | Date | Change |
 |---|---|
+| 2026-09-04 | **Phase 8 scope confirmed IN SCOPE by Prashanth** -- this is an end-to-end project with real deployment, not a HOLD/fast-follow to skip for the postmortem. Updated the milestone table (M8 `HOLD`->`TODO`) and Phase 8's own header/detail accordingly. Also fixed a stale M5 row in the same milestone table -- still said `TODO` even though the Phase 5 detail section had said `WIP` since Session 4/5's work (golden set, arithmetic layer, T-5.3/T-5.4 scripts) -- same milestone-table-vs-phase-detail drift pattern caught in prior sessions for M2. |
 | 2026-09-04 | **Arithmetic gap closed (Session 5).** Found `TemplateGenerator` never computed an actual rupee amount or day count (only structural reasoning existed) while scoping T-5.3/T-5.4 -- a real scope gap, not a bug. Built `generation/formula.py` (deterministic, LLM-free) and wired it through `ServiceFacts`/`TemporalWorking`/`GeneratedAnswer`/`TemplateGenerator.generate()` (commit `1ff410c`, +15 tests, 166/166 passing), after exposing `PipelineResult.pieces` for Phase 5's eval harness (commit `49f533f`). Wired verified `facts`/`expected_computation` into P-01/P-02/P-03 in `scored_golden_set.json` (commit `fe9e305`): P-01 amount=₹20,00,000 (uncapped ₹22,50,000), P-02 45+52=97 days, P-03 165 days -- all three re-verified independently against `generation/formula.py` directly, not just carried over from an earlier hand-check. Standing working mode from this session: Claude writes and commits code directly via the device bridge; Prashanth is pulled in only for real terminal runs needing network this sandbox blocks. |
 | 2026-09-03 | **T-5.1/T-5.2 done.** `eval/golden/scored_golden_set.json` — 24 probes promoted into the scored golden set with class labels, expected clause IDs, and golden answers (derived from real corpus text + closed V-1/V-3 findings, no invented numbers). Mix 46/25/21/8 vs. target 45/25/20/10. Checked T-1.8's block against all 43 probes: V-2/V-4/V-5 don't gate any of them (see Phase 5 detail and `docs/CORPUS_REQUIREMENTS.md`), so promotion proceeded without re-opening verification work. Found and fixed a real probe/fixture wording mismatch on P-33 (Gulf EOSB terms vs. the fixture's actual India synonym set) — likely explains its M3 zero-recall result; held out of the scored set pending sign-off. Also fixed two stale plan artifacts found on read-through: Phase 2's header still said `WIP` after its exit criterion had already been met, and P-01's `[VERIFY]` tag in `adversarial_probe_set.md` had not been cleared when V-1 closed. |
 | 2026-09-03 | **M4 CLOSED. Phase 4 DONE.** T-4.7 (LangSmith tracing, `@traceable` on retrieve/grade/temporal-reason/generate, no-op with no network call unless tracing is explicitly enabled -- verified) and T-4.8 wiring (`grading/answer_pipeline.py`'s `answer_query()`, composing T-4.1-T-4.6 into one call) done. M4 exit criterion met with a stated scope caveat: proven end-to-end on three real representative cases (P-01 answers without splitting, P-3a self-corrects and splits at 2020-02-01, P-06 correctly asks for clarification instead of guessing) starting from actual query text, not a full unaided 43-probe run -- that needs a natural-language fact-extraction step (dates/country from free text) that was never a Phase 4 task and doesn't exist yet. 150/150 tests passing. Phase 5 (evaluation harness) open next. |
