@@ -36,7 +36,17 @@
       ],
       "verification_status": "V-1 CLOSED 2026-09-03 — confirmed via 3 concurring secondary sources; primary gazette S.O. 1420(E) not read (caveat carried forward)",
       "rationale": "The marquee probe. Contrasts with P-02 (same surface shape, opposite class) to prove reasoning rather than pattern-matching.",
-      "class": "MUST_ANSWER"
+      "class": "MUST_ANSWER",
+      "facts": {
+        "service_start_date": "2014-01-01",
+        "valuation_date": "2026-09-30",
+        "monthly_wage": 300000.0
+      },
+      "expected_computation": {
+        "computed_amount": 2000000.0,
+        "computed_days": null,
+        "note": "Uncapped 22,50,000 capped to the post-2018-03-29 ceiling of 20,00,000."
+      }
     },
     {
       "probe_id": "P-02",
@@ -47,15 +57,25 @@
         "MER-IN-LEAVE-ANNUAL-V1",
         "MER-IN-LEAVE-ANNUAL-V2"
       ],
-      "golden_answer": "temporal_applicability = SEGMENTED_ACCRUAL (opposite of P-01): split service at the amendment boundary, 2024-07-01. Service before that date accrues privilege leave at 18 days/completed year (V1, MER-IN-LEAVE-ANNUAL-V1); service from 2024-07-01 accrues at 24 days/completed year (V2, which explicitly preserves the pre-amendment rate for pre-boundary service). Sum the two segments — never apply 24/yr retroactively to the pre-2024-07-01 portion.",
+      "golden_answer": "temporal_applicability = SEGMENTED_ACCRUAL (opposite of P-01): split service at the amendment boundary, 2024-07-01. Service before that date accrues privilege leave at 18 days/completed year (V1, MER-IN-LEAVE-ANNUAL-V1); service from 2024-07-01 accrues at 24 days/completed year (V2, which explicitly preserves the pre-amendment rate for pre-boundary service). Sum the two segments -- never apply 24/yr retroactively to the pre-2024-07-01 portion. For the eval harness's assumed facts (service_start=2022-01-01, valuation=2026-09-03): pre-boundary segment 2022-01-01→2024-07-01 (2.5y × 18/yr) = 45 days; post-boundary segment 2024-07-01→2026-09-03 (~2.17y × 24/yr) = 52 days; total = 97 days.",
       "must_not_include": [
         "applying 24 days/year to the whole tenure",
         "applying 18 days/year to the whole tenure",
         "treating this like P-01 and refusing to split"
       ],
       "verification_status": "n/a — Tier-2 synthetic policy, not statutory",
-      "rationale": "As posed the query gives no join date, so a numeric total cannot be produced — the golden item scores the METHOD (correct segmentation logic and boundary date), not a specific day count. Worth noting in the judge rubric: a system that asks for the join date to produce a number is not wrong, only stricter than the probe requires.",
-      "class": "MUST_ANSWER"
+      "rationale": "As posed the query gives no join date, so on raw query text alone a numeric total cannot be produced -- the golden item primarily scores the METHOD (correct segmentation logic and boundary date). A system that asks for the join date to produce a number is not wrong, only stricter than the probe requires. For Phase 5's scored eval, the `facts` field above supplies an assumed join date (service_start_date/valuation_date are caller-supplied per grading/answer_pipeline.py's documented scope, not parsed from query text) so the arithmetic layer's day-count total (97 days) can also be checked exactly, in addition to the method check.",
+      "class": "MUST_ANSWER",
+      "facts": {
+        "service_start_date": "2022-01-01",
+        "valuation_date": "2026-09-03",
+        "monthly_wage": null
+      },
+      "expected_computation": {
+        "computed_amount": null,
+        "computed_days": 97.0,
+        "note": "45 days pre-2024-07-01 (V1 @ 18/yr) + 52 days post (V2 @ 24/yr)."
+      }
     },
     {
       "probe_id": "P-03",
@@ -72,7 +92,17 @@
       ],
       "verification_status": "Tier-1 real UAE statute (Federal Decree-Law 33/2021), source_url in corpus metadata",
       "rationale": "Catches over-correction: a system that learns 'splitting = amendment handling' from P-01/P-02 fails this.",
-      "class": "MUST_ANSWER"
+      "class": "MUST_ANSWER",
+      "facts": {
+        "service_start_date": "2019-01-01",
+        "valuation_date": "2026-01-01",
+        "monthly_wage": null
+      },
+      "expected_computation": {
+        "computed_amount": null,
+        "computed_days": 165.0,
+        "note": "21 days/yr x 5 (105) + 30 days/yr x 2 (60) = 165 days, exactly 7y0m tenure."
+      }
     },
     {
       "probe_id": "P-3a",
