@@ -145,6 +145,32 @@ def main() -> int:
         return 1
 
     try:
+        # Neutralize nest_asyncio.apply() BEFORE importing ragas. Root cause
+        # (confirmed 2026-09-04 by reading the installed source of both
+        # versions, not guessed from the traceback): ragas 0.3.1 -- what
+        # Prashanth's .venv-win actually installed, an OLDER release than
+        # this project's 0.4.3 dev-reference venv, not a newer one as first
+        # assumed -- calls nest_asyncio.apply() unconditionally at MODULE
+        # IMPORT TIME in ragas/executor.py, with no guard. ragas 0.4.3 added
+        # a guard (ragas/async_utils.py::apply_nest_asyncio) that only
+        # applies it when an event loop is ALREADY running (the Jupyter
+        # case nest_asyncio exists for) and is a no-op otherwise, which is
+        # why 0.4.3 never hit this. nest_asyncio's global loop patching is
+        # incompatible with Python 3.11+'s asyncio.timeout() task tracking,
+        # and produced "RuntimeError(Timeout should be used inside a task)"
+        # on every single job, silently NaN-ing every metric (reproduced on
+        # Prashanth's real run, 2026-09-04). Since this script is always a
+        # plain top-level script -- never a Jupyter cell with an
+        # already-running loop -- nest_asyncio is never actually needed
+        # here, on ANY ragas version, so making nest_asyncio.apply() a
+        # no-op is safe and makes every version behave like 0.4.3's own
+        # guarded default.
+        try:
+            import nest_asyncio as _nest_asyncio_module
+            _nest_asyncio_module.apply = lambda *a, **k: None
+        except ImportError:
+            pass  # not installed -- fine, nothing to neutralize
+
         from ragas import EvaluationDataset, SingleTurnSample, evaluate
         from ragas.metrics import answer_correctness, context_precision, context_recall, faithfulness
         from langchain_openai import ChatOpenAI, OpenAIEmbeddings
@@ -238,32 +264,24 @@ def main() -> int:
             llm=llm,
             embeddings=embeddings,
         )
-        # ragas.executor otherwise calls nest_asyncio.apply() unconditionally
-        # (for Jupyter compatibility) on the versions that expose this flag.
-        # nest_asyncio's loop patching is incompatible with Python 3.11+'s
-        # asyncio.timeout() -- confirmed by reading ragas/executor.py and
-        # ragas/async_utils.py on ragas 0.4.3 -- and produced "RuntimeError
-        # (Timeout should be used inside a task)" on every job there, silently
-        # NaN-ing every metric. We run as a plain script (no Jupyter loop
-        # already running), so nest_asyncio is unnecessary here whenever the
-        # flag exists to disable it.
-        #
-        # requirements.txt pins "ragas" unversioned, so different machines can
-        # legitimately end up on different ragas releases (confirmed 2026-09-04:
-        # this exact TypeError on Prashanth's .venv-win install of a newer ragas
-        # that removed/renamed allow_nest_asyncio, against a dev reference of
-        # 0.4.3 that still has it) -- inspect the INSTALLED evaluate()'s real
-        # signature rather than assuming either shape.
+        # The nest_asyncio.apply() monkeypatch above (see the comment where
+        # ragas is imported) is the actual fix for the "Timeout should be
+        # used inside a task" crash. This still passes allow_nest_asyncio=False
+        # when the installed ragas version happens to expose that kwarg
+        # (0.4.3 and similar) -- redundant with the monkeypatch, but cheap
+        # insurance, and it keeps this script correct against whichever
+        # ragas release requirements.txt's unversioned pin resolves to.
         ragas_version = getattr(__import__("ragas"), "__version__", "unknown")
         if "allow_nest_asyncio" in inspect.signature(evaluate).parameters:
             evaluate_kwargs["allow_nest_asyncio"] = False
-            print(f"(ragas {ragas_version}: passing allow_nest_asyncio=False)")
+            print(f"(ragas {ragas_version}: passing allow_nest_asyncio=False; "
+                  f"nest_asyncio.apply() is also neutralized directly)")
         else:
             print(f"(ragas {ragas_version}: no allow_nest_asyncio parameter on this "
-                  f"version's evaluate() -- running without it; if metrics come back "
-                  f"as n/a/NaN, that's the nest_asyncio/asyncio.timeout incompatibility "
-                  f"resurfacing on this ragas release and needs a fresh look, not a "
-                  f"silent re-add of the old flag.)")
+                  f"version's evaluate() -- relying on the nest_asyncio.apply() "
+                  f"monkeypatch instead. If metrics still come back as n/a/NaN, "
+                  f"the incompatibility has resurfaced somewhere the monkeypatch "
+                  f"doesn't reach and needs a fresh look.)")
         eval_result = evaluate(dataset, **evaluate_kwargs)
         result_df = eval_result.to_pandas()
         for idx, row in enumerate(per_item):
