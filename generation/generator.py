@@ -137,6 +137,27 @@ class TemplateGenerator:
         used_pieces = _pieces_actually_used(pieces, workings)
         citations = build_citations(used_pieces)
 
+        if workings and not missing:
+            # Bug fix, 2026-09-04 (Session 8, Convention 17): reason_over_pieces()
+            # wraps nearly every retrieved piece in its own TemporalWorking, and
+            # the narrative above is -- for POINT_IN_TIME and self-contained
+            # pieces especially -- only a templated meta-sentence about which
+            # version governs, never the underlying clause's own text. Net
+            # effect, found diagnosing low RAGAS Faithfulness/Answer Correctness
+            # and several Citation Accuracy misses: most real answers carried
+            # zero actual policy content, just generic template prose, even
+            # though a real clause WAS correctly cited. Fix: always follow the
+            # narrative with the real text of every piece it actually relied on
+            # (used_pieces is exactly what gets cited, from _pieces_actually_used
+            # above), deduplicated -- so a cited clause is always also quoted,
+            # matching the `if not workings` branch's own behaviour, instead of
+            # only ever being named.
+            seen_clause_ids: set[str] = set()
+            for p in used_pieces:
+                if p.clause_id not in seen_clause_ids:
+                    lines.append(p.text)
+                    seen_clause_ids.add(p.clause_id)
+
         computed_amount: float | None = None
         computed_days: float | None = None
         if not missing and workings:
