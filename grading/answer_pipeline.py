@@ -52,6 +52,18 @@ class PipelineResult:
     Untyped as list (not list[RetrievedPiece]) to avoid a retrieval.hybrid_search
     import here purely for a type hint -- grading/answer_pipeline.py otherwise
     has no reason to import RetrievedPiece."""
+    faithfulness_score: float | None = None
+    """Set only when grading.faithfulness_gate.apply_faithfulness_gate() has
+    been run over this result (T-6.6) -- None means "gate not applied,"
+    never "answer is unfaithful." Kept here rather than only in the gate's
+    own return value so a refused result still carries the score that
+    caused the refusal, for logging/demo/audit purposes."""
+    refused_by_faithfulness_gate: bool = False
+    """True iff this result started as ANSWERED and was converted to
+    INSUFFICIENT by the live faithfulness gate (T-6.6) -- distinguishes a
+    live faithfulness refusal from every other INSUFFICIENT cause (no
+    relevant clause, missing lineage segment, etc.), which matters for
+    T-6.8's re-run and for the demo narrative."""
 
 
 def answer_query(
