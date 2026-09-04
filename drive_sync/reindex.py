@@ -18,6 +18,12 @@ Given a ChangedFile (from change_detector.detect_changes()), this:
 6. Only on success, calls change_detector.mark_seen() so the next poll
    doesn't report this file again.
 
+Also runs T-6.5's clause-level version-event detection (drive_sync.
+version_events) between the old and new parse of the file, so a caller
+can report any SUBSTANTIVE/SUNSET/ADDITION clause changes for human
+review -- see version_events.py for why this only flags, never auto-
+decides supersession.
+
 Deliberately NOT incremental on the BM25/lexical side: rank_bm25's
 BM25Okapi computes corpus-wide document-frequency statistics at
 construction time, so there is no meaningful notion of "update just one
@@ -37,6 +43,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from dataclasses import dataclass
+
 from ingestion.embedder import EmbeddingCache, OpenAIEmbedder
 from ingestion.index_units import build_indexable_units
 from ingestion.logging_setup import get_logger
@@ -44,6 +52,7 @@ from ingestion.parser import parse_file
 from retrieval.vector_index import VectorIndex
 
 from drive_sync.change_detector import ChangedFile, export_plain_text, mark_seen
+from drive_sync.version_events import VersionEvent, detect_version_events
 
 _log = get_logger("drive_sync.reindex")
 
@@ -53,14 +62,26 @@ VECTOR_INDEX_PATH = REPO_ROOT / "build" / "vector_index"
 EMBEDDING_CACHE_PATH = REPO_ROOT / "build" / "embedding_cache.json"
 
 
-def reindex_changed_file(changed: ChangedFile, service) -> int:
-    """Re-index exactly one changed Drive document. Returns the number of
-    indexable units (retrieval pieces) written for it. Raises on any
-    failure -- callers (scripts/reindex_from_drive.py) should NOT call
-    mark_seen() themselves if this raises, so a failed re-index is picked
-    up again on the next poll rather than silently skipped."""
+@dataclass
+class ReindexResult:
+    unit_count: int
+    version_events: list[VersionEvent]
+
+
+def reindex_changed_file(changed: ChangedFile, service) -> ReindexResult:
+    """Re-index exactly one changed Drive document. Returns a ReindexResult
+    (unit count written, plus any clause-level version events a human
+    should look at). Raises on any failure -- callers (scripts/reindex_
+    from_drive.py) should NOT call mark_seen() themselves if this raises,
+    so a failed re-index is picked up again on the next poll rather than
+    silently skipped."""
     local_path = CORPUS_ROOT / changed.rel_path
     _log.info("re-indexing %s (%s)", changed.drive_doc_name, changed.rel_path)
+
+    # Capture the OLD clauses before overwriting -- this is the only point
+    # at which the pre-edit text is still available, needed for T-6.5's
+    # clause-level diff below.
+    old_chunks = parse_file(local_path, repo_root=REPO_ROOT) if local_path.exists() else []
 
     # Step 1-2: pull the live text, overwrite the local corpus file.
     new_text = export_plain_text(service, changed.drive_file_id)
@@ -70,6 +91,15 @@ def reindex_changed_file(changed: ChangedFile, service) -> int:
     # Step 3-4: re-parse just this file, build its units.
     chunks = parse_file(local_path, repo_root=REPO_ROOT)
     units = build_indexable_units(chunks)
+
+    # T-6.5: classify what changed at clause level (flag-only, see
+    # version_events.py). Retrieval is updated regardless, below.
+    version_events = detect_version_events(old_chunks, chunks)
+    for ev in version_events:
+        _log.info(
+            "version event: clause_id=%s kind=%s needs_human_review=%s",
+            ev.clause_id, ev.kind.value, ev.needs_human_review,
+        )
 
     # source_file must match exactly what parse_file/Chunk computed
     # (relative to REPO_ROOT, e.g. "corpus/tier1_law/india/india_law.md")
@@ -91,4 +121,4 @@ def reindex_changed_file(changed: ChangedFile, service) -> int:
     mark_seen(changed)
 
     _log.info("re-indexed %s: %d unit(s) written", changed.rel_path, len(units))
-    return len(units)
+    return ReindexResult(unit_count=len(units), version_events=version_events)

@@ -41,10 +41,16 @@ def main() -> int:
 
     print(f"{len(changes)} file(s) changed -- re-indexing:")
     failures = 0
+    all_review_events = []
     for c in changes:
         try:
-            unit_count = reindex_changed_file(c, service)
-            print(f"  OK: {c.drive_doc_name}  ({c.rel_path}) -- {unit_count} unit(s) re-indexed")
+            result = reindex_changed_file(c, service)
+            print(f"  OK: {c.drive_doc_name}  ({c.rel_path}) -- {result.unit_count} unit(s) re-indexed")
+            for ev in result.version_events:
+                flag = "NEEDS REVIEW" if ev.needs_human_review else "info"
+                print(f"      [{flag}] clause {ev.clause_id}: {ev.kind.value}")
+                if ev.needs_human_review:
+                    all_review_events.append((c, ev))
         except Exception as e:  # noqa: BLE001 -- report and continue with the rest
             failures += 1
             print(f"  FAILED: {c.drive_doc_name}  ({c.rel_path}) -- {e!r}")
@@ -55,6 +61,17 @@ def main() -> int:
         return 1
 
     print(f"\nAll {len(changes)} file(s) re-indexed successfully.")
+
+    if all_review_events:
+        print(
+            f"\n{len(all_review_events)} clause change(s) need human review before their "
+            f"version metadata (effective_date, supersedes/superseded_by) can be trusted -- "
+            f"the live text is already updated and searchable either way:"
+        )
+        for c, ev in all_review_events:
+            print(f"\n  {c.drive_doc_name} -- clause {ev.clause_id} ({ev.kind.value})")
+            print(f"  {ev.note}")
+
     return 0
 
 
