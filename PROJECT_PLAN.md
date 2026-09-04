@@ -22,6 +22,8 @@ This is the tracking document of record. The live task board mirrors it; where t
 
 **Standing rule.** No performance number, capability claim, or "production-grade" description enters this document, the README, the code, or an interview answer unless it was produced by a real run and recorded in §Results Ledger. Targets are not results. Aspirations are not results.
 
+**Standing rule, companion to the above.** Every real bug found on a real run gets root-caused (evidence, not guesswork -- read the failing library's actual source, trace a symptom through every layer to its real origin) and recorded here, in the phase it belongs to plus the Change Log, whether or not it's fixed yet. Never silently patch and move on. This is deliberate, not incidental: a project with zero recorded bugs either wasn't tested for real or isn't being honest about its history, and "I made a mistake, found it on a real run, and fixed it" is the actual differentiator between this project and a tutorial-standard one -- it's interview material, not something to tidy away before showing the work.
+
 **Calendar note.** Phases are numbered by working day (D1–D7) against the Slot 4 allocation in `AI_Engineer_14Day_Schedule.pdf`. That file lives in the `Career_Transition` folder, which is not connected to this session — day-to-calendar mapping is therefore indicative, not authoritative. Connect the folder and it can be reconciled properly.
 
 ---
@@ -33,7 +35,7 @@ This is the tracking document of record. The live task board mirrors it; where t
 | **M0** | Design locked, corpus grounded | Corpus decision closed; Tier-1 real statutory corpus committed; failure register + probe set + corpus spec committed | D1 | `DONE` |
 | **M1** | Corpus complete | Every requirement R-01→R-25 has a corpus artifact; every probe has something to bite on; defect manifest exists | D1–D2 | `DONE` |
 | **M2** | Indexed | Corpus fully indexed under the extended schema; proviso-boundary and metadata tests pass | D2–D3 | `DONE` |
-| **M3** | Retrieval measured | Retrieval-only Context Precision + Recall **measured** against the probe set and recorded in the ledger | D3 | `DONE` |
+| **M3** | Retrieval measured | Retrieval-only Context Precision + Recall **measured** against the probe set and recorded in the ledger | D3 | `REOPENED` -- real bug found downstream (Session 5), see Phase 3 detail |
 | **M4** | End-to-end answers | Pipeline answers the probe set with citations; clarification contract returns structured output on `MUST_CLARIFY` items | D4 | `DONE` (composition proven on representative real cases -- see caveat in Phase 4 detail) |
 | **M5** | Baseline scored | All 5 metrics + the four-class confusion matrix run on the golden set; **first real numbers** recorded | D4–D5 | `WIP` (golden set + arithmetic layer done; T-5.3/T-5.4 scripts written, awaiting real run) |
 | **M6** | Freshness demoable | A document edited in Drive is picked up, re-indexed incrementally, and the answer changes correctly on camera | D5–D6 | `TODO` |
@@ -142,7 +144,7 @@ on unverified capability claims:
 
 ---
 
-### Phase 3 — Retrieval core · `DONE` · D3
+### Phase 3 — Retrieval core · `REOPENED` · D3
 
 | ID | Task | Depends on | Status |
 |---|---|---|---|
@@ -216,6 +218,8 @@ embeddings — output saved to `build/retrieval_harness_result.json`):
   "is the final answer correct." Nothing here should be quoted as an end-to-end accuracy figure.
 
 M3's exit criterion — T-3.6 produces real numbers, recorded in the ledger — is met. See §Results ledger.
+
+**Reopened, 2026-09-04 (Session 5)**: a real bug was found downstream, on Phase 5's first live T-5.4 run, that traces all the way back here. Symptom: every ANSWERED item cited 9-12 clauses when the golden set expected 1-3 (e.g. a query asking only about housing allowance also narrated DIFC leave, notice, probation, and gratuity-ceiling clauses). Root-caused through three layers: `generation/generator.py` cited everything retrieval handed it (patched, commit `48daa40`) -> `grading/temporal_reasoner.py`'s `reason_over_pieces()` wraps EVERY retrieved normative piece in its own trivial working regardless of topical relevance, so narrowing citations to "governing pieces" narrowed nothing -> `HybridRetriever.retrieve()` here in Phase 3 always truncates to exactly `top_k`, with **no floor on `rerank_score`** (its own docstring says step 7 is "truncate to top_k," unconditionally). The precision-bound note above ("top_k is a knob Phase 5's golden-set run should reconsider") flagged this exact class of issue at M3's original close and it was left as a follow-up rather than fixed then -- this is that follow-up landing for real. Fix proposed (make `top_k` a ceiling, not a target: drop pieces below a `rerank_score` floor before truncating) but deliberately NOT implemented in this session -- handed to a fresh Phase 3-focused session with full context, since this reopens an already-`DONE`, already-measured milestone and deserves that phase's own design rationale in the loop, not a downstream patch. **The 0.134/0.682 numbers above are now provisional** -- do not quote them as final, and re-run `scripts/run_retrieval_harness.py` for real once the fix lands. T-5.3/T-5.4 (RAGAS, Citation Accuracy) both need a fresh run afterward too; neither of Citation Accuracy's first two real runs (0.106, then 0.151 mean, this session) should be trusted or entered into the Results Ledger -- both ran against this pre-fix, over-broad retrieval.
 
 ---
 
