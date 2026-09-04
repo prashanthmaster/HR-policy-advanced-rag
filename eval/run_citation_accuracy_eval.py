@@ -36,12 +36,13 @@ Design, kept deliberately simple and auditable rather than clever:
 Same sandbox-network constraint as run_ragas_eval.py: needs a real
 gpt-4o-mini call, run this yourself outside any sandbox.
 
-Same known limitation as run_ragas_eval.py: the golden set's `country`
-field is free text ("UAE-DIFC", "UAE (entity-dependent)"), not the strict
-enum ingestion/schema.py validates against, so it's normalized to None
-(no hard country filter) unless it's exactly India/UAE/Germany/GLOBAL --
-see _normalize_country() below. The DIFC-vs-mainland distinction on
-P-3a/P-3b/P-10/P-17 is therefore not enforced by this script's filter.
+Same `country` normalization as run_ragas_eval.py (see that file's
+docstring for the full reasoning): free-text values like "UAE-DIFC" are
+mapped to None via _normalize_country() rather than mis-filtering. The
+DIFC-vs-mainland split is handled separately via a per-item
+`jurisdiction_scope` field, set only for P-3a (unambiguous) and
+deliberately left unset for P-3b/P-17 (their point is entity ambiguity --
+forcing a jurisdiction there would defeat the probe).
 
 Usage:
     .venv/bin/python eval/run_citation_accuracy_eval.py
@@ -196,6 +197,7 @@ def main() -> int:
         result = answer_query(
             retriever, item["query"],
             country=_normalize_country(item.get("country")),
+            jurisdiction_scope=item.get("jurisdiction_scope"),
             as_of_date=facts.valuation_date,
             facts=facts,
             reranker=reranker,

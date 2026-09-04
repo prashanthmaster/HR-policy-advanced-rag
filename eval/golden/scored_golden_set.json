@@ -121,7 +121,9 @@
       ],
       "verification_status": "V-3 CLOSED 2026-09-03 — two concurring sources; article numbers beyond Art. 62 not verified and deliberately omitted",
       "rationale": "The best real straddle case in the corpus — sits directly against P-01 (opposite class, opposite real statute) as the strongest single pair in the project.",
-      "class": "MUST_ANSWER"
+      "class": "MUST_ANSWER",
+      "jurisdiction_scope": "uae-difc",
+      "jurisdiction_scope_note": "Unambiguous -- query states the DIFC entity directly. Hard-filtering to uae-difc is correct here and does not defeat the probe (unlike P-3b/P-17)."
     },
     {
       "probe_id": "P-3b",
@@ -140,7 +142,9 @@
       ],
       "verification_status": "V-3 CLOSED 2026-09-03 (same verification as P-3a)",
       "rationale": "Same words, same city, two different real regimes — direct test of jurisdiction_scope filtering.",
-      "class": "MUST_ANSWER"
+      "class": "MUST_ANSWER",
+      "jurisdiction_scope": null,
+      "jurisdiction_scope_note": "Deliberately NOT set. This probe's whole point is entity ambiguity -- the query names a location ('Dubai' / 'the DIFC office'), not the employing entity, and the golden_answer requires citing BOTH the mainland and DIFC rules and flagging that entity (not location) governs. A hard jurisdiction_scope filter here would silently resolve the ambiguity the probe exists to catch, defeating the test."
     },
     {
       "probe_id": "P-40",
@@ -394,7 +398,9 @@
       ],
       "verification_status": "V-3 CLOSED 2026-09-03",
       "rationale": "Real straddle jurisdiction, ties directly to interview question 1's companion case.",
-      "class": "MUST_FLAG"
+      "class": "MUST_FLAG",
+      "jurisdiction_scope": null,
+      "jurisdiction_scope_note": "Deliberately NOT set. This probe's whole point is entity ambiguity -- the query names a location ('Dubai' / 'the DIFC office'), not the employing entity, and the golden_answer requires citing BOTH the mainland and DIFC rules and flagging that entity (not location) governs. A hard jurisdiction_scope filter here would silently resolve the ambiguity the probe exists to catch, defeating the test."
     },
     {
       "probe_id": "P-38",

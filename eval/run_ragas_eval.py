@@ -20,20 +20,28 @@ ServiceFacts(...) -- it does not attempt to extract dates from the query
 string itself. Items without a "facts" block run with ServiceFacts()
 (all-None), same as any caller that hasn't resolved those facts yet.
 
-Known limitation, stated plainly rather than silently worked around: the
-golden set's `country` field is free-text description for a human reader
-("UAE-DIFC", "UAE (entity-dependent)"), not the strict {"India","UAE",
-"Germany","GLOBAL"} enum ingestion/schema.py's IndexableUnit.country
-actually validates against -- passing a value like "UAE-DIFC" straight
-into answer_query()'s hard country filter would silently match nothing
-and produce a bogus INSUFFICIENT. _normalize_country() below maps
-anything outside the four real values to None (no hard country filter)
-rather than mis-filtering. This means the DIFC-vs-mainland distinction on
-P-3a/P-3b/P-10/P-17 is NOT enforced by this script's country arg -- same
-M4 scope gap as jurisdiction_scope never being derivable from a country
-string here. Read those four items' results with that caveat; closing it
-for real needs a jurisdiction_scope value per golden item, not a workaround
-in this script.
+Known limitation on `country`, stated plainly: the golden set's `country`
+field is free-text description for a human reader ("UAE-DIFC", "UAE
+(entity-dependent)"), not the strict {"India","UAE","Germany","GLOBAL"}
+enum ingestion/schema.py's IndexableUnit.country actually validates
+against -- passing a value like "UAE-DIFC" straight into answer_query()'s
+hard country filter would silently match nothing and produce a bogus
+INSUFFICIENT. _normalize_country() below maps anything outside the four
+real values to None (no hard country filter) rather than mis-filtering.
+
+The DIFC-vs-mainland split itself is NOT a gap, though -- retrieval already
+has a purpose-built `jurisdiction_scope` filter (retrieval/filters.py,
+Phase 3) with fallback semantics (a clause tagged neither mainland nor
+DIFC matches either query), and the corpus already tags every UAE clause
+uae-mainland/uae-difc. This script reads a per-item `jurisdiction_scope`
+field (added Session 5) and passes it straight through. It is set only
+where the query is actually unambiguous about entity (P-3a). It is
+deliberately left unset for P-3b/P-17 -- those two probes' entire point is
+that the query names a LOCATION ("Dubai" / "the DIFC office") rather than
+the employing entity, and their golden answers require citing BOTH regimes
+and flagging that entity (not location) governs; hard-filtering either one
+to a single jurisdiction would silently resolve the ambiguity the probe
+exists to catch.
 
 Only items whose real pipeline run reaches ANSWERED are scored by RAGAS --
 Context Precision/Recall/Faithfulness/Answer Correctness are defined over
@@ -181,6 +189,7 @@ def main() -> int:
         result = answer_query(
             retriever, item["query"],
             country=_normalize_country(item.get("country")),
+            jurisdiction_scope=item.get("jurisdiction_scope"),
             as_of_date=facts.valuation_date,
             facts=facts,
             reranker=reranker,
