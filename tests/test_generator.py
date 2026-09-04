@@ -48,6 +48,26 @@ def test_p01_answer_states_no_split_with_one_citation(units):
     assert answer.used_temporal_reasoning is True
 
 
+def test_extra_retrieved_pieces_are_not_cited_when_unused(units):
+    """Regression test for the over-citation bug found on the first live
+    T-5.4 run (Session 5, 2026-09-04): `build_citations`/`check_supersession`
+    used to run over the FULL retrieved `pieces` list unconditionally, so
+    anything retrieval returned alongside the governing clause got cited
+    too, even though the narrative never mentioned it. Real retrieval
+    returns ~10 candidates per query, not just the 1-2 that matter -- this
+    simulates that by passing an unrelated, unused piece alongside the
+    genuine governing piece and asserting it is NOT cited."""
+    piece = _piece_for(units, "IN-GRAT-S4-CEILING")
+    unrelated = _piece_for(units, "IN-FACTORIES-LEAVE")
+    facts = ServiceFacts(service_start_date=dt.date(2014, 1, 1), valuation_date=dt.date(2026, 9, 30))
+    working = reason_point_in_time(piece, facts)
+
+    answer = TemplateGenerator().generate("what gratuity do I get", [piece, unrelated], [working])
+    cited_ids = {c.clause_id for c in answer.citations}
+    assert cited_ids == {"IN-GRAT-S4-CEILING"}
+    assert "IN-FACTORIES-LEAVE" not in cited_ids
+
+
 def test_p3a_answer_has_both_segments_and_both_citations(units):
     dews = _piece_for(units, "DIFC-L2-2019-DEWS")
     legacy = _piece_for(units, "DIFC-EOSB-LEGACY-GRATUITY")

@@ -78,6 +78,37 @@ def _compute_from_workings(workings: list[TemporalWorking], pieces_clause_ids: s
     return lines, amount, days
 
 
+def _pieces_actually_used(pieces: list[RetrievedPiece], workings: list[TemporalWorking]) -> list[RetrievedPiece]:
+    """Bug fix, 2026-09-04 (Session 5): citations/supersession-checking used
+    to run over the FULL retrieved-and-graded `pieces` list unconditionally,
+    which is right when there's no temporal reasoning (every normative piece
+    really is narrated verbatim, see the `if not workings` branch below) but
+    wrong once `workings` exist -- the narrative only ever discusses each
+    working's `governing_piece` / `segments[*].governing_piece` /
+    `alternatives` (see grading/temporal_reasoner.py), never the other
+    5-9 pieces retrieval also returned as candidates. Citing the whole
+    retrieved set regardless produced a real defect: a live T-5.4 run
+    showed 7/7 ANSWERED items over-citing (mean Citation Accuracy 0.106).
+    This narrows citations/supersession-notes down to what the narrative
+    actually relied on -- retrieval keeps its full breadth (still needed
+    for CRAG sufficiency grading and corrective re-query), only what gets
+    STAMPED as a source changes."""
+    if not workings:
+        return [p for p in pieces if p.unit.normative]
+    used: list[RetrievedPiece] = []
+    seen_ids: set[str] = set()
+    for w in workings:
+        candidates = list(w.alternatives)
+        if w.governing_piece is not None:
+            candidates.append(w.governing_piece)
+        candidates.extend(seg.governing_piece for seg in w.segments)
+        for c in candidates:
+            if c.clause_id not in seen_ids:
+                used.append(c)
+                seen_ids.add(c.clause_id)
+    return used
+
+
 class TemplateGenerator:
     """Deterministic, no LLM. Assembles an answer purely by stitching
     together clause text, T-4.3's narrative lines, and (Phase 5) a small
@@ -91,7 +122,6 @@ class TemplateGenerator:
         pieces: list[RetrievedPiece],
         workings: list[TemporalWorking],
     ) -> GeneratedAnswer:
-        citations = build_citations(pieces)
         lines: list[str] = []
         missing: list[str] = []
 
@@ -104,6 +134,9 @@ class TemplateGenerator:
                 lines.extend(w.narrative)
                 missing.extend(w.missing_facts)
 
+        used_pieces = _pieces_actually_used(pieces, workings)
+        citations = build_citations(used_pieces)
+
         computed_amount: float | None = None
         computed_days: float | None = None
         if not missing and workings:
@@ -114,7 +147,7 @@ class TemplateGenerator:
         if missing:
             lines.append(f"Cannot give a final answer: missing {', '.join(missing)}.")
 
-        notes, warning = check_supersession(pieces)
+        notes, warning = check_supersession(used_pieces)
         lines.extend(notes)
         if warning:
             lines.append(warning)
