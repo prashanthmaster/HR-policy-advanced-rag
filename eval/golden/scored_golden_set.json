@@ -123,7 +123,11 @@
       "rationale": "The best real straddle case in the corpus — sits directly against P-01 (opposite class, opposite real statute) as the strongest single pair in the project.",
       "class": "MUST_ANSWER",
       "jurisdiction_scope": "uae-difc",
-      "jurisdiction_scope_note": "Unambiguous -- query states the DIFC entity directly. Hard-filtering to uae-difc is correct here and does not defeat the probe (unlike P-3b/P-17)."
+      "jurisdiction_scope_note": "Unambiguous -- query states the DIFC entity directly. Hard-filtering to uae-difc is correct here and does not defeat the probe (unlike P-3b/P-17).",
+      "facts": {
+        "service_start_date": "2017-01-01",
+        "valuation_date": "2026-10-01"
+      }
     },
     {
       "probe_id": "P-3b",
@@ -362,7 +366,11 @@
       ],
       "verification_status": "Tier-2 synthetic policy",
       "rationale": "Tests the three-clocks discipline (Finding 2) on the retroactive-amendment side, opposite direction from P-05's future-dated case.",
-      "class": "MUST_FLAG"
+      "class": "MUST_FLAG",
+      "facts": {
+        "service_start_date": "2026-01-01",
+        "valuation_date": "2026-03-15"
+      }
     },
     {
       "probe_id": "P-05",
