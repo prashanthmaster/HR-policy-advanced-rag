@@ -11,6 +11,7 @@ retrieval quality is Phase 3/5's job, measured against real embeddings.
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -86,3 +87,55 @@ def test_open_existing_without_a_prior_build_raises():
     index = VectorIndex(MockEmbedder(dimension=8))
     with pytest.raises(RuntimeError):
         index.open_existing()
+
+
+def test_reindex_source_file_without_a_prior_build_raises():
+    index = VectorIndex(MockEmbedder(dimension=8))
+    with pytest.raises(RuntimeError):
+        index.reindex_source_file("corpus/tier1_law/india/india_law.md", [])
+
+
+def test_reindex_source_file_replaces_only_that_files_points(tmp_path):
+    # T-6.4: editing one document must update only that document's points --
+    # every other file's points must survive untouched, and the edited
+    # file's OLD points must not linger alongside the new ones.
+    chunks = parse_corpus(CORPUS_DIR, repo_root=REPO_ROOT)
+    units = build_indexable_units(chunks)
+    path = tmp_path / "idx"
+
+    india_source_file = next(
+        u.source_file for u in units if u.clause_id == "IN-GRAT-S4-CEILING"
+    )
+    india_units_before = [u for u in units if u.source_file == india_source_file]
+    other_units = [u for u in units if u.source_file != india_source_file]
+    assert india_units_before and other_units  # sanity: both groups non-empty
+
+    index = VectorIndex(MockEmbedder(dimension=8), path=path)
+    index.build(units)
+
+    # Simulate a Drive edit: the India law file now has one fewer unit (a
+    # clause "removed"), and the surviving ones have visibly different text
+    # (so MockEmbedder gives them different vectors, proving new content
+    # actually landed, not just old points re-upserted verbatim).
+    edited_india_units = [
+        replace(u, text=u.text + " [EDITED FOR TEST]") for u in india_units_before[:-1]
+    ]
+
+    index.reindex_source_file(india_source_file, edited_india_units)
+
+    all_hits = index.search(other_units[0].text, top_k=len(units) + 5)
+    hit_clause_ids = {r["clause_id"] for r in all_hits}
+
+    # Every other document's clauses are still present, untouched.
+    for u in other_units:
+        assert u.clause_id in hit_clause_ids
+
+    # The dropped India clause's old point is gone...
+    dropped_clause_id = india_units_before[-1].clause_id
+    assert dropped_clause_id not in hit_clause_ids
+    # ...and the edited India clauses' new content is retrievable by its
+    # new (post-edit) text -- proving the new point, not the stale one, is
+    # what's actually indexed now.
+    edited = edited_india_units[0]
+    results = index.search(edited.text, top_k=3)
+    assert results[0]["clause_id"] == edited.clause_id

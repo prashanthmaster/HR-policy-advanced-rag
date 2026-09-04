@@ -19,7 +19,7 @@ import hashlib
 from pathlib import Path
 
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, PointStruct, VectorParams
+from qdrant_client.models import Distance, FieldCondition, Filter, MatchValue, PointStruct, VectorParams
 
 from ingestion.embedder import Embedder
 from ingestion.index_units import IndexableUnit
@@ -72,6 +72,7 @@ class VectorIndex:
                 payload={
                     "piece_id": u.piece_id,
                     "clause_id": u.clause_id,
+                    "source_file": u.source_file,
                     "country": u.country,
                     "doc_type": u.doc_type,
                     "jurisdiction_scope": u.jurisdiction_scope,
@@ -100,6 +101,67 @@ class VectorIndex:
                 "run scripts/build_vector_index.py --live first."
             )
         self._built = True
+
+    def reindex_source_file(self, source_file: str, units: list[IndexableUnit]) -> None:
+        """T-6.4 -- incremental re-index of a single changed document.
+
+        Unlike build(), this does NOT delete/recreate the whole collection.
+        It deletes only the existing points whose payload.source_file
+        matches `source_file` (so a clause removed from the source in this
+        edit doesn't linger as a stale point), then embeds and upserts the
+        freshly-parsed units for that file. Every other document's points
+        are untouched -- both the point of "incremental" and the reason
+        this project's OpenAI budget survives a Phase 6 demo: the embedder's
+        own cache (ingestion/embedder.py) already means unchanged clause
+        text is never re-billed even on a full rebuild, but this also
+        avoids the Qdrant-side churn of wiping and rebuilding all ~84
+        points to change ~1 document's worth.
+
+        Requires the collection to already exist (via a prior build()) --
+        this is deliberately update-only, not a from-scratch build path.
+        """
+        if not self._client.collection_exists(_COLLECTION):
+            raise RuntimeError(
+                f"VectorIndex.reindex_source_file: collection {_COLLECTION!r} does not exist -- "
+                "run scripts/build_vector_index.py --live at least once before incremental updates."
+            )
+
+        self._client.delete(
+            collection_name=_COLLECTION,
+            points_selector=Filter(
+                must=[FieldCondition(key="source_file", match=MatchValue(value=source_file))]
+            ),
+        )
+
+        if units:
+            vectors = self._embedder.embed([u.text for u in units])
+            points = [
+                PointStruct(
+                    id=_point_id(u.piece_id),
+                    vector=vec,
+                    payload={
+                        "piece_id": u.piece_id,
+                        "clause_id": u.clause_id,
+                        "source_file": u.source_file,
+                        "country": u.country,
+                        "doc_type": u.doc_type,
+                        "jurisdiction_scope": u.jurisdiction_scope,
+                        "normative": u.normative,
+                        "temporal_applicability": u.temporal_applicability,
+                        "effective_date": u.effective_date.isoformat() if u.effective_date else None,
+                        "effective_date_unresolved": u.effective_date_unresolved,
+                        "lineage_id": u.lineage_id,
+                    },
+                )
+                for u, vec in zip(units, vectors)
+            ]
+            self._client.upsert(collection_name=_COLLECTION, points=points)
+
+        self._built = True
+        _log.info(
+            "reindexed source_file=%s: removed old points, upserted %d new unit(s)",
+            source_file, len(units),
+        )
 
     def search(self, query: str, top_k: int = 10) -> list[dict]:
         if not self._built:
