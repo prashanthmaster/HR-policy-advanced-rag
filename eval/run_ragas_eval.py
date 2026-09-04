@@ -237,6 +237,14 @@ def main() -> int:
             metrics=[context_precision, context_recall, faithfulness, answer_correctness],
             llm=llm,
             embeddings=embeddings,
+            # ragas.executor otherwise calls nest_asyncio.apply() unconditionally
+            # (for Jupyter compatibility). nest_asyncio's loop patching is
+            # incompatible with Python 3.11+'s asyncio.timeout() -- confirmed by
+            # reading ragas/executor.py and ragas/async_utils.py -- and produced
+            # "RuntimeError(Timeout should be used inside a task)" on every job,
+            # silently NaN-ing every metric. We run as a plain script (no Jupyter
+            # loop already running), so nest_asyncio is unnecessary here.
+            allow_nest_asyncio=False,
         )
         result_df = eval_result.to_pandas()
         for idx, row in enumerate(per_item):
