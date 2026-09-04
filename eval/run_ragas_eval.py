@@ -72,6 +72,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import inspect
 import json
 import os
 import sys
@@ -232,20 +233,38 @@ def main() -> int:
         llm = ChatOpenAI(model=JUDGE_MODEL, temperature=0)
         embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
         dataset = EvaluationDataset(samples=samples)
-        eval_result = evaluate(
-            dataset,
+        evaluate_kwargs = dict(
             metrics=[context_precision, context_recall, faithfulness, answer_correctness],
             llm=llm,
             embeddings=embeddings,
-            # ragas.executor otherwise calls nest_asyncio.apply() unconditionally
-            # (for Jupyter compatibility). nest_asyncio's loop patching is
-            # incompatible with Python 3.11+'s asyncio.timeout() -- confirmed by
-            # reading ragas/executor.py and ragas/async_utils.py -- and produced
-            # "RuntimeError(Timeout should be used inside a task)" on every job,
-            # silently NaN-ing every metric. We run as a plain script (no Jupyter
-            # loop already running), so nest_asyncio is unnecessary here.
-            allow_nest_asyncio=False,
         )
+        # ragas.executor otherwise calls nest_asyncio.apply() unconditionally
+        # (for Jupyter compatibility) on the versions that expose this flag.
+        # nest_asyncio's loop patching is incompatible with Python 3.11+'s
+        # asyncio.timeout() -- confirmed by reading ragas/executor.py and
+        # ragas/async_utils.py on ragas 0.4.3 -- and produced "RuntimeError
+        # (Timeout should be used inside a task)" on every job there, silently
+        # NaN-ing every metric. We run as a plain script (no Jupyter loop
+        # already running), so nest_asyncio is unnecessary here whenever the
+        # flag exists to disable it.
+        #
+        # requirements.txt pins "ragas" unversioned, so different machines can
+        # legitimately end up on different ragas releases (confirmed 2026-09-04:
+        # this exact TypeError on Prashanth's .venv-win install of a newer ragas
+        # that removed/renamed allow_nest_asyncio, against a dev reference of
+        # 0.4.3 that still has it) -- inspect the INSTALLED evaluate()'s real
+        # signature rather than assuming either shape.
+        ragas_version = getattr(__import__("ragas"), "__version__", "unknown")
+        if "allow_nest_asyncio" in inspect.signature(evaluate).parameters:
+            evaluate_kwargs["allow_nest_asyncio"] = False
+            print(f"(ragas {ragas_version}: passing allow_nest_asyncio=False)")
+        else:
+            print(f"(ragas {ragas_version}: no allow_nest_asyncio parameter on this "
+                  f"version's evaluate() -- running without it; if metrics come back "
+                  f"as n/a/NaN, that's the nest_asyncio/asyncio.timeout incompatibility "
+                  f"resurfacing on this ragas release and needs a fresh look, not a "
+                  f"silent re-add of the old flag.)")
+        eval_result = evaluate(dataset, **evaluate_kwargs)
         result_df = eval_result.to_pandas()
         for idx, row in enumerate(per_item):
             if row["ragas_sample_index"] is not None:

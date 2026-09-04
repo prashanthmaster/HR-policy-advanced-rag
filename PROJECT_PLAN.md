@@ -35,9 +35,9 @@ This is the tracking document of record. The live task board mirrors it; where t
 | **M0** | Design locked, corpus grounded | Corpus decision closed; Tier-1 real statutory corpus committed; failure register + probe set + corpus spec committed | D1 | `DONE` |
 | **M1** | Corpus complete | Every requirement R-01→R-25 has a corpus artifact; every probe has something to bite on; defect manifest exists | D1–D2 | `DONE` |
 | **M2** | Indexed | Corpus fully indexed under the extended schema; proviso-boundary and metadata tests pass | D2–D3 | `DONE` |
-| **M3** | Retrieval measured | Retrieval-only Context Precision + Recall **measured** against the probe set and recorded in the ledger | D3 | `REOPENED` -- real bug found downstream (Session 5), see Phase 3 detail |
+| **M3** | Retrieval measured | Retrieval-only Context Precision + Recall **measured** against the probe set and recorded in the ledger | D3 | `DONE` -- reopened for a real downstream bug (Session 5), fixed + calibrated + re-measured for real 2026-09-04 (Precision 0.134->0.253, Recall 0.682->0.568, honest trade-off recorded), see Phase 3 detail |
 | **M4** | End-to-end answers | Pipeline answers the probe set with citations; clarification contract returns structured output on `MUST_CLARIFY` items | D4 | `DONE` (composition proven on representative real cases -- see caveat in Phase 4 detail) |
-| **M5** | Baseline scored | All 5 metrics + the four-class confusion matrix run on the golden set; **first real numbers** recorded | D4–D5 | `WIP` (golden set + arithmetic layer done; T-5.3/T-5.4 scripts written, awaiting real run) |
+| **M5** | Baseline scored | All 5 metrics + the four-class confusion matrix run on the golden set; **first real numbers** recorded | D4–D5 | `WIP` (T-5.4 Citation Accuracy real post-fix number in: 0.214; T-5.3 RAGAS hit a real ragas-version-drift bug on first post-fix run, fixed, awaiting re-run; T-5.5/T-5.6 not started) |
 | **M6** | Freshness demoable | A document edited in Drive is picked up, re-indexed incrementally, and the answer changes correctly on camera | D5–D6 | `TODO` |
 | **M7** | Regression-gated | CI runs the eval on push and fails the build on regression from recorded baseline | D6 | `TODO` |
 | **M8** | Deployed | Public Cloud Run URL answers a query end-to-end; LangSmith trace inspectable | D7 | `TODO` (confirmed IN SCOPE by Prashanth 2026-09-04 -- real deployment, not a fast-follow) |
@@ -144,7 +144,7 @@ on unverified capability claims:
 
 ---
 
-### Phase 3 — Retrieval core · `REOPENED` · D3
+### Phase 3 — Retrieval core · `DONE` · D3
 
 | ID | Task | Depends on | Status |
 |---|---|---|---|
@@ -279,11 +279,34 @@ to reproduce old, pre-fix behaviour (needed to regenerate the original provision
 before/after comparison).
 
 174/174 tests passing (171 + 3 new: `retrieve_and_grade`/`answer_query` both default to the calibrated floor,
-confirmed via signature inspection, not just import; the floor can still be explicitly disabled). **The fix is
-now real, not just fixable** -- but M3 stays `REOPENED`, not `DONE`, until Prashanth re-runs
-`scripts/run_retrieval_harness.py` (T-3.6) for real, honest post-fix Context Precision/Recall numbers, and
-T-5.3/T-5.4 get a fresh 24-item run. Nothing from the provisional 0.134/0.682 or the two untrusted Citation
-Accuracy runs (0.106, then 0.151) gets overwritten silently -- the ledger entry will show delta + why.
+confirmed via signature inspection, not just import; the floor can still be explicitly disabled).
+
+**Re-measured for real, 2026-09-04, same session -- M3 CLOSED again.** Prashanth ran
+`scripts/run_retrieval_harness.py` against the live, calibrated fix. Real result, honest delta from the
+provisional pre-fix numbers (see Results ledger for the full table):
+
+```
+Mean Context Precision@10: 0.253   (was 0.134, +89% relative)
+Mean Context Recall@10:    0.568   (was 0.682, -17% relative)
+```
+
+**Read honestly, not spun -- this is a real trade-off, not a clean win**: precision nearly doubled, which is
+the fix doing its job (fewer irrelevant clauses padded into the result set). But recall dropped a real 17%
+relative on the full 38-probe set -- worse than the 5-probe calibration sample suggested. The live run log
+shows several probes returning as few as 0-3 pieces where they used to get padded to 10 (two probes returned
+0 pieces post-floor), which means the floor is legitimately costing some true positives on the full set, not
+only trimming padding. `DEFAULT_MIN_RERANK_SCORE=0.001` was calibrated against only 5 probes (chosen to be
+conservative against THOSE 5's true positives) -- the full 38-probe run shows that conservatism wasn't quite
+conservative enough at full-corpus scale. **Not re-tuned this session** -- recorded as the honest result of
+the value actually chosen, per this project's own standing rule (Convention 2: no number goes anywhere until
+measured; the ledger shows what was measured, not what would look best). Worth a closer look in a future
+session: whether a slightly lower floor (e.g. re-examining the probes that now return 0-2 pieces) trades some
+of the precision gain back for recall, before this number gets treated as final.
+
+**M3 exit criterion re-met with the fix in place.** `PROJECT_PLAN.md` milestone table and Results ledger
+updated with the real post-fix numbers, pre-fix rows marked superseded (not deleted). Phase 3 status changed
+back to `DONE`. The P-01/P-17 ranking-order limitation documented above remains unresolved and unrelated to
+this recall trade-off -- two separate, both honestly recorded, limitations of the same fix.
 
 ---
 
@@ -311,8 +334,8 @@ Accuracy runs (0.106, then 0.151) gets overwritten silently -- the ledger entry 
 |---|---|---|---|
 | T-5.1 | Promote 20–30 probes into the scored golden set; fill golden answers + expected source clauses | M4, T-1.8 | `DONE` |
 | T-5.2 | Label every item `MUST_ANSWER` / `MUST_REFUSE` / `MUST_CLARIFY` / `MUST_FLAG`; hold the ~45/25/20/10 mix | T-5.1 | `DONE` |
-| T-5.3 | RAGAS: Context Precision, Context Recall, Faithfulness, Answer Correctness | T-5.2 | `WIP` (nest_asyncio bug fixed, awaiting re-run) |
-| T-5.4 | Custom Citation Accuracy (LLM-as-judge, FinGuard G-Eval pattern) | T-5.3 | `WIP` (over-citation bug fixed, awaiting re-run) |
+| T-5.3 | RAGAS: Context Precision, Context Recall, Faithfulness, Answer Correctness | T-5.2 | `WIP` (2nd real bug found+fixed 2026-09-04: ragas version drift removed `allow_nest_asyncio` on Prashanth's installed release; script now inspects the installed signature instead of assuming one -- awaiting re-run) |
+| T-5.4 | Custom Citation Accuracy (LLM-as-judge, FinGuard G-Eval pattern) | T-5.3 | `WIP` (real post-fix number in: mean 0.214 over 11/24 ANSWERED items, up from untrusted 0.106/0.151 pre-fix -- still shows 6/11 extra and 4/11 missing citations, over-citation improved not solved) |
 | T-5.5 | Four-class confusion matrix + **over-refusal counter as a first-class defect** (Finding 3) | T-5.2 | `TODO` |
 | T-5.6 | Baseline run; record every number in the ledger | T-5.4, T-5.5 | `TODO` |
 
@@ -339,6 +362,10 @@ Accuracy runs (0.106, then 0.151) gets overwritten silently -- the ledger entry 
 - **P-01** (India gratuity): the corpus's own deliberate D-2 decoy illustration outscores the real answer (0.098 vs. 0.022). The floor cannot remove the decoy without also removing the real answer.
 - **P-17** (DIFC vs. mainland): the second of two correct clauses scores 0.0002, below four unrelated clauses. Same shape, same reason.
 If T-5.3/T-5.4's next real run shows lower-than-expected scores specifically on P-01 and/or P-17, **that is this already-diagnosed limitation surfacing, not a new bug** -- don't re-open a fresh root-cause investigation on it. It was deliberately left unfixed this session: chasing *why* the reranker mis-orders these two cases is real ML-tuning work disproportionate to what a 24-item synthetic-corpus demo needs, and the project's actual differentiator (architecture correctness + an honest bug trail) doesn't require solving it. If it's ever worth revisiting, it's a reranker/embedding-model question, not a retrieval-pipeline-architecture one.
+
+**T-5.4 real post-fix run, 2026-09-04, same session**: Prashanth ran `eval/run_citation_accuracy_eval.py` against the live, calibrated fix. 11/24 golden items reached `ANSWERED` (13 correctly went to `NEEDS_CLARIFICATION`/`INSUFFICIENT` per their own class, or are still awaiting T-5.5's confusion-matrix breakdown to confirm). Mean Citation Accuracy over those 11: **0.214** -- up from the two untrusted pre-fix runs (0.106, then 0.151), neither of which was ever entered in the Results ledger. Real, honest read: **improved, not solved**. 6/11 items still show an unexpected/extra citation, 4/11 are missing an expected one. Some of this is expected to be the documented P-01/P-17 ranking-order limitation surfacing exactly as flagged above -- but the mix hasn't been broken down probe-by-probe against that specific list yet, so don't assume every remaining miss is that one limitation until T-5.5 does the real per-item breakdown.
+
+**T-5.3 hit a second real bug on its first post-fix run attempt, 2026-09-04, same session**: `eval/run_ragas_eval.py` crashed immediately with `TypeError: evaluate() got an unexpected keyword argument 'allow_nest_asyncio'`. Root-caused, not just patched around: `requirements.txt` pins `ragas` with **no version**, so different machines installing at different times can legitimately land on different releases -- Prashanth's `.venv-win` install picked up a newer `ragas` release than the `0.4.3` this project's own dev reference copy carries, and that newer release apparently removed or renamed the `allow_nest_asyncio` parameter the Session 5 fix depended on (most likely because the underlying `nest_asyncio`/`asyncio.timeout()` incompatibility that parameter existed to work around was fixed upstream — plausible but not confirmed by reading that release's source, since it isn't available in this sandbox). **Fixed properly, not by guessing a version to pin**: `eval/run_ragas_eval.py` now calls `inspect.signature(evaluate)` on whatever `ragas` is actually installed and only passes `allow_nest_asyncio=False` if that release's `evaluate()` still accepts it -- self-diagnosing rather than assuming either shape, and prints which path it took plus the installed `ragas.__version__` so the terminal output is self-documenting. If metrics come back `n/a`/`NaN` on the newer release (the original symptom of the incompatibility this flag existed to prevent), that would mean the incompatibility persists under a different parameter name and needs a fresh look -- the script says so explicitly in that case rather than failing silently. 174/174 tests still passing (no pipeline code touched). **Not yet re-run against the fix** -- Prashanth needs to re-run `eval/run_ragas_eval.py` once more for T-5.3's actual first real numbers.
 
 ---
 
@@ -451,16 +478,32 @@ Therefore an employee joining 2014 and terminating 2026-09-30 receives the ₹20
 
 | Date | Milestone | Metric | Value | Run reference |
 |---|---|---|---|---|
-| 2026-09-03 | M3 | Retrieval-only Context Precision@10 (mean, 38 probes) | 0.134 | `build/retrieval_harness_result.json`, `scripts/run_retrieval_harness.py` |
-| 2026-09-03 | M3 | Retrieval-only Context Recall@10 (mean, 38 probes) | 0.682 | `build/retrieval_harness_result.json`, `scripts/run_retrieval_harness.py` |
-| 2026-09-03 | M3 | Probes at perfect recall (1.0) | 18 / 38 | `build/retrieval_harness_result.json` |
-| 2026-09-03 | M3 | Probes at zero recall (0.0) | 4 / 38 (P-05, P-25, P-33, P-35) | `build/retrieval_harness_result.json` |
+| 2026-09-03 | M3 | Retrieval-only Context Precision@10 (mean, 38 probes) — **PRE-FIX, superseded 2026-09-04** | 0.134 | `build/retrieval_harness_result.json`, `scripts/run_retrieval_harness.py` |
+| 2026-09-03 | M3 | Retrieval-only Context Recall@10 (mean, 38 probes) — **PRE-FIX, superseded 2026-09-04** | 0.682 | `build/retrieval_harness_result.json`, `scripts/run_retrieval_harness.py` |
+| 2026-09-03 | M3 | Probes at perfect recall (1.0) — **PRE-FIX, superseded 2026-09-04** | 18 / 38 | `build/retrieval_harness_result.json` |
+| 2026-09-03 | M3 | Probes at zero recall (0.0) — **PRE-FIX, superseded 2026-09-04** | 4 / 38 (P-05, P-25, P-33, P-35) | `build/retrieval_harness_result.json` |
+| 2026-09-04 | M3 | Retrieval-only Context Precision@10 (mean, 38 probes), **post-fix** (`min_rerank_score=0.001`) | **0.253** (+0.119 vs. pre-fix, +89% relative) | `build/retrieval_harness_result.json`, `scripts/run_retrieval_harness.py` |
+| 2026-09-04 | M3 | Retrieval-only Context Recall@10 (mean, 38 probes), **post-fix** | **0.568** (-0.114 vs. pre-fix, -17% relative) | `build/retrieval_harness_result.json`, `scripts/run_retrieval_harness.py` |
+| 2026-09-04 | T-5.4 | Citation Accuracy (mean, 11/24 items reaching ANSWERED), **post-fix** | **0.214** (vs. two untrusted pre-fix runs of 0.106 and 0.151 — neither ever entered here) | `build/citation_accuracy_result.json`, `eval/run_citation_accuracy_eval.py` |
 
-See Phase 3's status block above for the honest read of these numbers — precision@10 is mechanically bounded
-by narrow expected-clause sets and should not be read as retrieval quality on its own; the four zero-recall
-probes are flagged, not yet root-caused.
+**Post-fix delta, read honestly (this is the actual retrieval-floor trade-off, not spun)**: precision nearly
+doubled and citation accuracy roughly doubled from the last (untrusted) reading, but recall dropped a real
+17% relative — the floor legitimately cost some true positives, not just padding, on the full 38-probe set;
+several probes in the real run returned as few as 0-3 pieces where they used to get padded to 10, and two of
+those (0-returned) probes now retrieve nothing at all. This is a real, not hypothetical, cost of the
+`DEFAULT_MIN_RERANK_SCORE=0.001` choice, worse on the full set than the 5-probe calibration sample suggested
+(see Phase 3 detail for the calibration data) — flagged here rather than only celebrating the precision gain.
+Citation Accuracy still shows 6/11 ANSWERED items with an unexpected citation and 4/11 missing an expected
+one — the over-citation bug is measurably better, not solved; some of this is the documented P-01/P-17
+ranking-order limitation, but the mix hasn't been broken down probe-by-probe yet. See Phase 3 and Phase 5
+detail sections for the full read and what's still open.
 
-Metrics awaiting first measurement: Faithfulness · Answer Correctness · Citation Accuracy · four-class confusion matrix · over-refusal count · end-to-end latency · indexing cost.
+See Phase 3's original status block above for the honest read of the pre-fix numbers — precision@10 is
+mechanically bounded by narrow expected-clause sets and should not be read as retrieval quality on its own;
+the four zero-recall probes from the pre-fix run were flagged, not root-caused (still true post-fix — recall
+composition per-probe hasn't been re-diffed against the old zero-recall set yet).
+
+Metrics awaiting first measurement: Faithfulness · Answer Correctness · four-class confusion matrix · over-refusal count · end-to-end latency · indexing cost. (RAGAS Context Precision/Recall/Faithfulness/Answer Correctness — T-5.3 — hit a real bug on this run, see Phase 5 detail; not yet measured.)
 
 ---
 
@@ -482,6 +525,7 @@ Metrics awaiting first measurement: Faithfulness · Answer Correctness · Citati
 
 | Date | Change |
 |---|---|
+| 2026-09-04 | **Phase 3 reopened bug: real post-fix numbers in, M3 re-closed (Session 6 continued).** Prashanth ran `scripts/run_retrieval_harness.py`, `eval/run_ragas_eval.py`, and `eval/run_citation_accuracy_eval.py` against the live, calibrated fix. T-3.6: Context Precision@10 0.134 -> 0.253 (+89% relative), Context Recall@10 0.682 -> 0.568 (-17% relative) -- a real trade-off, recorded honestly rather than only celebrating the precision gain; several probes now return as few as 0-3 pieces where they used to get padded to 10. M3 milestone moved back to `DONE` with these numbers. T-5.4: Citation Accuracy 0.214 over 11/24 ANSWERED items (up from the two untrusted pre-fix runs, neither ever entered in the ledger) -- improved, not solved (6/11 still show an extra citation). T-5.3 hit a second real bug on its first attempt: `ragas` is pinned unversioned in `requirements.txt`, so Prashanth's machine installed a newer release than this project's dev reference (0.4.3) and that release removed/renamed the `allow_nest_asyncio` parameter the earlier fix depended on -- `eval/run_ragas_eval.py` now inspects the installed `evaluate()`'s real signature instead of assuming one, and self-reports which path it took. Not yet re-run against this fix. 174/174 tests passing throughout (no pipeline code touched by the ragas-script fix). |
 | 2026-09-04 | **Phase 3 reopened bug: calibrated and wired in (Session 6).** Prashanth ran `scripts/dump_rerank_scores.py` for real against 5 probes. Finding: the floor cleanly separates signal from noise on single-topic queries (P-30: 0.98 vs. <=0.0016) but cannot fix two adversarial cases where a wrong clause outranks a right one (P-01's decoy scores 0.098 vs. the real answer's 0.022; P-17's second correct clause scores 0.0002, below four wrong ones) -- no floor value can fix a wrong ranking order, only a too-low true positive relative to real noise. Chose the conservative default `DEFAULT_MIN_RERANK_SCORE = 0.001` from that data (drops all clear padding, keeps every true positive seen in calibration) and wired it in as the actual default on `retrieve_and_grade()`, `answer_query()`, and `run_retrieval_harness()` -- not just an available parameter. Deliberately did NOT chase the P-01/P-17 ranking-order limitation further (scope call: reranker-tuning work disproportionate to a 2-of-24-probe edge case on a synthetic demo corpus); logged it as a forward flag in Phase 5's detail section instead, so the next T-5.3/T-5.4 run doesn't re-diagnose an already-known issue. 174/174 tests passing. M3 stays `REOPENED` pending the real T-3.6/T-5.3/T-5.4 re-runs. |
 | 2026-09-04 | Phase 3 reopened bug: built the fix mechanism. `HybridRetriever.retrieve()` gained `min_rerank_score` (drop below-floor candidates before truncating to `top_k`, so `top_k` is a ceiling not a target), default `None` (old behaviour) until calibrated. `scripts/dump_rerank_scores.py` written for the real-data calibration run. Not yet the actual fix in production -- no call site passes the new parameter yet, and no floor value is chosen. 171/171 tests passing. |
 | 2026-09-04 | **Two real bugs found on the first live T-5.3/T-5.4 run.** (1) RAGAS scoring returned `n/a` for all four metrics on every item -- root-caused to `ragas`'s unconditional `nest_asyncio.apply()` being incompatible with Python 3.11+'s `asyncio.timeout()` (confirmed by reading `ragas/executor.py` directly, not guessed); fixed via `allow_nest_asyncio=False` in `eval/run_ragas_eval.py`, not yet re-run. (2) Citation Accuracy scored 0.106 mean with 7/7 ANSWERED items over-citing -- root-caused to `generation/citations.py`'s `build_citations()` attaching every retrieved normative piece regardless of whether the answer's narrative actually used it, a real defect in Phase 4/5 generation code that the existing test suite never caught (it checked expected clauses were present, never that extraneous ones were absent). Found and root-caused; fix proposed (restrict citations to pieces actually referenced by `workings`) but deliberately NOT applied without Prashanth's sign-off, since it changes production generation output. Also resolved the `langchain_community.chat_models.vertexai` `ModuleNotFoundError` blocking `ragas` from importing at all -- root-caused to a dead top-level import (`ragas/llms/base.py` only uses `ChatVertexAI`/`VertexAI` in an `isinstance()` support-list, never instantiates either) against a `langchain-community` version where that submodule was removed in LangChain's provider-package split; fixed with a 5-line local compatibility shim in the venv rather than downgrading `langchain-community` (which would have risked real incompatibility with the already-installed `langchain-core 1.5.1`/`langchain 1.3.14`). |
