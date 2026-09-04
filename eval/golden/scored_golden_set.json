@@ -477,8 +477,8 @@
         "a fabricated German 'gratuity' amount"
       ],
       "verification_status": "Tier-1 real German law context (KSchG scope); corpus's own note on Germany's lack of a gratuity equivalent is Tier-2 explanatory, consistent with KSchG §§9-10 framework",
-      "rationale": "Country hard-filter test — jurisdiction_scope filtering exists specifically so this can't leak.",
-      "class": "MUST_REFUSE"
+      "rationale": "Country hard-filter test — jurisdiction_scope filtering exists specifically so this can't leak. Reclassified 2026-09-04 (Session 9): this item's own golden_answer is a full, citable, substantive negative answer (\"Germany has no gratuity scheme\") built from real corpus clauses (MER-DE-SEVERANCE / DE-KSCHG-SCOPE), not a case where the corpus has nothing to say -- that shape is MUST_ANSWER (a confident answer, whose content happens to be a refusal of the premise), not MUST_REFUSE (no relevant content exists at all, e.g. P-39's genuine deliberate absence). Confirmed by a real pipeline run: retrieving only MER-DE-SEVERANCE (the second citation is clipped by the calibrated min_rerank_score floor, a known, separate, accepted limitation -- see the retrieval-precision findings) still produces ANSWERED status with correct refusal-content text and never touches an India/UAE gratuity clause, satisfying every must_not_include constraint. Only one other MUST_REFUSE item exists in this set (P-39), and it is genuinely different in kind -- checked before reclassifying, per this project's standing rule against unverified fixes.",
+      "class": "MUST_ANSWER"
     }
   ]
 }

@@ -68,6 +68,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from eval.retrieval_harness import load_expected_clauses, load_probe_queries  # noqa: E402
+from eval.run_confusion_matrix import _normalize_country  # noqa: E402
 from ingestion.embedder import EmbeddingCache, OpenAIEmbedder  # noqa: E402
 from ingestion.index_units import build_indexable_units  # noqa: E402
 from ingestion.parser import parse_corpus  # noqa: E402
@@ -108,6 +109,22 @@ def main() -> int:
 
     all_queries = load_probe_queries()
     expected_by_probe = load_expected_clauses()
+
+    # Session 9 fix: this script used to call retriever.retrieve() with NO
+    # country/jurisdiction_scope, unlike every real production entry point
+    # (grading/answer_pipeline.py's answer_query, eval/run_confusion_matrix.py),
+    # which resolve country from the golden set's own "country" field per
+    # item and pass it through as a HARD filter (retrieval/filters.py).
+    # That meant this script's numbers overstated cross-country noise for
+    # any probe that DOES have a resolved country -- P-16 (India), P-18
+    # (Germany), P-28 (India) all get the wrong-country candidates removed
+    # entirely in the real pipeline; P-39 has no resolved country (None) by
+    # design and is unaffected by this fix. Loading real per-probe country
+    # here so the calibration numbers match what the pipeline actually sees.
+    import json as _json
+    _golden = _json.load(open(REPO_ROOT / "eval" / "golden" / "scored_golden_set.json", encoding="utf-8"))
+    country_by_probe = {it.get("probe_id"): _normalize_country(it.get("country")) for it in _golden["items"]}
+    jurisdiction_by_probe = {it.get("probe_id"): it.get("jurisdiction_scope") for it in _golden["items"]}
     missing = [pid for pid in probe_ids if pid not in all_queries]
     if missing:
         print(f"Unknown probe id(s): {missing}. Known ids come from eval/golden/adversarial_probe_set.md.", file=sys.stderr)
@@ -134,11 +151,16 @@ def main() -> int:
     for probe_id in probe_ids:
         query = all_queries[probe_id]
         expected = set(expected_by_probe.get(probe_id, []))
-        results = retriever.retrieve(query, top_k=args.top_k, reranker=reranker)
+        results = retriever.retrieve(
+            query, top_k=args.top_k, reranker=reranker,
+            country=country_by_probe.get(probe_id),
+            jurisdiction_scope=jurisdiction_by_probe.get(probe_id),
+        )
 
         print(f"\n=== {probe_id} ===")
         print(f"query: {query}")
         print(f"expected clause_ids ({len(expected)}): {sorted(expected)}")
+        print(f"country filter applied: {country_by_probe.get(probe_id)!r}")
         print(f"{'rank':>4}  {'rerank_score':>13}  {'expected?':>9}  clause_id")
         for i, r in enumerate(results, start=1):
             hit = "yes" if r.clause_id in expected else ""
