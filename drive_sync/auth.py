@@ -27,9 +27,13 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 
 load_dotenv()
 
-# Read-only is all this project ever needs: we only detect and pull changes,
-# never write back to Drive.
-SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
+# drive.file (not the broader "drive" scope): access only to files this app
+# itself creates (T-6.2's corpus upload) or that the user opens with it --
+# never blanket access to Prashanth's whole Drive. Widened from
+# drive.readonly once T-6.2 needed to create documents, not just poll them;
+# changing scopes invalidates any cached token from the narrower scope, so
+# this required one more one-time consent (see PROJECT_PLAN.md Change Log).
+SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 
 
 def get_credentials() -> Credentials:
