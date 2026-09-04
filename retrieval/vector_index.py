@@ -89,6 +89,17 @@ class VectorIndex:
         self._built = True
         _log.info("built vector index over %d units", len(units))
 
+    def close(self) -> None:
+        """Release the on-disk Qdrant storage lock. Local on-disk Qdrant
+        single-locks its storage folder, so a process holding a VectorIndex
+        open against a path must close() it before ANY other VectorIndex
+        (in this process or another) can open the same path -- including
+        VectorIndex.reindex_source_file()'s own client inside drive_sync.
+        reindex. Safe to call more than once; a fresh VectorIndex must be
+        constructed to use the collection again afterward (this doesn't
+        reopen)."""
+        self._client.close()
+
     def open_existing(self) -> None:
         """Mark an on-disk collection built by a previous run() as ready
         to search, without re-embedding or re-upserting anything. Use

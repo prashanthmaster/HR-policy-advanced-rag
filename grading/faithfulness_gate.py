@@ -36,9 +36,26 @@ from ingestion.logging_setup import get_logger
 
 _log = get_logger("grading.faithfulness_gate")
 
-# None = not yet calibrated -> apply_faithfulness_gate() is a no-op.
-# Set this from scripts/calibrate_faithfulness_gate.py's real output only.
-DEFAULT_FAITHFULNESS_THRESHOLD: float | None = None
+# Calibrated 4 Sep 2026 (Session 10) from a real run of
+# scripts/calibrate_faithfulness_gate.py over 13 ANSWERED golden items.
+# Real finding: even currently-correct answers scored faithfulness in the
+# 0.333-0.737 range (never near 1.0) -- consistent with Phase 5's own
+# measured baseline (mean 0.497, Session 8) -- because this pipeline's
+# generator is deterministic and citation-grounded (real clause text +
+# computed figures) rather than free-form LLM prose, and RAGAS's
+# Faithfulness metric decomposes an answer into claims and checks each
+# against literal retrieved text; a correct *reasoning* sentence about
+# which clause version governs isn't always a literal quote from any one
+# clause. At the real measured data: threshold 0.30 refuses ZERO of the
+# 13 real ANSWERED items (no regression risk), while 0.40+ already wrongly
+# refuses 2+ of them and 0.50+ refuses the majority -- exactly the
+# refuse-everything failure mode Risk RK-2 warns against. 0.30 is
+# therefore a real trip-wire against a genuinely degenerate future answer
+# (nothing today scores anywhere near that low), not a claim that 0.30 is
+# a "good enough" faithfulness bar in the abstract. See PROJECT_PLAN.md
+# Phase 6 Change Log for the full real numbers and reasoning; per-item
+# scores are in build/faithfulness_calibration_result.json.
+DEFAULT_FAITHFULNESS_THRESHOLD: float | None = 0.30
 
 
 class FaithfulnessScorer(Protocol):
