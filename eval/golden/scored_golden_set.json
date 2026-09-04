@@ -145,8 +145,8 @@
         "comparing 20 vs 30 by magnitude and calling 30 the larger entitlement"
       ],
       "verification_status": "V-3 CLOSED 2026-09-03 (same verification as P-3a)",
-      "rationale": "Same words, same city, two different real regimes — direct test of jurisdiction_scope filtering.",
-      "class": "MUST_ANSWER",
+      "rationale": "Same words, same city, two different real regimes — direct test of jurisdiction_scope filtering. Reclassified 2026-09-04 (Session 9): its own golden_answer is the same branched-answer shape as P-13/P-19/P-41 (all correctly MUST_CLARIFY), so it is graded the same way -- was inconsistently labeled MUST_ANSWER despite describing a clarification, not a resolved answer.",
+      "class": "MUST_CLARIFY",
       "jurisdiction_scope": null,
       "jurisdiction_scope_note": "Deliberately NOT set. This probe's whole point is entity ambiguity -- the query names a location ('Dubai' / 'the DIFC office'), not the employing entity, and the golden_answer requires citing BOTH the mainland and DIFC rules and flagging that entity (not location) governs. A hard jurisdiction_scope filter here would silently resolve the ambiguity the probe exists to catch, defeating the test."
     },
