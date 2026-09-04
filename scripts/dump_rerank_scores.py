@@ -15,6 +15,32 @@ shapes the floor must get right:
     SEGMENTED_ACCRUAL amendment pair) and must NOT be scored so low that
     a floor would cut it.
 
+Extended 2026-09-04 (Session 9) with four more real cases surfaced by
+the first post-narrative-fix confusion-matrix run, all suspected to be
+the SAME class of limitation as P-01/P-17 above (a real answer scores
+too low, or an unrelated clause scores too high, and no floor value can
+fix an ordering problem -- only remove things below a line):
+  - P-16: retrieves a near-duplicate "senior grade" notice clause
+    alongside the correct "junior grade" one and cites both -- is the
+    wrong one scoring high enough to survive, or is there no meaningful
+    score gap between the two at all?
+  - P-18: the clause that actually answers correctly ("Germany has no
+    general severance/gratuity scheme") is found and used; a related,
+    less on-topic clause (KSchG's dismissal-protection scope) scores
+    too low to be retrieved alongside it. Check whether that's a real
+    ordering problem or just a query this second clause was never a
+    strong match for.
+  - P-28: a colloquial phrasing ("I get nothing since I left before 5
+    years... that's illegal, isn't it?") apparently doesn't score well
+    against the formal eligibility clause it needs -- check whether the
+    real clause is present at all in the raw candidate list, and how
+    far down.
+  - P-39: a paternity-leave query with no matching content in the
+    corpus (a deliberate absence) apparently still scores unrelated
+    country-specific leave clauses high enough to look like a real
+    match, producing a false "which country" prompt instead of a clean
+    "nothing on this" response.
+
 This is a read-only diagnostic -- it does not change retrieve()'s
 behaviour or pick a floor itself. Report the printed table back so the
 actual min_rerank_score value (and whichever downstream call sites
@@ -54,7 +80,7 @@ from retrieval.vector_index import VectorIndex  # noqa: E402
 # Not the whole 43-probe set -- this is a calibration sample, not a re-run
 # of T-3.6 (that's scripts/run_retrieval_harness.py's job, separately,
 # once a floor value is actually chosen).
-DEFAULT_PROBE_IDS = ["P-30", "P-02", "P-3a", "P-01", "P-17"]
+DEFAULT_PROBE_IDS = ["P-30", "P-02", "P-3a", "P-01", "P-17", "P-16", "P-18", "P-28", "P-39"]
 
 
 def main() -> int:
