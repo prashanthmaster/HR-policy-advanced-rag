@@ -43,7 +43,7 @@ from langsmith import traceable
 from grading.crag_grader import grade_sufficiency
 from grading.schema import GradeVerdict, MissingReason, SufficiencyResult
 from ingestion.logging_setup import get_logger
-from retrieval.hybrid_search import HybridRetriever, RetrievedPiece
+from retrieval.hybrid_search import DEFAULT_MIN_RERANK_SCORE, HybridRetriever, RetrievedPiece
 from retrieval.reranker import Reranker
 
 _log = get_logger("grading.pipeline")
@@ -72,7 +72,11 @@ def retrieve_and_grade(
     jurisdiction_scope: str | None = None,
     as_of_date: dt.date | None = None,
     reranker: Reranker | None = None,
+    min_rerank_score: float | None = DEFAULT_MIN_RERANK_SCORE,
 ) -> GradedRetrieval:
+    """min_rerank_score defaults to the Session 6 calibrated floor (Phase 3
+    reopened bug fix) -- pass None explicitly to get the old unfiltered
+    behaviour, e.g. for a test that wants to see the full padded-out set."""
     pieces = retriever.retrieve(
         query,
         top_k=top_k,
@@ -80,6 +84,7 @@ def retrieve_and_grade(
         jurisdiction_scope=jurisdiction_scope,
         as_of_date=as_of_date,
         reranker=reranker,
+        min_rerank_score=min_rerank_score,
     )
     result = grade_sufficiency(pieces)
     if result.is_sufficient:
@@ -126,6 +131,7 @@ def retrieve_and_grade(
             jurisdiction_scope=jurisdiction_scope,
             as_of_date=as_of_date,
             reranker=reranker,
+            min_rerank_score=min_rerank_score,
         )
         _log.info("corrective re-query: widened top_k %d -> %d, %d pieces returned", top_k, top_k * _WIDENED_TOP_K_MULTIPLIER, len(widened))
         corrected_pieces = widened

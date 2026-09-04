@@ -105,3 +105,14 @@ def test_p01_result_exposes_retrieved_pieces_for_eval():
     assert result.pieces is not None
     assert len(result.pieces) > 0
     assert any(p.clause_id == "IN-GRAT-S4-CEILING" for p in result.pieces)
+
+
+def test_answer_query_defaults_to_the_calibrated_min_rerank_score_floor():
+    """Same wiring check as grading/pipeline.py's, one layer up: answer_query()
+    is the real M4 entry point everything (including the eval scripts) calls,
+    so this is what actually has to default to the Session 6 fix."""
+    import inspect
+    from retrieval.hybrid_search import DEFAULT_MIN_RERANK_SCORE
+
+    sig = inspect.signature(answer_query)
+    assert sig.parameters["min_rerank_score"].default == DEFAULT_MIN_RERANK_SCORE

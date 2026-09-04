@@ -46,6 +46,7 @@ from pathlib import Path
 
 from ingestion.logging_setup import get_logger
 from retrieval.hybrid_search import HybridRetriever
+from retrieval.hybrid_search import DEFAULT_MIN_RERANK_SCORE
 from retrieval.reranker import Reranker
 
 _log = get_logger("eval.retrieval_harness")
@@ -114,7 +115,13 @@ def run_retrieval_harness(
     reranker: Reranker | None = None,
     probe_queries: dict[str, str] | None = None,
     expected_by_probe: dict[str, list[str]] | None = None,
+    min_rerank_score: float | None = DEFAULT_MIN_RERANK_SCORE,
 ) -> RetrievalHarnessReport:
+    """min_rerank_score defaults to the Session 6 calibrated floor (Phase 3
+    reopened bug fix) -- the T-3.6 re-run should use this default so the
+    Results Ledger's "after" numbers reflect production behaviour. Pass
+    None explicitly to reproduce the original 3 Sep pre-fix numbers for
+    comparison."""
     probe_queries = probe_queries if probe_queries is not None else load_probe_queries()
     expected_by_probe = expected_by_probe if expected_by_probe is not None else load_expected_clauses()
 
@@ -127,7 +134,7 @@ def run_retrieval_harness(
             excluded.append(probe_id)
             continue
 
-        results = retriever.retrieve(query, top_k=top_k, as_of_date=as_of_date, reranker=reranker)
+        results = retriever.retrieve(query, top_k=top_k, as_of_date=as_of_date, reranker=reranker, min_rerank_score=min_rerank_score)
         retrieved_clause_ids = [r.clause_id for r in results]
         expected_set = set(expected_list)
         precision, recall = _score_one(expected_set, retrieved_clause_ids)

@@ -104,3 +104,37 @@ def test_missing_cohort_rule_is_not_corrected_by_reretry():
 
     src = inspect.getsource(_fn)
     assert "MISSING_COHORT_RULE" not in src  # documents: no correction branch exists for it
+
+
+# --- Session 6: retrieve_and_grade defaults to the calibrated min_rerank_score floor ---
+
+def test_retrieve_and_grade_defaults_to_the_calibrated_floor():
+    """The Phase 3 reopened-bug fix (over-broad citation) is only real if
+    the production entry point actually applies it by default -- not just
+    if HybridRetriever.retrieve() supports the parameter. Confirms the
+    wiring, not just the mechanism."""
+    import inspect
+    from retrieval.hybrid_search import DEFAULT_MIN_RERANK_SCORE
+
+    sig = inspect.signature(retrieve_and_grade)
+    assert sig.parameters["min_rerank_score"].default == DEFAULT_MIN_RERANK_SCORE
+
+
+def test_retrieve_and_grade_floor_can_be_disabled_for_old_padding_behaviour():
+    """Explicit min_rerank_score=None still reproduces the pre-fix,
+    always-exactly-top_k padding -- needed so a caller (or a test) that
+    genuinely wants the old behaviour, e.g. to reproduce the original
+    3 Sep pre-fix numbers, still can. >=10 rather than ==10 because this
+    query's corrective re-query path (a real, separate T-4.2 behaviour)
+    can legitimately ADD a lineage-sibling piece on top of the top_k=10
+    padded set -- that's not the floor's job to prevent."""
+    retriever, _units = _build_retriever()
+    graded = retrieve_and_grade(
+        retriever,
+        "Grade M3, 6 years, Dubai -- what's my housing allowance?",
+        top_k=10,
+        country="UAE",
+        reranker=MockReranker(),
+        min_rerank_score=None,
+    )
+    assert len(graded.pieces) >= 10

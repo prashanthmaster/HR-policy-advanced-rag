@@ -48,15 +48,33 @@ magnitude, so a floor on it would need its own separate calibration
 work and isn't attempted here; that path stays explicitly unfloored and
 documented as such, not silently assumed equivalent.
 
-The actual floor VALUE is not set as a new default here on purpose --
-this project's standing rule is no constant without calibration against
-real data (same status rrf_k=60 and rerank_candidate_k=20 already have).
-scripts/dump_rerank_scores.py is the calibration script: it prints real
-FlashRankReranker score distributions for a few representative queries
-(a genuinely single-topic one like P-30's housing-allowance query, and
-genuinely multi-clause ones like P-02/P-3a that legitimately need 2+
-pieces) so the floor can be picked from real numbers, not guessed, and
-so it doesn't accidentally cut a legitimate segmented-accrual pair.
+The actual floor VALUE is not set as a default on THIS function on
+purpose -- HybridRetriever.retrieve() stays neutral/unopinionated (its
+own default stays None = old unfiltered behaviour, unchanged, so this
+module's own test suite keeps meaning what it already asserts). The
+calibrated value lives one layer up, as DEFAULT_MIN_RERANK_SCORE below,
+applied by the production entry points (grading/pipeline.py's
+retrieve_and_grade, grading/answer_pipeline.py's answer_query,
+eval/retrieval_harness.py's run_retrieval_harness) -- not here.
+
+Calibrated 2026-09-04 (Session 6) via scripts/dump_rerank_scores.py's
+real output over 5 representative probes (P-30 single-topic; P-02/P-3a
+genuinely multi-clause; P-01/P-17 adversarial). Real finding, recorded
+honestly rather than glossed over: a single score floor cleanly
+separates on-topic from off-topic on P-30-shaped queries (true positive
+0.9784, everything else <=0.0016) but CANNOT fully solve P-01/P-17 --
+on those two, a wrong clause outscores a right one (P-01's decoy
+illustration scores 0.098 vs the correct clause's 0.022; P-17's second
+correct clause scores 0.0002, below four wrong clauses). No floor value
+can fix a case where the ranking ORDER itself is wrong, only a case
+where the true positive is simply too low relative to genuine noise.
+DEFAULT_MIN_RERANK_SCORE=0.001 was chosen as the most conservative value
+that trims the clearest padding (P-30/P-3a's near-zero tails) while
+never dropping any of the 7 true-positive pieces actually observed
+across all 5 calibration probes -- it is a real, if partial, fix for
+the over-citation bug, not a claim that P-01/P-17-shaped ranking-order
+problems are solved. See PROJECT_PLAN.md's Phase 3 detail (fix) and
+Phase 5 detail (forward-flagged known limitation) for the full record.
 """
 
 from __future__ import annotations
@@ -75,6 +93,13 @@ from retrieval.reranker import Reranker
 from retrieval.vector_index import VectorIndex
 
 _log = get_logger("retrieval.hybrid_search")
+
+# Calibrated 2026-09-04 (Session 6) from scripts/dump_rerank_scores.py's real
+# output over 5 representative probes -- see this module's docstring for the
+# full calibration record, including the honest limit of what this constant
+# can and cannot fix. Applied by the production entry points, NOT by
+# HybridRetriever.retrieve() itself (its own default stays None).
+DEFAULT_MIN_RERANK_SCORE = 0.001
 
 
 @dataclass

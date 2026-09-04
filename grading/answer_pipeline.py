@@ -33,7 +33,7 @@ from grading.pipeline import retrieve_and_grade
 from grading.schema import ClarificationResponse, SufficiencyResult
 from grading.temporal_reasoner import ServiceFacts, reason_over_pieces
 from ingestion.logging_setup import get_logger
-from retrieval.hybrid_search import HybridRetriever
+from retrieval.hybrid_search import DEFAULT_MIN_RERANK_SCORE, HybridRetriever
 from retrieval.reranker import Reranker
 
 _log = get_logger("grading.answer_pipeline")
@@ -64,13 +64,18 @@ def answer_query(
     reranker: Reranker | None = None,
     generator: TemplateGenerator | None = None,
     top_k: int = 10,
+    min_rerank_score: float | None = DEFAULT_MIN_RERANK_SCORE,
 ) -> PipelineResult:
+    """min_rerank_score defaults to the Session 6 calibrated floor (Phase 3
+    reopened bug fix) -- pass None explicitly to get the old unfiltered
+    behaviour."""
     facts = facts or ServiceFacts()
     generator = generator or TemplateGenerator()
 
     graded = retrieve_and_grade(
         retriever, query, top_k=top_k, country=country,
         jurisdiction_scope=jurisdiction_scope, as_of_date=as_of_date, reranker=reranker,
+        min_rerank_score=min_rerank_score,
     )
     if not graded.sufficiency.is_sufficient:
         _log.info("answer_query: INSUFFICIENT even after correction (%s)", [r.value for r in graded.sufficiency.reasons])
