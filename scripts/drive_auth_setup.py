@@ -16,6 +16,13 @@ that's the proof the whole chain (GCP project -> Drive API enabled -> OAuth
 client -> your consent -> folder access) really works end to end.
 """
 import os
+import sys
+from pathlib import Path
+
+# Running this file directly (not as a module) only puts scripts/ on
+# sys.path, not the repo root -- add the repo root explicitly so
+# `drive_sync` (a sibling top-level package) can be imported.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from dotenv import load_dotenv
 
