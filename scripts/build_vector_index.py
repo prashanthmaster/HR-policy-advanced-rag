@@ -64,6 +64,14 @@ def main() -> int:
         )
         return 1
 
+    # Defensive strip: a value pasted into a CI secret (or a .env line) can
+    # silently pick up a trailing newline/space, which the OpenAI/langchain
+    # clients then send as-is in the Authorization header -- httpx/h11 reject
+    # that with a cryptic "Illegal header value" error (hit for real in
+    # GitHub Actions, see PROJECT_PLAN.md Phase 7 Change Log). Stripping once,
+    # here, fixes it for every downstream client that reads this env var.
+    os.environ["OPENAI_API_KEY"] = os.environ["OPENAI_API_KEY"].strip()
+
     corpus_dir = REPO_ROOT / "corpus"
     chunks = parse_corpus(corpus_dir, repo_root=REPO_ROOT)
     units = build_indexable_units(chunks)

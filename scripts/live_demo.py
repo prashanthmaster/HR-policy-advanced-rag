@@ -98,6 +98,14 @@ def main() -> int:
     if not os.environ.get("OPENAI_API_KEY"):
         print("OPENAI_API_KEY is not set.", file=sys.stderr)
         return 1
+
+    # Defensive strip: a value pasted into a CI secret (or a .env line) can
+    # silently pick up a trailing newline/space, which the OpenAI/langchain
+    # clients then send as-is in the Authorization header -- httpx/h11 reject
+    # that with a cryptic "Illegal header value" error (hit for real in
+    # GitHub Actions, see PROJECT_PLAN.md Phase 7 Change Log). Stripping once,
+    # here, fixes it for every downstream client that reads this env var.
+    os.environ["OPENAI_API_KEY"] = os.environ["OPENAI_API_KEY"].strip()
     if not INDEX_PATH.exists():
         print(f"{INDEX_PATH} does not exist. Run scripts/build_vector_index.py --live first.", file=sys.stderr)
         return 1
