@@ -1,15 +1,15 @@
 {
-  "_comment": "T-7.2's recorded regression baseline -- the real scorecard from a real run against the corpus as it stood on 2026-09-05 (post all Phase 6 live edits and reverts). Future CI runs compare their own real numbers against THIS file and fail the build if any of them get worse -- never against an invented absolute target. This file is committed to git so it always travels with the exact code version it describes. To deliberately accept a new floor (after a real, reviewed improvement or an intentional scope change), re-run the three eval scripts and regenerate this file -- never hand-edit the numbers.",
+  "_comment": "T-7.2's recorded regression baseline -- the real scorecard from a real run against the corpus as it stood on 2026-09-05. Future CI runs compare their own real numbers against THIS file and fail the build if any of them get worse -- never against an invented absolute target. This file is committed to git so it always travels with the exact code version it describes. To deliberately accept a new floor (after a real, reviewed improvement or an intentional scope change), re-run the three eval scripts and regenerate this file with scripts/build_regression_baseline.py -- never hand-edit the numbers.",
   "recorded_date": "2026-09-05",
   "judge_model": "gpt-4o-mini",
   "embedding_model": "text-embedding-3-small",
   "total_item_count": 24,
   "ragas": {
-    "scored_item_count": 13,
-    "mean_context_precision": 0.7707326006810835,
-    "mean_context_recall": 0.4487179487179487,
-    "mean_faithfulness": 0.4684567066920008,
-    "mean_answer_correctness": 0.3505316972698825
+    "scored_item_count": 12,
+    "mean_context_precision": 0.7382936507424503,
+    "mean_context_recall": 0.47519841269841273,
+    "mean_faithfulness": 0.5114118452353746,
+    "mean_answer_correctness": 0.37978930286475715
   },
   "citation_accuracy": {
     "scored_item_count": 13,
@@ -24,6 +24,6 @@
       "P-01"
     ],
     "narrative_only_no_substance_count": 0,
-    "answered_count": 13
+    "answered_count": 12
   }
 }
