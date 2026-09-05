@@ -47,6 +47,11 @@ google-auth-httplib2
 fastapi
 uvicorn[standard]
 pydantic>=2
+python-multipart
+
+# UI (T-8.4: Streamlit frontend calling the FastAPI backend over HTTP)
+streamlit
+requests
 
 # Utilities
 python-dotenv

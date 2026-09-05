@@ -1,0 +1,19 @@
+.git
+.venv/
+.venv-win/
+.pytest_cache/
+__pycache__/
+*.pyc
+.env
+*.env
+credentials.json
+token.json
+service_account.json
+qdrant_storage/
+logs/
+build/
+Claude outputs/
+docs/
+tests/
+corpus_samples/
+.github/

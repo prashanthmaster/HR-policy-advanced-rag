@@ -39,14 +39,40 @@ def _point_id(piece_id: str) -> int:
 
 
 class VectorIndex:
-    def __init__(self, embedder: Embedder, path: str | Path | None = None):
+    def __init__(
+        self,
+        embedder: Embedder,
+        path: str | Path | None = None,
+        url: str | None = None,
+        api_key: str | None = None,
+    ):
+        """Three mutually exclusive backends, checked in this order:
+
+        1. url set (T-8.2, Qdrant Cloud) -- a real remote Qdrant instance,
+           reached over HTTPS. This is the only mode that survives a Cloud
+           Run deploy: Cloud Run containers have no persistent local disk
+           across restarts/instances, so the on-disk path=/  :memory: modes
+           below cannot serve a deployed app. api_key is required by every
+           Qdrant Cloud cluster (unauthenticated remote access is not an
+           option Qdrant Cloud offers).
+        2. path set, url not set -- local on-disk Qdrant (dev machine only).
+        3. neither set -- in-memory Qdrant (tests only).
+
+        location= is for remote-server URLs generally, but url= is used
+        here instead of routing url through location= because location=
+        historically also had to double as the local on-disk path parameter
+        in this codebase, and a local on-disk path must go through path=
+        instead of location= -- location= tries to urlparse the string and,
+        on Windows, misreads the drive letter ('C:\\...') as a URL scheme
+        ("Unknown scheme: c"). Found live 3 Sep 2026 on the first real
+        --live run (tests and --dry-run only ever exercised :memory:).
+        Keeping url= as its own explicit parameter avoids that ambiguity
+        being reintroduced now that a real remote case exists.
+        """
         self._embedder = embedder
-        # location= is for remote-server URLs; a local on-disk path must go
-        # through path= instead -- location= tries to urlparse the string and,
-        # on Windows, misreads the drive letter ('C:\\...') as a URL scheme
-        # ("Unknown scheme: c"). Found live 3 Sep 2026 on the first real
-        # --live run (tests and --dry-run only ever exercised :memory:).
-        if path is None:
+        if url is not None:
+            self._client = QdrantClient(url=url, api_key=api_key)
+        elif path is None:
             self._client = QdrantClient(location=":memory:")
         else:
             self._client = QdrantClient(path=str(path))
