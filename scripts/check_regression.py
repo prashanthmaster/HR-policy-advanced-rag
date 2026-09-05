@@ -9,17 +9,25 @@ tolerance -- never against an invented absolute number. This is the
 project's standing convention (see PROJECT_PLAN.md Phase 7 note): the bar
 is "no worse than the last real recorded run," not a made-up target score.
 
-A small tolerance (TOLERANCE_SCORE) is allowed on the 0-1 judge-scored
-metrics (Context Precision/Recall, Faithfulness, Answer Correctness,
-Citation Accuracy) because they depend on an LLM-as-judge call
-(gpt-4o-mini) that is not perfectly deterministic between runs even
-against an unchanged corpus -- confirmed empirically on 2026-09-05 by
-running the full suite twice back-to-back and seeing near-identical but
-not bit-identical scores. The confusion-matrix counts (class match count,
-over-refusal count, narrative-only-no-substance count) are plain
-classification counts over a fixed 24-item set and were confirmed
-bit-identical across both real runs, so those are held to an exact
-no-regression bar (zero tolerance).
+A tolerance (TOLERANCE_SCORE) is allowed on the 0-1 judge-scored metrics
+(Context Precision/Recall, Faithfulness, Answer Correctness, Citation
+Accuracy) because they depend on an LLM-as-judge call (gpt-4o-mini) that
+is not perfectly deterministic between runs, and because GitHub Actions
+never caches embeddings between runs (unlike a local machine), so the
+retrieved context -- and even which golden items reach ANSWERED at all --
+can shift slightly run to run. This was measured for real, not guessed:
+two back-to-back local runs landed within ~0.002 of each other, which is
+what the original 0.03 tolerance was based on, but two back-to-back real
+GitHub Actions runs on IDENTICAL code and corpus swung by up to ~0.045 on
+Context Recall/Faithfulness/Answer Correctness (2026-09-05, runs
+33952012673 and 33952877889). 0.08 is that observed spread plus a safety
+margin -- widened deliberately from evidence, not to paper over a real
+regression. The confusion-matrix counts (class match count, over-refusal
+count, narrative-only-no-substance count) and the citation-accuracy
+problem counts have stayed bit-identical across every real run so far,
+including both CI runs, so those stay at an exact no-regression bar
+(zero tolerance) -- they are also this project's primary "does it make
+the right decision" metric, so that's deliberate, not an oversight.
 
 Usage:
     python scripts/check_regression.py
@@ -41,7 +49,7 @@ CONFUSION_PATH = REPO_ROOT / "build" / "confusion_matrix_result.json"
 
 # Allowed downward wiggle on 0-1 judge-scored metrics, to absorb LLM-judge
 # noise between runs -- NOT a lowering of the bar, just a noise floor.
-TOLERANCE_SCORE = 0.03
+TOLERANCE_SCORE = 0.08
 
 
 def _load(path: Path) -> dict:
