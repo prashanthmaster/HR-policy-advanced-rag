@@ -179,6 +179,38 @@ def main() -> int:
         except ImportError:
             pass  # not installed -- fine, nothing to neutralize
 
+        # Stub out langchain_community.chat_models.vertexai BEFORE importing
+        # ragas. Root cause (confirmed 2026-09-05, real GitHub Actions
+        # failure): ragas 0.3.1 does an eager top-level import of
+        # ChatVertexAI from that exact submodule path, which was removed
+        # from langchain-community once Vertex AI support moved to the
+        # separate langchain-google-vertexai package -- this project never
+        # uses Vertex AI (budget is locked to gpt-4o-mini/gpt-5-nano/
+        # text-embedding-3-small), so failing over this is pure friction.
+        # Previously "fixed" only by a hand-edited stub file dropped
+        # straight into .venv-win's site-packages -- invisible to git, so
+        # it silently vanished on a fresh CI install and reproduced the
+        # exact same crash there. Doing it here instead, as a fake module
+        # registered in sys.modules, makes the fix travel with the code on
+        # any machine, no manual site-packages surgery required.
+        import sys as _sys
+        import types as _types
+        if "langchain_community.chat_models.vertexai" not in _sys.modules:
+            _vertexai_stub = _types.ModuleType("langchain_community.chat_models.vertexai")
+
+            class ChatVertexAI:  # noqa: N801 -- name required to match ragas's import
+                """Stub only. Never instantiated in this project -- ragas
+                just checks isinstance() against this class in a
+                supported-LLMs list."""
+
+                def __init__(self, *args, **kwargs):
+                    raise NotImplementedError(
+                        "ChatVertexAI is a compatibility stub; Vertex AI is not used in this project."
+                    )
+
+            _vertexai_stub.ChatVertexAI = ChatVertexAI
+            _sys.modules["langchain_community.chat_models.vertexai"] = _vertexai_stub
+
         from ragas import EvaluationDataset, SingleTurnSample, evaluate
         from ragas.metrics import answer_correctness, context_precision, context_recall, faithfulness
         from langchain_openai import ChatOpenAI, OpenAIEmbeddings
