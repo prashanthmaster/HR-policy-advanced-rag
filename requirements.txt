@@ -7,10 +7,26 @@
 # See PROJECT_PLAN.md Phase 2 gate note and risk RK-4.
 #
 # Core pipeline
-langchain>=0.3
+#
+# langchain/langchain-community/ragas pinned to EXACT versions, 2026-09-05
+# (Phase 7 CI Change Log): a real GitHub Actions run on a clean Linux box
+# resolved a different, incompatible combination than what's actually
+# installed and working on Prashanth's own machine, and crashed deep
+# inside langchain_community with "No module named
+# 'langchain_community.chat_models.vertexai'" -- an optional integration
+# neither this project nor ragas actually uses, pulled in only because an
+# unpinned resolver picked a bad version mix. Pinning to the exact
+# versions proven to work locally (captured via `pip freeze` on
+# .venv-win) makes CI install the identical, already-working combination
+# instead of "whatever's newest today."
+langchain==1.3.18
+langchain-community==0.4.2
+langchain-core==1.6.1
+langchain-openai==1.6.0
+langchain-text-splitters==1.1.2
 langgraph>=0.2
 langsmith
-openai>=1.40
+openai==3.7.0
 
 # Retrieval
 rank-bm25
@@ -18,8 +34,8 @@ qdrant-client
 flashrank
 
 # Eval
-ragas
-datasets
+ragas==0.3.1
+datasets==5.0.1
 
 # Google Drive freshness
 google-api-python-client
