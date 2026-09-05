@@ -166,7 +166,11 @@ def _to_response(result: PipelineResult) -> QueryResponse:
         return QueryResponse(
             status=result.status,
             missing_facts=[{"fact": m.fact, "why": m.why} for m in c.missing_facts],
-            conditional_answers=[{"condition": ca.condition} for ca in c.conditional_answers],
+            # Bug fixed here (Session 10, caught from real UI testing): ca.answer is a full
+            # GeneratedAnswer with real text -- the first version of this endpoint sent only
+            # the bare condition string ("if country = India") and silently dropped the
+            # actual per-branch answer, so the UI had nothing real to show under it.
+            conditional_answers=[{"condition": ca.condition, "answer_text": ca.answer.text} for ca in c.conditional_answers],
         )
     # INSUFFICIENT
     return QueryResponse(
