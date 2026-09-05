@@ -99,7 +99,7 @@ _log = get_logger("retrieval.hybrid_search")
 # full calibration record, including the honest limit of what this constant
 # can and cannot fix. Applied by the production entry points, NOT by
 # HybridRetriever.retrieve() itself (its own default stays None).
-DEFAULT_MIN_RERANK_SCORE = 0.5  # TEMPORARY, T-7 M7 exit-criterion test -- deliberately wrong, reverts next commit. See PROJECT_PLAN.md Phase 7 Change Log.
+DEFAULT_MIN_RERANK_SCORE = 0.001
 
 
 @dataclass
