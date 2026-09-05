@@ -26,6 +26,7 @@ from dotenv import load_dotenv
 
 from drive_sync.auth import get_drive_service
 from drive_sync.change_detector import detect_changes
+from drive_sync.golden_impact import find_affected_probes, load_golden_items
 from drive_sync.reindex import reindex_changed_file
 
 load_dotenv()
@@ -71,6 +72,29 @@ def main() -> int:
         for c, ev in all_review_events:
             print(f"\n  {c.drive_doc_name} -- clause {ev.clause_id} ({ev.kind.value})")
             print(f"  {ev.note}")
+
+        # T-6.9 -- the other half of "flag, don't fix": a changed clause can
+        # also make a golden probe's recorded golden_answer stale, and that
+        # never shows up here on its own (this script never reads the golden
+        # set otherwise). Cross-check the changed clause_ids against every
+        # probe's expected_clause_ids and flag any overlap -- pure, free,
+        # no API calls.
+        changed_clause_ids = {ev.clause_id for _, ev in all_review_events}
+        try:
+            golden_items = load_golden_items()
+            affected_probes = find_affected_probes(changed_clause_ids, golden_items)
+        except FileNotFoundError:
+            affected_probes = []
+
+        if affected_probes:
+            print(
+                f"\n{len(affected_probes)} golden probe(s) cite a clause that just changed -- "
+                f"their recorded golden_answer may now be stale. Re-check before trusting a "
+                f"RAGAS Answer Correctness or Citation Accuracy run against them:"
+            )
+            for probe in affected_probes:
+                print(f"\n  {probe.probe_id}: {probe.query}")
+                print(f"    changed clause(s): {', '.join(probe.matched_clause_ids)}")
 
     return 0
 

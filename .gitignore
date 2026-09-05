@@ -13,3 +13,5 @@ qdrant_storage/
 .ipynb_checkpoints/
 logs/
 build/
+drive_sync/token.json.old*
+drive_sync/sync_state.json

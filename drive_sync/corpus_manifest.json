@@ -1,0 +1,34 @@
+{
+  "tier1_law/india/india_law.md": {
+    "drive_file_id": "160eESkgW4K9KHdReiLj0Lalw51TQFKi8PkF9f8CRnJg",
+    "drive_doc_name": "Tier 1 — India Law"
+  },
+  "tier1_law/uae/uae_law.md": {
+    "drive_file_id": "1bKgmDAF-7nQ1HjRD_ujxxdpJWjDOnqWCD_0qFQ6kva8",
+    "drive_doc_name": "Tier 1 — UAE Law"
+  },
+  "tier1_law/uae/uae_difc_law.md": {
+    "drive_file_id": "1Wr38ULqA8eGOJctfC3Om6LX8wO-31WHGUaxhnZdIwOY",
+    "drive_doc_name": "Tier 1 — UAE DIFC Law"
+  },
+  "tier1_law/germany/germany_law.md": {
+    "drive_file_id": "1FJnbHzTTwKUa4cNyrbYaUsjUn1p4CHONEC6LLvJ-OzQ",
+    "drive_doc_name": "Tier 1 — Germany Law"
+  },
+  "tier2_policy/meridian_global_preamble.md": {
+    "drive_file_id": "1wBeXupAoE0Y7GYiDvoA441Fxqt3KWHTSmpQs_lNOlZ4",
+    "drive_doc_name": "Tier 2 — Meridian Global Preamble"
+  },
+  "tier2_policy/india/meridian_india_policy.md": {
+    "drive_file_id": "1nCTKqKgKh4lCP_E9IUSSJSJUYeNFr2YKU7HV9NGzlRA",
+    "drive_doc_name": "Tier 2 — Meridian India Policy"
+  },
+  "tier2_policy/uae/meridian_uae_policy.md": {
+    "drive_file_id": "1e_fM4DG9th_OR6thm-3dgqQdzea7sOCj3sUDf98BG1I",
+    "drive_doc_name": "Tier 2 — Meridian UAE Policy"
+  },
+  "tier2_policy/germany/meridian_germany_policy.md": {
+    "drive_file_id": "1wZqFT9XD6EmH1R76Vr5BM-Ke8wT9bYATTN3Ob_KshaA",
+    "drive_doc_name": "Tier 2 — Meridian Germany Policy"
+  }
+}
