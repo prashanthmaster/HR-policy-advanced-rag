@@ -11,10 +11,11 @@ import datetime as dt
 import hashlib
 import json
 from enum import StrEnum
+from itertools import pairwise
 from pathlib import Path, PurePosixPath
 from typing import Literal, Self
 
-from pydantic import HttpUrl, model_validator
+from pydantic import Field, HttpUrl, model_validator
 
 from hr_policy_rag.domain.models import ContractModel, NonEmptyString, NormativeTier, Sha256
 
@@ -88,6 +89,19 @@ _MEDIA_SUFFIXES: dict[SourceMediaType, frozenset[str]] = {
 }
 
 
+class PdfPageRange(ContractModel):
+    """Inclusive, one-based PDF page range approved for extraction."""
+
+    start_page: int = Field(ge=1)
+    end_page: int = Field(ge=1)
+
+    @model_validator(mode="after")
+    def validate_range(self) -> Self:
+        if self.end_page < self.start_page:
+            raise ValueError("end_page must be on or after start_page")
+        return self
+
+
 class ManifestSource(ContractModel):
     source_id: NonEmptyString
     title: NonEmptyString | None = None
@@ -104,6 +118,7 @@ class ManifestSource(ContractModel):
     certification_level: CertificationLevel
     official_source_urls: tuple[HttpUrl, ...] = ()
     approved_locators: tuple[NonEmptyString, ...] = ()
+    approved_page_ranges: tuple[PdfPageRange, ...] = ()
     reason_codes: tuple[NonEmptyString, ...] = ()
     published_on: dt.date | None = None
     effective_from: dt.date | None = None
@@ -122,6 +137,13 @@ class ManifestSource(ContractModel):
             raise ValueError("reason_codes must not contain duplicates")
         if len(set(self.approved_locators)) != len(self.approved_locators):
             raise ValueError("approved_locators must not contain duplicates")
+        page_ranges = [(page_range.start_page, page_range.end_page) for page_range in self.approved_page_ranges]
+        if page_ranges != sorted(page_ranges):
+            raise ValueError("approved_page_ranges must be sorted")
+        if any(current[0] <= prior[1] for prior, current in pairwise(page_ranges)):
+            raise ValueError("approved_page_ranges must not overlap")
+        if self.media_type is not SourceMediaType.PDF and self.approved_page_ranges:
+            raise ValueError("approved_page_ranges are valid only for PDF sources")
         if len(set(self.supersedes)) != len(self.supersedes):
             raise ValueError("supersedes must not contain duplicates")
         if self.source_id in self.supersedes:
@@ -140,6 +162,8 @@ class ManifestSource(ContractModel):
             raise ValueError("a serving source requires title and document_version")
         if self.published_on is None or self.effective_from is None or self.reviewed_on is None:
             raise ValueError("a serving source requires published_on, effective_from, and reviewed_on")
+        if self.media_type is SourceMediaType.PDF and not self.approved_page_ranges:
+            raise ValueError("a serving PDF requires approved_page_ranges")
         if self.normative_tier is NormativeTier.STATUTORY:
             if self.source_kind not in {
                 SourceKind.PRIMARY_LAW,
@@ -181,7 +205,7 @@ class ManifestSource(ContractModel):
 
 
 class CorpusManifest(ContractModel):
-    schema_version: Literal[1, 2]
+    schema_version: Literal[1, 2, 3]
     corpus_generation: NonEmptyString
     as_of_date: dt.date
     active_jurisdictions: tuple[NonEmptyString, ...]
@@ -327,10 +351,14 @@ def _verify_source(source: ManifestSource, repository_root: Path) -> None:
 
 def _corpus_hash(manifest: CorpusManifest) -> str:
     serving_identity = {
+        "schema_version": manifest.schema_version,
         "corpus_generation": manifest.corpus_generation,
         "as_of_date": manifest.as_of_date.isoformat(),
+        "active_jurisdictions": manifest.active_jurisdictions,
+        "active_topics": manifest.active_topics,
+        "production_legal_reviewed": manifest.production_legal_reviewed,
         "sources": [
-            {"source_id": source.source_id, "content_sha256": source.content_sha256}
+            source.model_dump(mode="json")
             for source in sorted(manifest.sources, key=lambda item: item.source_id)
             if source.use is CorpusUse.SERVING
         ],

@@ -18,8 +18,8 @@ when evidence or employee facts are insufficient.
 | Phase 0 — security and v1 preservation | Accepted | `v1-audit-baseline` |
 | Phase 1 — reproducible foundation | Accepted | commit `50d3998`, Actions run `34022994742` |
 | Phase 2A — certified India-gratuity seed | Accepted | commit `0f5c554`, Actions run `34025628818` |
-| Phase 2B — professional portfolio corpus | Local candidate | remote CI pending |
-| Phase 3 — deterministic ingestion | Not started | no chunking claim |
+| Phase 2B — professional portfolio corpus | Accepted | commit `5c8a02a`, Actions run `34028191410` |
+| Phase 3 — deterministic ingestion | Local candidate | remote CI pending |
 | Phase 4 — hybrid retrieval | Not started | no retrieval metric claim |
 | Phases 5–10 | Not started | no answer-quality or production claim |
 
@@ -63,6 +63,26 @@ The verifier rejects:
 Raw PDF hashes use exact bytes. UTF-8 Markdown and HTML hashes normalize only an
 optional BOM and line endings so Windows and Linux produce the same identity.
 
+## Phase 3 ingestion profile
+
+The checked-in deterministic ingestion artifact currently contains 126 chunks
+from all 33 serving records. It extracts 92,145 characters: 58,400 from 25
+approved PDF pages and 33,745 from reviewed Markdown. Archived-but-unapproved
+PDF pages, adversarial fixtures, quarantined files, and deferred files produce
+no chunks.
+
+Chunks are bounded at 1,600 characters with 160 characters of lexical overlap.
+They preserve source and content hashes, document version, jurisdiction, topic,
+authority tier, publication/effective dates, supersession, page or heading
+locator, and parser/chunker versions. Clause-structured Markdown retains clause
+IDs as locators without embedding its control metadata as policy prose.
+
+Markdown and PDF are the only supported serving formats because they are the
+only formats backed by reviewed corpus samples. Encrypted, malformed, textless,
+oversized, and out-of-range PDFs fail closed. HTML and DOCX remain unsupported
+instead of being claimed from mocks; scanned PDFs require a future reviewed OCR
+path.
+
 ## Target architecture
 
 The serving path will remain deliberately small:
@@ -86,11 +106,12 @@ Python 3.12 and `uv` 0.11 are required.
 ```bash
 uv sync --locked --all-groups
 uv lock --check
-uv run ruff check src tests_v2 scripts/build_corpus_manifest.py
-uv run ruff format --check src tests_v2 scripts/build_corpus_manifest.py
+uv run ruff check src tests_v2 scripts/build_corpus_manifest.py scripts/build_ingestion_artifact.py
+uv run ruff format --check src tests_v2 scripts/build_corpus_manifest.py scripts/build_ingestion_artifact.py
 uv run pyright
 uv run pytest --cov=hr_policy_rag --cov-report=term-missing tests_v2
 uv run python scripts/build_corpus_manifest.py --check
+uv run python scripts/build_ingestion_artifact.py --check
 uv build
 docker build --tag hr-policy-rag:local .
 ```
@@ -101,7 +122,9 @@ docker build --tag hr-policy-rag:local .
 - `docs/v2/ADR-0001-BROWNFIELD-BOUNDARY.md`
 - `docs/v2/ADR-0002-CORPUS-CERTIFICATION.md`
 - `docs/v2/ADR-0003-PROFESSIONAL-CORPUS-PROFILE.md`
+- `docs/v2/ADR-0004-DETERMINISTIC-INGESTION.md`
 - `docs/v2/PHASE_2B_VERIFICATION.md`
+- `docs/v2/PHASE_3_VERIFICATION.md`
 - `corpus_v2/acquisition_status.json`
 
 No performance number or “production-grade” description should be used in a

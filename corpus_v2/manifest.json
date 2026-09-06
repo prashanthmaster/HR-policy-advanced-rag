@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "corpus_generation": "india-uae-policy-portfolio-2026-09-06-v1",
   "as_of_date": "2026-09-06",
   "active_jurisdictions": [
@@ -43,6 +43,16 @@
         "Section 2(88)",
         "Sections 53-56"
       ],
+      "approved_page_ranges": [
+        {
+          "start_page": 12,
+          "end_page": 12
+        },
+        {
+          "start_page": 41,
+          "end_page": 45
+        }
+      ],
       "reason_codes": [],
       "published_on": "2020-09-29",
       "effective_from": "2025-11-21",
@@ -72,6 +82,12 @@
       "approved_locators": [
         "Section 2(y)"
       ],
+      "approved_page_ranges": [
+        {
+          "start_page": 4,
+          "end_page": 5
+        }
+      ],
       "reason_codes": [],
       "published_on": "2019-08-08",
       "effective_from": "2025-11-21",
@@ -100,6 +116,12 @@
       ],
       "approved_locators": [
         "Questions 6-7, 13-14, 16-17, and 19"
+      ],
+      "approved_page_ranges": [
+        {
+          "start_page": 2,
+          "end_page": 4
+        }
       ],
       "reason_codes": [],
       "published_on": "2026-03-16",
@@ -131,6 +153,24 @@
       ],
       "approved_locators": [
         "Chapters 2-5"
+      ],
+      "approved_page_ranges": [
+        {
+          "start_page": 6,
+          "end_page": 6
+        },
+        {
+          "start_page": 8,
+          "end_page": 10
+        },
+        {
+          "start_page": 12,
+          "end_page": 15
+        },
+        {
+          "start_page": 17,
+          "end_page": 22
+        }
       ],
       "reason_codes": [],
       "published_on": "2026-02-18",
@@ -164,6 +204,7 @@
       "approved_locators": [
         "Certified statements"
       ],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2026-09-06",
       "effective_from": "2025-11-21",
@@ -194,6 +235,7 @@
       "approved_locators": [
         "Certified demo rule"
       ],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2026-09-06",
       "effective_from": "2025-11-21",
@@ -224,6 +266,7 @@
       "approved_locators": [
         "Certified demo behaviour"
       ],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2026-09-06",
       "effective_from": "2025-11-21",
@@ -253,6 +296,7 @@
       "approved_locators": [
         "Article 51"
       ],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2021-09-20",
       "effective_from": "2022-02-02",
@@ -282,6 +326,7 @@
       "approved_locators": [
         "Articles 9 and 43"
       ],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2021-09-20",
       "effective_from": "2022-02-02",
@@ -311,6 +356,7 @@
       "approved_locators": [
         "Article 29"
       ],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2021-09-20",
       "effective_from": "2022-02-02",
@@ -343,6 +389,7 @@
       "approved_locators": [
         "Certified demo behaviour"
       ],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-02-03",
       "effective_from": "2022-02-02",
@@ -370,6 +417,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-12-01",
       "effective_from": "2023-01-01",
@@ -397,6 +445,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2024-12-01",
       "effective_from": "2025-01-01",
@@ -426,6 +475,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2024-12-01",
       "effective_from": "2025-01-01",
@@ -453,6 +503,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2024-12-01",
       "effective_from": "2025-01-01",
@@ -478,6 +529,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-12-01",
       "effective_from": "2023-01-01",
@@ -503,6 +555,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2025-11-21",
       "effective_from": "2025-11-21",
@@ -530,6 +583,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-12-01",
       "effective_from": "2023-01-01",
@@ -555,6 +609,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2025-06-01",
       "effective_from": "2025-07-01",
@@ -582,6 +637,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-12-01",
       "effective_from": "2023-01-01",
@@ -607,6 +663,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2024-06-01",
       "effective_from": "2024-07-01",
@@ -636,6 +693,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2026-04-01",
       "effective_from": "2026-04-01",
@@ -661,6 +719,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-12-01",
       "effective_from": "2023-01-01",
@@ -686,6 +745,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2026-04-01",
       "effective_from": "2026-04-01",
@@ -715,6 +775,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-01-15",
       "effective_from": "2022-02-02",
@@ -740,6 +801,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-01-15",
       "effective_from": "2022-02-02",
@@ -765,6 +827,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2024-11-15",
       "effective_from": "2025-01-01",
@@ -792,6 +855,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-01-15",
       "effective_from": "2022-02-02",
@@ -817,6 +881,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2026-07-01",
       "effective_from": "2026-08-01",
@@ -844,6 +909,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2022-01-15",
       "effective_from": "2022-02-02",
@@ -869,6 +935,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2025-05-01",
       "effective_from": "2025-06-01",
@@ -898,6 +965,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2026-04-01",
       "effective_from": "2026-04-01",
@@ -923,6 +991,7 @@
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [],
       "published_on": "2026-04-01",
       "effective_from": "2026-04-01",
@@ -948,6 +1017,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "INTENTIONALLY_FALSE"
@@ -978,6 +1048,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "PROMPT_INJECTION"
@@ -1006,6 +1077,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "FABRICATED_LAW"
@@ -1034,6 +1106,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "FUTURE_DATED"
@@ -1062,6 +1135,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "UNAPPROVED"
@@ -1090,6 +1164,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "WRONG_JURISDICTION"
@@ -1120,6 +1195,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "DUPLICATE"
@@ -1148,6 +1224,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "DATE_UNRESOLVED"
@@ -1176,6 +1253,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "FALSE_STATUS"
@@ -1204,6 +1282,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "SERVING_EXCLUSION_TEST",
         "WRONG_WAGE_BASIS"
@@ -1234,6 +1313,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "OUTDATED_AFTER_LABOUR_CODES_COMMENCEMENT",
         "FALSE_FOUR_YEAR_GRATUITY_THRESHOLD",
@@ -1265,6 +1345,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "REPLACED_BY_REVIEWED_SCOPED_EXTRACTS",
         "RAW_OFFICIAL_ARTIFACT_PENDING"
@@ -1295,6 +1376,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "OUTSIDE_ACTIVE_PORTFOLIO_SCOPE",
         "INCORRECT_VACATION_CARRY_FORWARD_SUMMARY"
@@ -1325,6 +1407,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "COUNTRY_DEFERRED_FROM_PORTFOLIO_SCOPE",
         "NON_PRIMARY_SOURCE_CITATION"
@@ -1355,6 +1438,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "MIXED_ADVERSARIAL_FIXTURE",
         "INCOMPLETE_GOVERNING_LAW_RULE"
@@ -1385,6 +1469,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "MIXED_ADVERSARIAL_FIXTURES",
         "REFERENCES_QUARANTINED_STATUTORY_BASELINE"
@@ -1415,6 +1500,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "MIXED_ADVERSARIAL_FIXTURES",
         "REPLACED_BY_CLEAN_V2_POLICY_SET"
@@ -1445,6 +1531,7 @@
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "COUNTRY_DEFERRED_FROM_PORTFOLIO_SCOPE",
         "MIXED_ADVERSARIAL_FIXTURES"
@@ -1476,6 +1563,7 @@
         "https://www.labour.gov.in/static/uploads/2026/03/a4ccf4c6d97c4f1f36a6d83f8c64213d.pdf"
       ],
       "approved_locators": [],
+      "approved_page_ranges": [],
       "reason_codes": [
         "REPLACED_BY_RAW_PRIMARY_SOURCE_SET"
       ],

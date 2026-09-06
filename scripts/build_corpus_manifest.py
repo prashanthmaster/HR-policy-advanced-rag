@@ -37,6 +37,7 @@ def _source(
     certification_level: str,
     official_source_urls: tuple[str, ...] = (),
     approved_locators: tuple[str, ...] = (),
+    approved_page_ranges: tuple[tuple[int, int], ...] = (),
     reason_codes: tuple[str, ...] = (),
     published_on: str | None = None,
     effective_from: str | None = None,
@@ -61,6 +62,9 @@ def _source(
         "certification_level": certification_level,
         "official_source_urls": list(official_source_urls),
         "approved_locators": list(approved_locators),
+        "approved_page_ranges": [
+            {"start_page": start_page, "end_page": end_page} for start_page, end_page in approved_page_ranges
+        ],
         "reason_codes": list(reason_codes),
         "published_on": published_on,
         "effective_from": effective_from,
@@ -84,6 +88,7 @@ def _official(
     *,
     media_type: str = "text/markdown",
     approved_locators: tuple[str, ...],
+    approved_page_ranges: tuple[tuple[int, int], ...] = (),
 ) -> dict[str, Any]:
     return _source(
         source_id,
@@ -100,6 +105,7 @@ def _official(
         certification_level="PRIMARY_SOURCE_CHECKED",
         official_source_urls=urls,
         approved_locators=approved_locators,
+        approved_page_ranges=approved_page_ranges,
         published_on=published_on,
         effective_from=effective_from,
         reviewed_on=REVIEW_DATE,
@@ -199,6 +205,7 @@ def build_manifest() -> dict[str, Any]:
             "2025-11-21",
             media_type="application/pdf",
             approved_locators=("Section 2(88)", "Sections 53-56"),
+            approved_page_ranges=((12, 12), (41, 45)),
         ),
         _official(
             "in-wages-2019-raw",
@@ -213,6 +220,7 @@ def build_manifest() -> dict[str, Any]:
             "2025-11-21",
             media_type="application/pdf",
             approved_locators=("Section 2(y)",),
+            approved_page_ranges=((4, 5),),
         ),
         _official(
             "in-labour-codes-faq-2026-03-16-raw",
@@ -227,6 +235,7 @@ def build_manifest() -> dict[str, Any]:
             "2026-03-16",
             media_type="application/pdf",
             approved_locators=("Questions 6-7, 13-14, 16-17, and 19",),
+            approved_page_ranges=((2, 4),),
         ),
         _official(
             "in-labour-codes-employer-handbook-2026-raw",
@@ -241,6 +250,7 @@ def build_manifest() -> dict[str, Any]:
             "2026-02-18",
             media_type="application/pdf",
             approved_locators=("Chapters 2-5",),
+            approved_page_ranges=((6, 6), (8, 10), (12, 15), (17, 22)),
         ),
         _official(
             "in-labour-codes-commencement-scope",
@@ -701,7 +711,7 @@ def build_manifest() -> dict[str, Any]:
         ),
     ]
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "corpus_generation": "india-uae-policy-portfolio-2026-09-06-v1",
         "as_of_date": REVIEW_DATE,
         "active_jurisdictions": ["GLOBAL", "India", "UAE"],

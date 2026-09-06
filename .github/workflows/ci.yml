@@ -34,10 +34,10 @@ jobs:
         run: uv sync --locked --all-groups
 
       - name: Lint
-        run: uv run ruff check src tests_v2 scripts/build_corpus_manifest.py
+        run: uv run ruff check src tests_v2 scripts/build_corpus_manifest.py scripts/build_ingestion_artifact.py
 
       - name: Check formatting
-        run: uv run ruff format --check src tests_v2 scripts/build_corpus_manifest.py
+        run: uv run ruff format --check src tests_v2 scripts/build_corpus_manifest.py scripts/build_ingestion_artifact.py
 
       - name: Type check
         run: uv run pyright
@@ -47,6 +47,9 @@ jobs:
 
       - name: Verify corpus manifest reproducibility
         run: uv run python scripts/build_corpus_manifest.py --check
+
+      - name: Verify ingestion artifact reproducibility
+        run: uv run python scripts/build_ingestion_artifact.py --check
 
       - name: Build package
         run: uv build

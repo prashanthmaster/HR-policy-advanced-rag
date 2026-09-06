@@ -1,8 +1,12 @@
 # Phase 2B Professional Corpus Verification
 
-**Status:** local candidate; remote CI pending
+**Status:** accepted
 
 **Branch:** `brownfield-v2`
+
+**Commit:** `5c8a02a`
+
+**Independent CI:** GitHub Actions run `34028191410`
 
 **Corpus generation:** `india-uae-policy-portfolio-2026-09-06-v1`
 
@@ -101,6 +105,6 @@ Those claims remain gated in later phases.
 | Package build | Source distribution and wheel built successfully |
 | Local Docker build | Blocked: Docker executable unavailable in this environment |
 
-Phase 2B remains a local candidate until repository hygiene checks pass, the
-candidate is committed and pushed, and independent GitHub Actions—including the
-Docker image build—passes.
+Phase 2B was accepted after commit `5c8a02a` was pushed and GitHub Actions run
+`34028191410` independently passed lock, lint, format, strict typing, tests,
+coverage, manifest reproduction, package build, and Docker build.

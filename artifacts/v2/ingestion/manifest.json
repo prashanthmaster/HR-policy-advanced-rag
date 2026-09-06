@@ -1,0 +1,315 @@
+{
+  "chunk_count": 126,
+  "chunking": {
+    "max_chars": 1600,
+    "overlap_chars": 160,
+    "version": "heading-page-v1"
+  },
+  "chunks_sha256": "815e7d6bf282eb5d19921a3e0504f43f27029117a950cb10e63e737519a81bd1",
+  "corpus_generation": "india-uae-policy-portfolio-2026-09-06-v1",
+  "corpus_sha256": "43f5fbfa14e696713334dab1420b1a3bd5984dfbf241d5f4feda3a4d1f5edb2c",
+  "ingestion_generation": "d3d8682600bb4c80abd5eff2ea8decc0b9e066ab97c4f3df716258aa13dc4d59",
+  "parser_versions": {
+    "markdown": "markdown-atx-v1",
+    "pdf": "pypdf-6.17.0-layout"
+  },
+  "schema_version": 1,
+  "source_count": 33,
+  "sources": [
+    {
+      "chunk_count": 3,
+      "extracted_characters": 1202,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "ae-executive-regulation-scope",
+      "warnings": []
+    },
+    {
+      "chunk_count": 3,
+      "extracted_characters": 1184,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "ae-labour-law-end-of-service-extract",
+      "warnings": []
+    },
+    {
+      "chunk_count": 3,
+      "extracted_characters": 1121,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "ae-labour-law-leave-extract",
+      "warnings": []
+    },
+    {
+      "chunk_count": 3,
+      "extracted_characters": 1134,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "ae-labour-law-notice-extract",
+      "warnings": []
+    },
+    {
+      "chunk_count": 3,
+      "extracted_characters": 1366,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "in-annual-leave-scope",
+      "warnings": []
+    },
+    {
+      "chunk_count": 18,
+      "extracted_characters": 20847,
+      "extracted_pages": [
+        12,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "media_type": "application/pdf",
+      "source_id": "in-coss-2020-raw",
+      "warnings": []
+    },
+    {
+      "chunk_count": 3,
+      "extracted_characters": 1241,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "in-labour-codes-commencement-scope",
+      "warnings": []
+    },
+    {
+      "chunk_count": 25,
+      "extracted_characters": 24668,
+      "extracted_pages": [
+        6,
+        8,
+        9,
+        10,
+        12,
+        13,
+        14,
+        15,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "media_type": "application/pdf",
+      "source_id": "in-labour-codes-employer-handbook-2026-raw",
+      "warnings": []
+    },
+    {
+      "chunk_count": 6,
+      "extracted_characters": 6796,
+      "extracted_pages": [
+        2,
+        3,
+        4
+      ],
+      "media_type": "application/pdf",
+      "source_id": "in-labour-codes-faq-2026-03-16-raw",
+      "warnings": []
+    },
+    {
+      "chunk_count": 3,
+      "extracted_characters": 1256,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "in-notice-scope",
+      "warnings": []
+    },
+    {
+      "chunk_count": 5,
+      "extracted_characters": 6089,
+      "extracted_pages": [
+        4,
+        5
+      ],
+      "media_type": "application/pdf",
+      "source_id": "in-wages-2019-raw",
+      "warnings": [
+        "Xref table not zero-indexed. ID numbers for objects will be corrected."
+      ]
+    },
+    {
+      "chunk_count": 4,
+      "extracted_characters": 1425,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-global-answering-guide-v1",
+      "warnings": []
+    },
+    {
+      "chunk_count": 5,
+      "extracted_characters": 1569,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-global-facts-records-v1",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 885,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-global-policy-hierarchy-2023",
+      "warnings": []
+    },
+    {
+      "chunk_count": 5,
+      "extracted_characters": 1664,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-global-policy-hierarchy-v1",
+      "warnings": []
+    },
+    {
+      "chunk_count": 2,
+      "extracted_characters": 1159,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-india-gratuity-policy-2023",
+      "warnings": []
+    },
+    {
+      "chunk_count": 3,
+      "extracted_characters": 1023,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-india-gratuity-policy-2025",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1061,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-india-leave-policy-2023",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1114,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-india-leave-policy-2024",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1056,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-india-notice-policy-2023",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1119,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-india-notice-policy-2025",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 878,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-india-payroll-gratuity-procedure-2023",
+      "warnings": []
+    },
+    {
+      "chunk_count": 4,
+      "extracted_characters": 1270,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-india-payroll-gratuity-procedure-2026",
+      "warnings": []
+    },
+    {
+      "chunk_count": 5,
+      "extracted_characters": 1035,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-india-policy-faq-2026",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1053,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-uae-eos-policy-2022",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1118,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-uae-eos-policy-2025",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1074,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-uae-leave-policy-2022",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1171,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-uae-leave-policy-2025",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1197,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-uae-mainland-scope-v1",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1089,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-uae-notice-policy-2022",
+      "warnings": []
+    },
+    {
+      "chunk_count": 1,
+      "extracted_characters": 1072,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-uae-notice-policy-2026",
+      "warnings": []
+    },
+    {
+      "chunk_count": 4,
+      "extracted_characters": 1277,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-uae-payroll-eos-procedure-2026",
+      "warnings": []
+    },
+    {
+      "chunk_count": 6,
+      "extracted_characters": 932,
+      "extracted_pages": [],
+      "media_type": "text/markdown",
+      "source_id": "meridian-uae-policy-faq-2026",
+      "warnings": []
+    }
+  ]
+}

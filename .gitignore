@@ -18,5 +18,7 @@ dist/
 htmlcov/
 .ruff_cache/
 .pyright/
+*.bundle
+/corpus.zip
 drive_sync/token.json.old*
 drive_sync/sync_state.json

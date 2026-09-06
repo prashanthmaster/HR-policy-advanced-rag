@@ -14,6 +14,7 @@ from hr_policy_rag.corpus import (
     CorpusManifest,
     CorpusUse,
     ManifestSource,
+    PdfPageRange,
     SourceKind,
     SourceMediaType,
     load_verified_corpus,
@@ -64,7 +65,7 @@ def _source(**overrides: object) -> ManifestSource:
 def test_committed_manifest_meets_phase_2b_portfolio_profile() -> None:
     verified = load_verified_corpus(MANIFEST_PATH, repository_root=REPOSITORY_ROOT)
 
-    assert verified.manifest.schema_version == 2
+    assert verified.manifest.schema_version == 3
     assert verified.manifest.active_jurisdictions == ("GLOBAL", "India", "UAE")
     assert verified.manifest.active_topics == ("gratuity", "notice", "leave")
     assert len(verified.serving_sources) >= 30
@@ -237,6 +238,7 @@ def test_serving_sources_reject_unapproved_authority_domains_and_uninspectable_s
         _source(
             relative_path="policy.pdf",
             media_type=SourceMediaType.PDF,
+            approved_page_ranges=(PdfPageRange(start_page=1, end_page=1),),
             source_kind=SourceKind.COMPANY_POLICY,
             normative_tier=NormativeTier.COMPANY_POLICY,
             synthetic=True,
@@ -499,6 +501,7 @@ def test_binary_source_uses_raw_bytes_and_inventory_covers_pdf(tmp_path: Path) -
     source = _source(
         relative_path="raw/law.pdf",
         media_type=SourceMediaType.PDF,
+        approved_page_ranges=(PdfPageRange(start_page=1, end_page=1),),
         content_sha256=hashlib.sha256(pdf_bytes).hexdigest(),
     )
     manifest = CorpusManifest(
@@ -579,6 +582,7 @@ def test_source_extension_must_match_declared_media_type(tmp_path: Path) -> None
     source = _source(
         relative_path="law.md",
         media_type=SourceMediaType.PDF,
+        approved_page_ranges=(PdfPageRange(start_page=1, end_page=1),),
         content_sha256=hashlib.sha256(source_path.read_bytes()).hexdigest(),
     )
     manifest = CorpusManifest(
@@ -596,6 +600,37 @@ def test_source_extension_must_match_declared_media_type(tmp_path: Path) -> None
 
     with pytest.raises(CorpusIntegrityError, match="SOURCE_MEDIA_TYPE_MISMATCH"):
         load_verified_corpus(manifest_path, repository_root=tmp_path)
+
+
+def test_corpus_identity_changes_when_serving_metadata_changes(tmp_path: Path) -> None:
+    source_path = tmp_path / "law.md"
+    source_path.write_text("trusted statutory text\n", encoding="utf-8")
+    source_hash = _sha256(source_path)
+
+    def load_with_effective_date(effective_from: dt.date) -> str:
+        source = _source(
+            relative_path="law.md",
+            content_sha256=source_hash,
+            effective_from=effective_from,
+        )
+        manifest = CorpusManifest(
+            schema_version=3,
+            corpus_generation="metadata-identity-test",
+            as_of_date=AS_OF_DATE,
+            active_jurisdictions=("India",),
+            active_topics=("gratuity",),
+            production_legal_reviewed=False,
+            inventory_roots=(),
+            sources=(source,),
+        )
+        manifest_path = tmp_path / "manifest.json"
+        manifest_path.write_text(json.dumps(manifest.model_dump(mode="json")), encoding="utf-8")
+        return load_verified_corpus(manifest_path, repository_root=tmp_path).corpus_sha256
+
+    before = load_with_effective_date(dt.date(2025, 11, 21))
+    after = load_with_effective_date(dt.date(2025, 11, 22))
+
+    assert before != after
 
 
 def test_official_artifact_acquisition_evidence_matches_manifest_and_files() -> None:
