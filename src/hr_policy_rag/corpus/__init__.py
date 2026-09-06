@@ -6,6 +6,8 @@ from hr_policy_rag.corpus.manifest import (
     CorpusManifest,
     CorpusUse,
     ManifestSource,
+    SourceKind,
+    SourceMediaType,
     VerifiedCorpus,
     load_verified_corpus,
 )
@@ -16,6 +18,8 @@ __all__ = [
     "CorpusManifest",
     "CorpusUse",
     "ManifestSource",
+    "SourceKind",
+    "SourceMediaType",
     "VerifiedCorpus",
     "load_verified_corpus",
 ]

@@ -1,108 +1,109 @@
-# HR-Policy Advanced RAG
+# HR-Policy RAG — quality-first brownfield rebuild
 
-> **Brownfield rebuild in progress.** The original implementation is preserved
-> at tag `v1-audit-baseline`. Code under `src/hr_policy_rag` is the only active
-> v2 runtime. The architecture and performance statements below describe v1
-> history and are not v2 capability claims until replaced by a reproducible v2
-> evidence bundle. See `docs/v2/QUALITY_CONTRACT.md`.
+This repository is rebuilding a version-aware HR-policy question-answering
+system. The original implementation is preserved at tag `v1-audit-baseline`.
+Only code under `src/hr_policy_rag` and the `corpus_v2` manifest are active v2
+work.
 
-## V2 verified status
+The portfolio objective is an evidence-linked system for India and UAE
+mainland gratuity/end-of-service, notice, and leave questions. It must select
+the rule applicable on a requested date, distinguish mandatory law from
+synthetic company policy, calculate deterministically, and refuse or clarify
+when evidence or employee facts are insufficient.
 
-- Phase 0 and Phase 1 are accepted at commit `50d3998`; GitHub Actions run
-  `34022994742` passed every gate, including the Docker build.
-- Phase 2 currently certifies one narrow corpus generation for **India
-  gratuity**. Only the sources marked `SERVING` in `corpus_v2/manifest.json`
-  may enter the v2 pipeline.
-- The legacy `corpus/` tree is retained for audit but is entirely quarantined
-  or deferred. It is not a trusted v2 source.
-- No v2 retrieval, generation, legal-production, or answer-quality claim has
-  been made yet.
+## Verified status
 
-> A retrieval system that knows when a policy has been amended and refuses to answer from the superseded version.
+| Gate | Status | Evidence |
+|---|---|---|
+| Phase 0 — security and v1 preservation | Accepted | `v1-audit-baseline` |
+| Phase 1 — reproducible foundation | Accepted | commit `50d3998`, Actions run `34022994742` |
+| Phase 2A — certified India-gratuity seed | Accepted | commit `0f5c554`, Actions run `34025628818` |
+| Phase 2B — professional portfolio corpus | Local candidate | remote CI pending |
+| Phase 3 — deterministic ingestion | Not started | no chunking claim |
+| Phase 4 — hybrid retrieval | Not started | no retrieval metric claim |
+| Phases 5–10 | Not started | no answer-quality or production claim |
 
-Portfolio Slot 4 of 4 (applied AI Engineer portfolio). Domain anchored in multi-country statutory/regulatory update management from prior enterprise HRMS delivery work (India, UAE, Germany scope below).
+## Phase 2B corpus profile
 
-**No performance number, capability claim, or "production-grade" description in this repo (or said in an interview) unless it was personally verified against a real run or test result.**
+The checked-in v2 manifest currently exposes:
 
-## What this is
+- 33 serving source records across `GLOBAL`, `India`, and `UAE`;
+- gratuity/end-of-service, notice, and leave coverage in both active countries;
+- 4 locally verified official India PDFs containing 188 pages and approximately
+  87,811 words before deterministic Phase 3 extraction;
+- reviewed UAE statutory extracts whose official raw endpoints are recorded as
+  remote-only because automated acquisition was blocked;
+- 22 conspicuously synthetic company-policy, procedure, and FAQ records;
+- 8 explicit historical-to-current supersession relationships;
+- 10 adversarial fixtures that cannot enter the serving set;
+- all 8 legacy v1 documents explicitly quarantined or deferred.
 
-Ask a question like *"An employee in our Dubai office resigns after 3 years of service — what notice period and gratuity apply under current company policy?"* and the system answers from the **current, correctly-versioned** combination of statutory law and company policy — citing the exact clause — rather than blending an amended clause with its superseded predecessor, or hallucinating a plausible-sounding number.
+These figures describe corpus inventory, not retrieval performance. The PDF word
+counts are profiling observations and are not accepted ingestion output.
 
-## Corpus design (the one open decision at kickoff, closed 3 Sep 2026)
+`production_legal_reviewed` remains `false`. Primary-source checking makes this
+suitable for a bounded portfolio demonstration; it does not make the project
+legal advice or production HR software.
 
-Real HR-policy questions in a multi-country company are rarely pure "what does the law say" or pure "what does our policy say" — they're law applied to a specific case, and the two can genuinely conflict. So the corpus is **hybrid, two-tier**, covering three countries chosen to be maximally different in labor-law shape (India, UAE, Germany):
+## Corpus controls
 
-- **Tier 1 — real statutory law.** Public, verifiable sources only: India (Labour Codes, Payment of Gratuity Act, POSH Act, EPF/ESI), UAE (Federal Decree-Law No. 33 of 2021), Germany (Kündigungsschutzgesetz / BGB provisions on notice and termination). Covers notice period, gratuity/severance, probation, leave, and termination across all three.
-- **Tier 2 — synthetic company policy layer.** A single fictional company's HR policy manual, one chapter per country, that *applies* Tier-1 law to concrete HR situations — sometimes matching the statutory minimum, sometimes exceeding it, sometimes lagging behind a recent amendment. **This tier is clearly fictional and is labeled as such everywhere it appears** (source documents, retrieved citations, and in any description of this project). At least one deliberate amendment (old clause + new clause + effective date) per country drives the live-freshness demo and creates genuine, defensible cross-country policy conflicts for the retrieval layer to navigate.
+`corpus_v2/manifest.json` is generated deterministically from
+`scripts/build_corpus_manifest.py`. A file cannot become serving material merely
+by being copied into a directory.
 
-**Explicitly rejected:** a live employee database with a natural-language-to-SQL layer. Real-sounding and tempting, but it's a second, unrelated hard problem (NL→SQL translation of "simple and often broken English" queries) that would bloat this slot without adding retrieval/freshness signal — logged as an explicit non-goal, not an oversight.
+The verifier rejects:
 
-### Source document formats (raised and settled 3 Sep 2026)
+- missing, changed, or unaccounted source files;
+- path traversal and media-type/extension mismatches;
+- statutory sources outside the approved official-domain allowlist;
+- unreviewed serving sources or unlabeled synthetic company policies;
+- invalid effective-date ranges, unknown predecessors, and cyclic lineage;
+- adversarial, quarantined, or deferred material leaking into the serving set.
 
-The scored 72-clause corpus is authored in markdown, not because real HR documents look like that, but for authoring speed — hand-writing 72 clauses with inline `key: value` metadata is far faster than the same content in PDF/Word/Excel. That's a real gap: a retrieval system that has only ever ingested clean markdown hasn't proven it can handle a scanned PDF, a Word doc, or an Excel export, and those are exactly what real HR document sets are made of.
+Raw PDF hashes use exact bytes. UTF-8 Markdown and HTML hashes normalize only an
+optional BOM and line endings so Windows and Linux produce the same identity.
 
-The fix taken: `ingestion/formats/` holds real parsers for PDF (pypdf), Word (python-docx), and Excel/CSV (openpyxl + stdlib csv), all producing the same validated `ChunkMetadata`/`Chunk` shape the markdown parser does. Since real documents don't carry inline structured metadata the way the markdown corpus does, each non-markdown source file has a companion `<file>.manifest.json` sidecar carrying the same metadata fields plus a locator (page range / paragraph range / row range) — the honest analogue of where that metadata actually lives in a real org (a DMS's properties, a tracking spreadsheet, or Drive file properties per the Phase 6 design).
+## Target architecture
 
-These parsers are proven against a **small representative sample** — `corpus_samples/multi_format/` (generated by `scripts/generate_multiformat_samples.py`, tested in `tests/test_format_parsers.py`) — not a full rewrite of all 72 clauses into every format. Re-authoring the whole corpus in four formats would be the same text in a different wrapper, not a stronger engineering claim; what proves something is real parsers tested against real files, which this is.
+The serving path will remain deliberately small:
 
-## Explicitly out of scope
+1. FastAPI validates the request and required employee facts.
+2. A verified corpus generation produces deterministic chunks and lineage.
+3. Qdrant performs metadata-filtered dense+sparse retrieval and fusion.
+4. Deterministic policy logic selects the governing version and performs
+   calculations.
+5. A language model explains the supported decision in a strict schema.
+6. Output validation checks claims, evidence, calculations, citations, safety,
+   and supersession before release.
 
-- No multi-agent/supervisor architecture (owned by Slot 3, FinGuard-MCP)
-- No MCP exposure on this slot (already proven in FinGuard-MCP)
-- No Notion/Jira connectors — Google Drive only
-- No multimodal/CLIP vision RAG — tables are extracted structurally and serialized as text in a separate chunk stream
-- No chatbot / conversational memory — stateless, single-turn by design (multi-turn already proven elsewhere)
-- No fine-tuning / LoRA
-- No live employee database or NL-to-SQL layer
+No LangChain, LangGraph, separate BM25 store, Redis, or guardrail agent is part
+of the initial serving path.
 
-## Architecture
+## Run the current quality gate
 
+Python 3.12 and `uv` 0.11 are required.
+
+```bash
+uv sync --locked --all-groups
+uv lock --check
+uv run ruff check src tests_v2 scripts/build_corpus_manifest.py
+uv run ruff format --check src tests_v2 scripts/build_corpus_manifest.py
+uv run pyright
+uv run pytest --cov=hr_policy_rag --cov-report=term-missing tests_v2
+uv run python scripts/build_corpus_manifest.py --check
+uv build
+docker build --tag hr-policy-rag:local .
 ```
-Source docs (Tier 1 law + Tier 2 policy, Google Drive)
-        │
-        ▼
-   Chunking + metadata tagging (country, doc_type, effective_date, version, section)
-        │
-        ├──► BM25 keyword index ──┐
-        └──► Vector index (Qdrant) ┴──► Reciprocal Rank Fusion
-                                           │
-                                           ▼
-                                    FlashRank rerank
-                                          │
-                                          ▼
-                              CRAG-style grading node
-                          (sufficient? → generate | corrective re-query)
-                                          │
-                                          ▼
-                         LLM generation (context-only, cited)
-                                          │
-                                          ▼
-                    Faithfulness score ──► below threshold: decline + surface closest match
-                                          │
-                                          ▼
-                                  Answer + citations
-```
 
-This core pipeline is deliberately the industry-standard reference architecture — not where this project's differentiation lives.
+## Evidence and decisions
 
-**The differentiator** is the Google Drive-connected live freshness/versioning layer: detect a document change, incrementally re-index only that document, tag every chunk with an effective date/version, and on an amendment, never blend old and new text.
+- `docs/v2/QUALITY_CONTRACT.md`
+- `docs/v2/ADR-0001-BROWNFIELD-BOUNDARY.md`
+- `docs/v2/ADR-0002-CORPUS-CERTIFICATION.md`
+- `docs/v2/ADR-0003-PROFESSIONAL-CORPUS-PROFILE.md`
+- `docs/v2/PHASE_2B_VERIFICATION.md`
+- `corpus_v2/acquisition_status.json`
 
-## Evaluation
-
-Golden dataset of 20-30 HR-policy questions (known-correct answers + known-correct source clauses) spanning law-only, policy-only, and combined law+policy questions across all three countries, including amended-clause questions. Scored on exactly four RAGAS metrics plus one custom metric — deliberately not more:
-
-1. **Context Precision**
-2. **Context Recall**
-3. **Faithfulness** (the hallucination check — most important metric for this domain)
-4. **Answer Correctness**
-5. **Citation Accuracy** (custom LLM-as-judge, same G-Eval pattern as Slot 3/FinGuard-MCP) — does the cited clause/section actually match what was retrieved
-
-Gated in CI so regressions are caught automatically.
-
-## Guardrail
-
-The Faithfulness score is reused live as the runtime guardrail — one metric, two jobs (offline CI gate + live refusal gate). No separate guardrail agent (that's Slot 3's job, not this one's).
-
-## Status
-
-Build in progress. Local prototype first; GCP Cloud Run + Qdrant Cloud deployment is a fast-follow after the local pipeline is stable and demoable, not a same-day requirement.
+No performance number or “production-grade” description should be used in a
+resume or interview unless the corresponding immutable evaluation evidence is
+present in this repository.

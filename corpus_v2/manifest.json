@@ -1,24 +1,33 @@
 {
-  "schema_version": 1,
-  "corpus_generation": "india-gratuity-demo-2026-09-06-v1",
+  "schema_version": 2,
+  "corpus_generation": "india-uae-policy-portfolio-2026-09-06-v1",
   "as_of_date": "2026-09-06",
   "active_jurisdictions": [
-    "India"
+    "GLOBAL",
+    "India",
+    "UAE"
   ],
   "active_topics": [
-    "gratuity"
+    "gratuity",
+    "notice",
+    "leave"
   ],
   "production_legal_reviewed": false,
   "inventory_roots": [
     "corpus",
+    "corpus_v2/raw",
     "corpus_v2/sources",
     "corpus_v2/fixtures"
   ],
   "sources": [
     {
-      "source_id": "in-coss-2020-gratuity-demo-extract",
-      "relative_path": "corpus_v2/sources/india/gratuity_statutory_extract.md",
-      "content_sha256": "89c10600a67032ffd7301432c0c55157ba95a16fd41d654ca4f16f2e40869a17",
+      "source_id": "in-coss-2020-raw",
+      "title": "Code on Social Security, 2020",
+      "document_version": "Act 36 of 2020",
+      "relative_path": "corpus_v2/raw/india/code_social_security_2020.pdf",
+      "content_sha256": "975235e57b8b8c3f4a09f6c9f0dbb2bfc663c15faf3715108ea33113ef565be7",
+      "media_type": "application/pdf",
+      "source_kind": "PRIMARY_LAW",
       "use": "SERVING",
       "jurisdiction": "India",
       "topics": [
@@ -28,16 +37,437 @@
       "synthetic": false,
       "certification_level": "PRIMARY_SOURCE_CHECKED",
       "official_source_urls": [
-        "https://www.labour.gov.in/static/uploads/2025/07/b0620548445580767b5c0d18c95c26f7.pdf",
-        "https://egazette.gov.in/WriteReadData/2025/267882.pdf",
-        "https://www.labour.gov.in/static/uploads/2026/03/a4ccf4c6d97c4f1f36a6d83f8c64213d.pdf"
+        "https://www.labour.gov.in/static/uploads/2025/07/b0620548445580767b5c0d18c95c26f7.pdf"
       ],
-      "reason_codes": []
+      "approved_locators": [
+        "Section 2(88)",
+        "Sections 53-56"
+      ],
+      "reason_codes": [],
+      "published_on": "2020-09-29",
+      "effective_from": "2025-11-21",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
     },
     {
-      "source_id": "meridian-india-gratuity-policy-v1",
-      "relative_path": "corpus_v2/sources/india/meridian_gratuity_policy.md",
-      "content_sha256": "a88c63191e9097a48a229a89d29eb67001df1fa92450c6550bb4d7b05999133d",
+      "source_id": "in-wages-2019-raw",
+      "title": "Code on Wages, 2019",
+      "document_version": "Act 29 of 2019",
+      "relative_path": "corpus_v2/raw/india/code_wages_2019.pdf",
+      "content_sha256": "0d17b967a528da2d6b827655ba9a701dc15d78b4d4f58b9bbc21d6789a680c85",
+      "media_type": "application/pdf",
+      "source_kind": "PRIMARY_LAW",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://www.labour.gov.in/static/uploads/2025/06/c328da14bbb15fc4ad571dc33e7a4ab3.pdf"
+      ],
+      "approved_locators": [
+        "Section 2(y)"
+      ],
+      "reason_codes": [],
+      "published_on": "2019-08-08",
+      "effective_from": "2025-11-21",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "in-labour-codes-faq-2026-03-16-raw",
+      "title": "Additional FAQs on Labour Codes",
+      "document_version": "2026-03-16",
+      "relative_path": "corpus_v2/raw/india/labour_codes_faq_2026-03-16.pdf",
+      "content_sha256": "d55818a3956bebf5445e515e25999d5ee5b94e58e371554b24197470cf4ee2ed",
+      "media_type": "application/pdf",
+      "source_kind": "OFFICIAL_GUIDANCE",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://www.labour.gov.in/static/uploads/2026/03/a4ccf4c6d97c4f1f36a6d83f8c64213d.pdf"
+      ],
+      "approved_locators": [
+        "Questions 6-7, 13-14, 16-17, and 19"
+      ],
+      "reason_codes": [],
+      "published_on": "2026-03-16",
+      "effective_from": "2026-03-16",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "in-labour-codes-employer-handbook-2026-raw",
+      "title": "Compliance Handbook for Employers Under the Four Labour Codes",
+      "document_version": "2026.1",
+      "relative_path": "corpus_v2/raw/india/labour_codes_employer_handbook_2026.pdf",
+      "content_sha256": "bbc851624beb6011c550fa6b8c6b6f29f0c5add6be6b8f5be5e9bc2f3b0288ec",
+      "media_type": "application/pdf",
+      "source_kind": "OFFICIAL_GUIDANCE",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://www.labour.gov.in/static/uploads/2026/02/83978455025732b99b0165def80ab171.pdf"
+      ],
+      "approved_locators": [
+        "Chapters 2-5"
+      ],
+      "reason_codes": [],
+      "published_on": "2026-02-18",
+      "effective_from": "2026-02-18",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "in-labour-codes-commencement-scope",
+      "title": "India labour-code commencement reviewed scope note",
+      "document_version": "2026-09-06",
+      "relative_path": "corpus_v2/sources/india/labour_codes_commencement_scope.md",
+      "content_sha256": "165d1344b9868970e2ca44f6c5cb7601621c09b4cd42c932321f5a7f2da64205",
+      "media_type": "text/markdown",
+      "source_kind": "REVIEWED_EXTRACT",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://egazette.gov.in/WriteReadData/2025/267882.pdf",
+        "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2192463"
+      ],
+      "approved_locators": [
+        "Certified statements"
+      ],
+      "reason_codes": [],
+      "published_on": "2026-09-06",
+      "effective_from": "2025-11-21",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "in-annual-leave-scope",
+      "title": "India annual leave reviewed statutory scope note",
+      "document_version": "2026-09-06",
+      "relative_path": "corpus_v2/sources/india/annual_leave_scope.md",
+      "content_sha256": "fd45c6b1ac38871acb49f0d5760ef87e34a3e955dc63d49101c61afd9bc6a7c3",
+      "media_type": "text/markdown",
+      "source_kind": "REVIEWED_EXTRACT",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "leave"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://www.labour.gov.in/whatsnew/occupational-safety-health-and-working-conditions-code-2020-no-37-2020",
+        "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2192802"
+      ],
+      "approved_locators": [
+        "Certified demo rule"
+      ],
+      "reason_codes": [],
+      "published_on": "2026-09-06",
+      "effective_from": "2025-11-21",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "in-notice-scope",
+      "title": "India employment notice reviewed statutory scope note",
+      "document_version": "2026-09-06",
+      "relative_path": "corpus_v2/sources/india/notice_scope.md",
+      "content_sha256": "5a2cebd17cb9722044e50742109aa48075d863e6bd2466f51cf5aadf1a6a3e98",
+      "media_type": "text/markdown",
+      "source_kind": "REVIEWED_EXTRACT",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "notice"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://www.labour.gov.in/offerings/schemes-and-services/details/labour-codes-gzNzQzMtQWa",
+        "https://www.labour.gov.in/static/uploads/2026/02/83978455025732b99b0165def80ab171.pdf"
+      ],
+      "approved_locators": [
+        "Certified demo behaviour"
+      ],
+      "reason_codes": [],
+      "published_on": "2026-09-06",
+      "effective_from": "2025-11-21",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "ae-labour-law-end-of-service-extract",
+      "title": "UAE mainland end-of-service reviewed statutory extract",
+      "document_version": "2026-09-06",
+      "relative_path": "corpus_v2/sources/uae/federal_law_end_of_service.md",
+      "content_sha256": "0c2ed85d036062b621397be91958322d3ddcd920d2d3a299250706715b874c0a",
+      "media_type": "text/markdown",
+      "source_kind": "REVIEWED_EXTRACT",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://uaelegislation.gov.ae/en/legislations/1541"
+      ],
+      "approved_locators": [
+        "Article 51"
+      ],
+      "reason_codes": [],
+      "published_on": "2021-09-20",
+      "effective_from": "2022-02-02",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "ae-labour-law-notice-extract",
+      "title": "UAE mainland notice reviewed statutory extract",
+      "document_version": "2026-09-06",
+      "relative_path": "corpus_v2/sources/uae/federal_law_notice.md",
+      "content_sha256": "0f1f8a62abf1bbd0afff169e6f0822a29fd735bc4daf74b6996c5eafe7b8be15",
+      "media_type": "text/markdown",
+      "source_kind": "REVIEWED_EXTRACT",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "notice"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://uaelegislation.gov.ae/en/legislations/1541"
+      ],
+      "approved_locators": [
+        "Articles 9 and 43"
+      ],
+      "reason_codes": [],
+      "published_on": "2021-09-20",
+      "effective_from": "2022-02-02",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "ae-labour-law-leave-extract",
+      "title": "UAE mainland annual leave reviewed statutory extract",
+      "document_version": "2026-09-06",
+      "relative_path": "corpus_v2/sources/uae/federal_law_annual_leave.md",
+      "content_sha256": "050fe87bbf1b1ff9563ff83440427368beaefe99613f27304727c0c1965c1de8",
+      "media_type": "text/markdown",
+      "source_kind": "REVIEWED_EXTRACT",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "leave"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://uaelegislation.gov.ae/en/legislations/1541"
+      ],
+      "approved_locators": [
+        "Article 29"
+      ],
+      "reason_codes": [],
+      "published_on": "2021-09-20",
+      "effective_from": "2022-02-02",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "ae-executive-regulation-scope",
+      "title": "UAE labour executive regulation reviewed scope note",
+      "document_version": "2026-09-06",
+      "relative_path": "corpus_v2/sources/uae/executive_regulation_scope.md",
+      "content_sha256": "81312a6b442e639cc82eaddcdd70efae216eb540878c4fdc9cf2214d1a522ddc",
+      "media_type": "text/markdown",
+      "source_kind": "REVIEWED_EXTRACT",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://uaelegislation.gov.ae/en/legislations/1547",
+        "https://mohre.gov.ae/assets/download/2617404c/Cabinet%20Resolution%20_Executive%20Regulations%20Decree-Law%20No.%2033.pdf.aspx"
+      ],
+      "approved_locators": [
+        "Certified demo behaviour"
+      ],
+      "reason_codes": [],
+      "published_on": "2022-02-03",
+      "effective_from": "2022-02-02",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-global-policy-hierarchy-2023",
+      "title": "Meridian policy authority and hierarchy",
+      "document_version": "2023.1",
+      "relative_path": "corpus_v2/sources/global/policy_hierarchy_2023.md",
+      "content_sha256": "ab4e73af98fe18dc69fede893a28f726a4bdda37f7c4229fc47922b265c159e3",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "GLOBAL",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2022-12-01",
+      "effective_from": "2023-01-01",
+      "effective_to": "2025-01-01",
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-global-policy-hierarchy-v1",
+      "title": "Meridian policy authority and hierarchy",
+      "document_version": "1.0",
+      "relative_path": "corpus_v2/sources/global/policy_hierarchy.md",
+      "content_sha256": "4d35069f3df5b887a98374281677f8fda791d7df1313986cb5915550a93caf88",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "GLOBAL",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2024-12-01",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": [
+        "meridian-global-policy-hierarchy-2023"
+      ]
+    },
+    {
+      "source_id": "meridian-global-facts-records-v1",
+      "title": "Meridian employee facts and source records",
+      "document_version": "1.0",
+      "relative_path": "corpus_v2/sources/global/employee_facts_and_records.md",
+      "content_sha256": "d9289a10276ae49dedab31dac2d7b06c86b18c626db0e9a7c0ed1443b50a157d",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_PROCEDURE",
+      "use": "SERVING",
+      "jurisdiction": "GLOBAL",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2024-12-01",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-global-answering-guide-v1",
+      "title": "Meridian HR policy answering guide",
+      "document_version": "1.0",
+      "relative_path": "corpus_v2/sources/global/hr_answering_guide.md",
+      "content_sha256": "85d8c3aca369cc32b8cc7de23220387da5afab80f0c7464338c7260e0739aadb",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_PROCEDURE",
+      "use": "SERVING",
+      "jurisdiction": "GLOBAL",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2024-12-01",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-india-gratuity-policy-2023",
+      "title": "Meridian India gratuity policy",
+      "document_version": "2023.1",
+      "relative_path": "corpus_v2/sources/india/gratuity_policy_2023.md",
+      "content_sha256": "ac74c7f2a982394afb7550549da426cb6a4121431a8b316eec46fd32a32e26db",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
       "use": "SERVING",
       "jurisdiction": "India",
       "topics": [
@@ -47,190 +477,1013 @@
       "synthetic": true,
       "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
-      "reason_codes": []
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2022-12-01",
+      "effective_from": "2023-01-01",
+      "effective_to": "2025-11-21",
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
     },
     {
-      "source_id": "fixture-false-four-year-gratuity-threshold",
-      "relative_path": "corpus_v2/fixtures/adversarial/false_four_year_threshold.md",
-      "content_sha256": "d8d65b33e9dc5a6c8b99d5caeaa5a25681f6c56313ccd5d0fcc62e84b2a34933",
-      "use": "ADVERSARIAL_TEST",
+      "source_id": "meridian-india-gratuity-policy-2025",
+      "title": "Meridian India gratuity policy",
+      "document_version": "2025.1",
+      "relative_path": "corpus_v2/sources/india/meridian_gratuity_policy.md",
+      "content_sha256": "a88c63191e9097a48a229a89d29eb67001df1fa92450c6550bb4d7b05999133d",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
       "jurisdiction": "India",
       "topics": [
         "gratuity"
       ],
-      "normative_tier": "STATUTORY",
-      "synthetic": false,
-      "certification_level": "NOT_REVIEWED",
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
       "official_source_urls": [],
-      "reason_codes": [
-        "INTENTIONALLY_FALSE",
-        "SERVING_EXCLUSION_TEST"
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2025-11-21",
+      "effective_from": "2025-11-21",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": [
+        "meridian-india-gratuity-policy-2023"
       ]
     },
     {
+      "source_id": "meridian-india-notice-policy-2023",
+      "title": "Meridian India notice policy",
+      "document_version": "2023.1",
+      "relative_path": "corpus_v2/sources/india/notice_policy_2023.md",
+      "content_sha256": "099cde657df0fcb40086a19200791d58902b6e42be765ae531554fc96127ee39",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "notice"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2022-12-01",
+      "effective_from": "2023-01-01",
+      "effective_to": "2025-07-01",
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-india-notice-policy-2025",
+      "title": "Meridian India notice policy",
+      "document_version": "2025.1",
+      "relative_path": "corpus_v2/sources/india/notice_policy_2025.md",
+      "content_sha256": "7b63f71dc14cf900385f0329673672ecad566056591ef1c2e96e74e2f4d6eacf",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "notice"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2025-06-01",
+      "effective_from": "2025-07-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": [
+        "meridian-india-notice-policy-2023"
+      ]
+    },
+    {
+      "source_id": "meridian-india-leave-policy-2023",
+      "title": "Meridian India leave policy",
+      "document_version": "2023.1",
+      "relative_path": "corpus_v2/sources/india/leave_policy_2023.md",
+      "content_sha256": "9ba55659b19fd0faf9c39bffd10f369ab80be03845b17363e34f3ea876b57cfb",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2022-12-01",
+      "effective_from": "2023-01-01",
+      "effective_to": "2024-07-01",
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-india-leave-policy-2024",
+      "title": "Meridian India leave policy",
+      "document_version": "2024.2",
+      "relative_path": "corpus_v2/sources/india/leave_policy_2024.md",
+      "content_sha256": "b6a7c399bbddd588d69466d8480423505bbaa029b29090f7c8662fa25e59173d",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2024-06-01",
+      "effective_from": "2024-07-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": [
+        "meridian-india-leave-policy-2023"
+      ]
+    },
+    {
+      "source_id": "meridian-india-policy-faq-2026",
+      "title": "Meridian India employee policy FAQ",
+      "document_version": "2026.1",
+      "relative_path": "corpus_v2/sources/india/employee_policy_faq.md",
+      "content_sha256": "a9272b40eaee7915c4578d7a095c2a1d95f9801ebc54821debb3474d52e759a3",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_FAQ",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2026-04-01",
+      "effective_from": "2026-04-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-india-payroll-gratuity-procedure-2023",
+      "title": "Meridian India payroll gratuity procedure",
+      "document_version": "2023.1",
+      "relative_path": "corpus_v2/sources/india/payroll_gratuity_procedure_2023.md",
+      "content_sha256": "88133ff47e2aae1d7b7888064660aaa5119ce7c5478c730d53837675ea0462c0",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_PROCEDURE",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2022-12-01",
+      "effective_from": "2023-01-01",
+      "effective_to": "2026-04-01",
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-india-payroll-gratuity-procedure-2026",
+      "title": "Meridian India payroll gratuity procedure",
+      "document_version": "2026.1",
+      "relative_path": "corpus_v2/sources/india/payroll_gratuity_procedure.md",
+      "content_sha256": "4fd15b0321ebe5480ac7999e467f247d7fa84560885859254e919bb35bd99836",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_PROCEDURE",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2026-04-01",
+      "effective_from": "2026-04-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": [
+        "meridian-india-payroll-gratuity-procedure-2023"
+      ]
+    },
+    {
+      "source_id": "meridian-uae-mainland-scope-v1",
+      "title": "Meridian UAE mainland handbook scope",
+      "document_version": "1.0",
+      "relative_path": "corpus_v2/sources/uae/mainland_scope_handbook.md",
+      "content_sha256": "85b5a3b650a86ef5f0ccf8e979f0a700beee399ac84c4b41959b10f40afb5c1b",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2022-01-15",
+      "effective_from": "2022-02-02",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-uae-eos-policy-2022",
+      "title": "Meridian UAE mainland end-of-service policy",
+      "document_version": "2022.1",
+      "relative_path": "corpus_v2/sources/uae/end_of_service_policy_2022.md",
+      "content_sha256": "2ba653fc73ec5614e3c4fe85bbf28c7b9709818b903e6fcf1ec16b40cc6a1d37",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2022-01-15",
+      "effective_from": "2022-02-02",
+      "effective_to": "2025-01-01",
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-uae-eos-policy-2025",
+      "title": "Meridian UAE mainland end-of-service policy",
+      "document_version": "2025.1",
+      "relative_path": "corpus_v2/sources/uae/end_of_service_policy_2025.md",
+      "content_sha256": "02d47bddf26b986d1fba77126302cc44a5cae4a025d8094024aacb6e804124e5",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2024-11-15",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": [
+        "meridian-uae-eos-policy-2022"
+      ]
+    },
+    {
+      "source_id": "meridian-uae-notice-policy-2022",
+      "title": "Meridian UAE mainland notice policy",
+      "document_version": "2022.1",
+      "relative_path": "corpus_v2/sources/uae/notice_policy_2022.md",
+      "content_sha256": "7201d7eb85ad3b011e8f0495ffff28709fdc1289e8419f3e3b8ba14cb2d313ed",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "notice"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2022-01-15",
+      "effective_from": "2022-02-02",
+      "effective_to": "2026-08-01",
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-uae-notice-policy-2026",
+      "title": "Meridian UAE mainland notice policy",
+      "document_version": "2026.2",
+      "relative_path": "corpus_v2/sources/uae/notice_policy_2026.md",
+      "content_sha256": "2a4ec6e1c141fdeb581d147ef11a659f369a48b1f747bd58c08f2baf236d40bb",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "notice"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2026-07-01",
+      "effective_from": "2026-08-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": [
+        "meridian-uae-notice-policy-2022"
+      ]
+    },
+    {
+      "source_id": "meridian-uae-leave-policy-2022",
+      "title": "Meridian UAE mainland annual leave policy",
+      "document_version": "2022.1",
+      "relative_path": "corpus_v2/sources/uae/annual_leave_policy_2022.md",
+      "content_sha256": "1ad80d1e25f86ff83cae78ca76ae7be06fa9e3ac1840a944ea844a9a7d93172d",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2022-01-15",
+      "effective_from": "2022-02-02",
+      "effective_to": "2025-06-01",
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-uae-leave-policy-2025",
+      "title": "Meridian UAE mainland annual leave policy",
+      "document_version": "2025.1",
+      "relative_path": "corpus_v2/sources/uae/annual_leave_policy_2025.md",
+      "content_sha256": "14b69feb821e83b62637ff1dc072ce8c29d7c800346465440d409307d049ee65",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_POLICY",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2025-05-01",
+      "effective_from": "2025-06-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": [
+        "meridian-uae-leave-policy-2022"
+      ]
+    },
+    {
+      "source_id": "meridian-uae-policy-faq-2026",
+      "title": "Meridian UAE mainland employee policy FAQ",
+      "document_version": "2026.1",
+      "relative_path": "corpus_v2/sources/uae/employee_policy_faq.md",
+      "content_sha256": "4d481a0ede0082f9fc99a1a4bd658ce07663185dec2a2c8845d61d0c398aa279",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_FAQ",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2026-04-01",
+      "effective_from": "2026-04-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "meridian-uae-payroll-eos-procedure-2026",
+      "title": "Meridian UAE mainland payroll end-of-service procedure",
+      "document_version": "2026.1",
+      "relative_path": "corpus_v2/sources/uae/payroll_end_of_service_procedure.md",
+      "content_sha256": "e29185eb8481fd80ecd82ec4819865e0ca1543d5946bf36598cb216781d99854",
+      "media_type": "text/markdown",
+      "source_kind": "COMPANY_PROCEDURE",
+      "use": "SERVING",
+      "jurisdiction": "UAE",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [],
+      "published_on": "2026-04-01",
+      "effective_from": "2026-04-01",
+      "effective_to": null,
+      "reviewed_on": "2026-09-06",
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-false-four-year-gratuity-threshold",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/false_four_year_threshold.md",
+      "content_sha256": "d8d65b33e9dc5a6c8b99d5caeaa5a25681f6c56313ccd5d0fcc62e84b2a34933",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "INTENTIONALLY_FALSE"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-document-prompt-injection",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/document_prompt_injection.md",
+      "content_sha256": "fc24631080b0d8c8934aa9cf0fc58d66df010fd86b11942491216788c9089565",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "PROMPT_INJECTION"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-fabricated-uae-notice",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/fabricated_uae_notice.md",
+      "content_sha256": "0f697ff0d477d85edc6ab6e260e20edfd28b429bdff47c6b855f365d9bea85c2",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "notice"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "FABRICATED_LAW"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-future-india-leave-amendment",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/future_india_leave_amendment.md",
+      "content_sha256": "e1b88e0eb45411f257e958b98ecb3c93790b10a0e9a018f8a99e63d229a32321",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "FUTURE_DATED"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-unsigned-policy-override",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/unsigned_policy_override.md",
+      "content_sha256": "8c28eef3132d8eab0088bea477ccd0af9e13cf8fed2795ae0471ddf83ad5ece3",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "notice"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "UNAPPROVED"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-wrong-jurisdiction-leave",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/wrong_jurisdiction_leave.md",
+      "content_sha256": "5fd3e6f8ce6eb6d8d8eabba1a7ddc1ba1458fe3b0ee889392ea669a9249533e2",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "WRONG_JURISDICTION"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-duplicate-policy-copy",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/duplicate_policy_copy.md",
+      "content_sha256": "2398d44ee88f67ee4f70379e8894e65a0b2fded769eba85227b25e45ad8a7709",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "gratuity",
+        "notice",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "DUPLICATE"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-missing-effective-date",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/missing_effective_date.md",
+      "content_sha256": "5f078ed5df53e009b6c2edb8c9c78d8c27a803e89071086f66f7459c2a8e4eec",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "DATE_UNRESOLVED"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-superseded-marked-current",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/superseded_marked_current.md",
+      "content_sha256": "d06fe981282e9edbc05d3a36df1da58bfe0371b32562dcc2a0864591fb2907c1",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "FALSE_STATUS"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "fixture-gross-salary-as-basic-wage",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/fixtures/adversarial/gross_salary_as_basic_wage.md",
+      "content_sha256": "54c685cc9671be6bb5466b2d120f95e57ccdb55c89fc6bc365959d66e99c9d5c",
+      "media_type": "text/markdown",
+      "source_kind": "TEST_FIXTURE",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "TEST",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "approved_locators": [],
+      "reason_codes": [
+        "SERVING_EXCLUSION_TEST",
+        "WRONG_WAGE_BASIS"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
       "source_id": "legacy-india-law-v1",
+      "title": null,
+      "document_version": null,
       "relative_path": "corpus/tier1_law/india/india_law.md",
       "content_sha256": "2cc928133115fab6eb959b9778d5badd180a9c883949d875147baef316b8e472",
+      "media_type": "text/markdown",
+      "source_kind": "LEGACY",
       "use": "QUARANTINED",
       "jurisdiction": "India",
       "topics": [
         "gratuity",
         "notice",
-        "probation",
         "leave"
       ],
       "normative_tier": "STATUTORY",
       "synthetic": false,
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
+      "approved_locators": [],
       "reason_codes": [
         "OUTDATED_AFTER_LABOUR_CODES_COMMENCEMENT",
         "FALSE_FOUR_YEAR_GRATUITY_THRESHOLD",
         "NON_AUTHORITATIVE_SOURCE_CITATIONS"
-      ]
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
     },
     {
       "source_id": "legacy-uae-mainland-law-v1",
+      "title": null,
+      "document_version": null,
       "relative_path": "corpus/tier1_law/uae/uae_law.md",
       "content_sha256": "dbe1ed49c3c49db0e14eaff4079e3fedf0bc23f8fc80882d196fdaf04993c8a7",
+      "media_type": "text/markdown",
+      "source_kind": "LEGACY",
       "use": "DEFERRED",
       "jurisdiction": "UAE",
       "topics": [
         "gratuity",
         "notice",
-        "probation",
         "leave"
       ],
       "normative_tier": "STATUTORY",
       "synthetic": false,
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
+      "approved_locators": [],
       "reason_codes": [
-        "OUTSIDE_ACTIVE_VERTICAL_SLICE",
-        "REQUIRES_CURRENT_PRIMARY_SOURCE_REVIEW"
-      ]
+        "REPLACED_BY_REVIEWED_SCOPED_EXTRACTS",
+        "RAW_OFFICIAL_ARTIFACT_PENDING"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
     },
     {
       "source_id": "legacy-difc-law-v1",
+      "title": null,
+      "document_version": null,
       "relative_path": "corpus/tier1_law/uae/uae_difc_law.md",
       "content_sha256": "09f5e289f4d54fe9e887a54db8607f696f3273af95f896663f1a33d492ae93de",
+      "media_type": "text/markdown",
+      "source_kind": "LEGACY",
       "use": "DEFERRED",
       "jurisdiction": "UAE-DIFC",
       "topics": [
         "gratuity",
         "notice",
-        "probation",
         "leave"
       ],
       "normative_tier": "STATUTORY",
       "synthetic": false,
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
+      "approved_locators": [],
       "reason_codes": [
-        "OUTSIDE_ACTIVE_VERTICAL_SLICE",
-        "UNVERIFIED_ARTICLE_LOCATORS",
+        "OUTSIDE_ACTIVE_PORTFOLIO_SCOPE",
         "INCORRECT_VACATION_CARRY_FORWARD_SUMMARY"
-      ]
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
     },
     {
       "source_id": "legacy-germany-law-v1",
+      "title": null,
+      "document_version": null,
       "relative_path": "corpus/tier1_law/germany/germany_law.md",
       "content_sha256": "c4c436868f1a8b85fa24369513437cefc79e1e7bf2fae6a24fe4c30ba0e0b4e9",
+      "media_type": "text/markdown",
+      "source_kind": "LEGACY",
       "use": "DEFERRED",
       "jurisdiction": "Germany",
       "topics": [
+        "gratuity",
         "notice",
-        "probation",
-        "gratuity"
+        "leave"
       ],
       "normative_tier": "STATUTORY",
       "synthetic": false,
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
+      "approved_locators": [],
       "reason_codes": [
         "COUNTRY_DEFERRED_FROM_PORTFOLIO_SCOPE",
         "NON_PRIMARY_SOURCE_CITATION"
-      ]
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
     },
     {
       "source_id": "legacy-meridian-global-policy-v1",
+      "title": null,
+      "document_version": null,
       "relative_path": "corpus/tier2_policy/meridian_global_preamble.md",
       "content_sha256": "00ea1d84d775eeac45aa06dafdc2cc8f54004005f8611ea7f5a059a6a3be1242",
+      "media_type": "text/markdown",
+      "source_kind": "LEGACY",
       "use": "QUARANTINED",
       "jurisdiction": "GLOBAL",
       "topics": [
-        "governing-law"
+        "gratuity",
+        "notice",
+        "leave"
       ],
       "normative_tier": "COMPANY_POLICY",
       "synthetic": true,
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
+      "approved_locators": [],
       "reason_codes": [
         "MIXED_ADVERSARIAL_FIXTURE",
         "INCOMPLETE_GOVERNING_LAW_RULE"
-      ]
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
     },
     {
       "source_id": "legacy-meridian-india-policy-v1",
+      "title": null,
+      "document_version": null,
       "relative_path": "corpus/tier2_policy/india/meridian_india_policy.md",
       "content_sha256": "da238649d1b26de6be944cca840da71040b24def43f2e1c92209067f990dd637",
+      "media_type": "text/markdown",
+      "source_kind": "LEGACY",
       "use": "QUARANTINED",
       "jurisdiction": "India",
       "topics": [
         "gratuity",
         "notice",
-        "probation",
         "leave"
       ],
       "normative_tier": "COMPANY_POLICY",
       "synthetic": true,
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
+      "approved_locators": [],
       "reason_codes": [
         "MIXED_ADVERSARIAL_FIXTURES",
         "REFERENCES_QUARANTINED_STATUTORY_BASELINE"
-      ]
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
     },
     {
       "source_id": "legacy-meridian-uae-policy-v1",
+      "title": null,
+      "document_version": null,
       "relative_path": "corpus/tier2_policy/uae/meridian_uae_policy.md",
       "content_sha256": "f5be2a6937f04bc83a0b2f62a28fd82a7cf5ee5254d6f9db3abd20c4ad9c258a",
-      "use": "DEFERRED",
+      "media_type": "text/markdown",
+      "source_kind": "LEGACY",
+      "use": "QUARANTINED",
       "jurisdiction": "UAE",
       "topics": [
         "gratuity",
         "notice",
-        "probation",
         "leave"
       ],
       "normative_tier": "COMPANY_POLICY",
       "synthetic": true,
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
+      "approved_locators": [],
       "reason_codes": [
-        "OUTSIDE_ACTIVE_VERTICAL_SLICE",
-        "MIXED_ADVERSARIAL_FIXTURES"
-      ]
+        "MIXED_ADVERSARIAL_FIXTURES",
+        "REPLACED_BY_CLEAN_V2_POLICY_SET"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
     },
     {
       "source_id": "legacy-meridian-germany-policy-v1",
+      "title": null,
+      "document_version": null,
       "relative_path": "corpus/tier2_policy/germany/meridian_germany_policy.md",
       "content_sha256": "61b3038b9633a44b842d1bb6e4fa5ab46abe57b673d3b4df4b7d6b4936ab81ca",
+      "media_type": "text/markdown",
+      "source_kind": "LEGACY",
       "use": "DEFERRED",
       "jurisdiction": "Germany",
       "topics": [
+        "gratuity",
         "notice",
-        "probation",
-        "gratuity"
+        "leave"
       ],
       "normative_tier": "COMPANY_POLICY",
       "synthetic": true,
       "certification_level": "NOT_REVIEWED",
       "official_source_urls": [],
+      "approved_locators": [],
       "reason_codes": [
         "COUNTRY_DEFERRED_FROM_PORTFOLIO_SCOPE",
         "MIXED_ADVERSARIAL_FIXTURES"
-      ]
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
+    },
+    {
+      "source_id": "in-coss-2020-gratuity-demo-extract-v1",
+      "title": null,
+      "document_version": null,
+      "relative_path": "corpus_v2/sources/india/gratuity_statutory_extract.md",
+      "content_sha256": "89c10600a67032ffd7301432c0c55157ba95a16fd41d654ca4f16f2e40869a17",
+      "media_type": "text/markdown",
+      "source_kind": "REVIEWED_EXTRACT",
+      "use": "DEFERRED",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://www.labour.gov.in/static/uploads/2025/07/b0620548445580767b5c0d18c95c26f7.pdf",
+        "https://www.labour.gov.in/static/uploads/2026/03/a4ccf4c6d97c4f1f36a6d83f8c64213d.pdf"
+      ],
+      "approved_locators": [],
+      "reason_codes": [
+        "REPLACED_BY_RAW_PRIMARY_SOURCE_SET"
+      ],
+      "published_on": null,
+      "effective_from": null,
+      "effective_to": null,
+      "reviewed_on": null,
+      "supersedes": []
     }
   ]
 }

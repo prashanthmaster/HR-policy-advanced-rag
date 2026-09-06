@@ -49,7 +49,7 @@ target-version = "py312"
 select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
 
 [tool.pyright]
-include = ["src", "tests_v2"]
+include = ["src", "tests_v2", "scripts/build_corpus_manifest.py"]
 pythonVersion = "3.12"
 typeCheckingMode = "strict"
 

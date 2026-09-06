@@ -1,6 +1,6 @@
 # Phase 2 Corpus Truth Verification
 
-**Status:** local candidate; remote CI pending
+**Status:** accepted as Phase 2A seed
 
 **Branch:** `brownfield-v2`
 
@@ -84,5 +84,13 @@ and topics are correct.
 | `git diff --check` | Passed |
 | Changed-file credential-pattern scan | No matches |
 
-The local evidence is complete. Phase 2 remains a candidate until the commit
-is pushed and the independent GitHub Actions/Docker gate passes.
+## Remote acceptance evidence
+
+- Commit `0f5c554f14411d01430fe10504effd67d7091b18` was pushed to
+  `brownfield-v2`.
+- GitHub Actions run `34025628818` completed successfully on its first attempt.
+- Locked installation, lint, formatting, strict typing, warning-free tests,
+  package build, and Docker image build all passed.
+
+This checkpoint is accepted as the narrow Phase 2A seed. It does not satisfy the
+broader Phase 2B professional corpus profile by itself.

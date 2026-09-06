@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "as_of_date": "2026-09-06",
+  "locally_verified_official_artifacts": [
+    {
+      "source_id": "in-coss-2020-raw",
+      "pages": 116,
+      "bytes": 616749,
+      "extracted_word_count_for_profile_only": 62484,
+      "sha256": "975235e57b8b8c3f4a09f6c9f0dbb2bfc663c15faf3715108ea33113ef565be7"
+    },
+    {
+      "source_id": "in-wages-2019-raw",
+      "pages": 29,
+      "bytes": 237003,
+      "extracted_word_count_for_profile_only": 16024,
+      "sha256": "0d17b967a528da2d6b827655ba9a701dc15d78b4d4f58b9bbc21d6789a680c85"
+    },
+    {
+      "source_id": "in-labour-codes-faq-2026-03-16-raw",
+      "pages": 5,
+      "bytes": 363855,
+      "extracted_word_count_for_profile_only": 1849,
+      "sha256": "d55818a3956bebf5445e515e25999d5ee5b94e58e371554b24197470cf4ee2ed"
+    },
+    {
+      "source_id": "in-labour-codes-employer-handbook-2026-raw",
+      "pages": 38,
+      "bytes": 701666,
+      "extracted_word_count_for_profile_only": 7454,
+      "sha256": "bbc851624beb6011c550fa6b8c6b6f29f0c5add6be6b8f5be5e9bc2f3b0288ec"
+    }
+  ],
+  "remote_only_official_artifacts": [
+    {
+      "source_id": "in-labour-codes-commencement-scope",
+      "url": "https://egazette.gov.in/WriteReadData/2025/267882.pdf",
+      "status": "REMOTE_ONLY",
+      "reason": "Official endpoint returned a gateway error during controlled acquisition; reviewed scope note retained."
+    },
+    {
+      "source_id": "ae-labour-law-source",
+      "url": "https://uaelegislation.gov.ae/en/legislations/1541",
+      "status": "REMOTE_ONLY",
+      "reason": "Official UAE legislation endpoint rejected automated download with HTTP 403; reviewed extracts retained."
+    },
+    {
+      "source_id": "ae-executive-regulation-source",
+      "url": "https://uaelegislation.gov.ae/en/legislations/1547",
+      "status": "REMOTE_ONLY",
+      "reason": "Official UAE legislation and MOHRE endpoints rejected or timed out during automated acquisition; reviewed scope note retained."
+    }
+  ],
+  "profile_totals": {
+    "locally_verified_official_pdf_pages": 188,
+    "locally_extracted_official_pdf_words_for_profile_only": 87811
+  },
+  "limitations": [
+    "Word counts are corpus-profile measurements and are not trusted ingestion output.",
+    "UAE raw official binaries are not locally verified and cannot be claimed as ingested.",
+    "The corpus is primary-source checked for a portfolio demonstration but not production legal reviewed."
+  ]
+}
