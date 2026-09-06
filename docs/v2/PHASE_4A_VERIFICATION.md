@@ -33,6 +33,10 @@ Other gates:
 - `uv lock --check`: passed;
 - missing `OPENAI_API_KEY`: explicit failure and no output artifact.
 
+The project and CI use `uv 0.12.9` exactly. This was corrected after the first
+Windows evaluation attempt demonstrated that the earlier `<0.12` constraint
+rejected the developer's installed stable toolchain.
+
 ## Open gates
 
 Phase 4A is accepted only after GitHub Actions passes against pinned Qdrant.
