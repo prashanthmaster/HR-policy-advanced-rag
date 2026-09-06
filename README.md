@@ -6,6 +6,18 @@
 > history and are not v2 capability claims until replaced by a reproducible v2
 > evidence bundle. See `docs/v2/QUALITY_CONTRACT.md`.
 
+## V2 verified status
+
+- Phase 0 and Phase 1 are accepted at commit `50d3998`; GitHub Actions run
+  `34022994742` passed every gate, including the Docker build.
+- Phase 2 currently certifies one narrow corpus generation for **India
+  gratuity**. Only the sources marked `SERVING` in `corpus_v2/manifest.json`
+  may enter the v2 pipeline.
+- The legacy `corpus/` tree is retained for audit but is entirely quarantined
+  or deferred. It is not a trusted v2 source.
+- No v2 retrieval, generation, legal-production, or answer-quality claim has
+  been made yet.
+
 > A retrieval system that knows when a policy has been amended and refuses to answer from the superseded version.
 
 Portfolio Slot 4 of 4 (applied AI Engineer portfolio). Domain anchored in multi-country statutory/regulatory update management from prior enterprise HRMS delivery work (India, UAE, Germany scope below).

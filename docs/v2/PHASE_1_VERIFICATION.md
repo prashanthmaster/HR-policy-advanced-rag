@@ -1,6 +1,6 @@
 # Phase 1 Foundation Verification
 
-**Status:** local candidate; not yet accepted
+**Status:** accepted
 
 **Branch:** `brownfield-v2`
 
@@ -40,15 +40,18 @@
 | `git diff --check` | Passed |
 | Changed-file credential-pattern scan | No match; this is a narrow hygiene check, not a complete security audit |
 
-## Open exit conditions
+## Remote acceptance evidence
 
-1. The container image has not been built locally because this executor has no
-   Docker, Podman, or Buildah binary. The pinned CI workflow must execute the
-   Docker build before Phase 1 is accepted.
-2. The previously uploaded Google OAuth grants must be revoked by the owner.
-   No uploaded token was used during this work. Until revocation is confirmed,
-   Phase 0 remains open.
-3. CI has not run on the local branch because no remote push was authorized.
+- The owner confirmed removal of the exposed Google authorization and deletion
+  of the retired OAuth client on 2026-09-06.
+- Commit `50d3998c152494538d83f30a9d4a14e67fded519` was pushed to
+  `brownfield-v2`.
+- GitHub Actions run `34022994742` completed successfully on its first attempt.
+- Every pinned CI step passed, including locked installation, lint, format,
+  strict typing, warning-free tests, package build, and the previously open
+  Docker image build.
+
+Phase 0 and Phase 1 are accepted. Their exit conditions are closed.
 
 No RAG, legal-correctness, retrieval-quality, guardrail-effectiveness, or
 production-readiness claim follows from this foundation checkpoint.

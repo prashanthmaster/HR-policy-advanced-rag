@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "corpus_generation": "india-gratuity-demo-2026-09-06-v1",
+  "as_of_date": "2026-09-06",
+  "active_jurisdictions": [
+    "India"
+  ],
+  "active_topics": [
+    "gratuity"
+  ],
+  "production_legal_reviewed": false,
+  "inventory_roots": [
+    "corpus",
+    "corpus_v2/sources",
+    "corpus_v2/fixtures"
+  ],
+  "sources": [
+    {
+      "source_id": "in-coss-2020-gratuity-demo-extract",
+      "relative_path": "corpus_v2/sources/india/gratuity_statutory_extract.md",
+      "content_sha256": "89c10600a67032ffd7301432c0c55157ba95a16fd41d654ca4f16f2e40869a17",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "PRIMARY_SOURCE_CHECKED",
+      "official_source_urls": [
+        "https://www.labour.gov.in/static/uploads/2025/07/b0620548445580767b5c0d18c95c26f7.pdf",
+        "https://egazette.gov.in/WriteReadData/2025/267882.pdf",
+        "https://www.labour.gov.in/static/uploads/2026/03/a4ccf4c6d97c4f1f36a6d83f8c64213d.pdf"
+      ],
+      "reason_codes": []
+    },
+    {
+      "source_id": "meridian-india-gratuity-policy-v1",
+      "relative_path": "corpus_v2/sources/india/meridian_gratuity_policy.md",
+      "content_sha256": "a88c63191e9097a48a229a89d29eb67001df1fa92450c6550bb4d7b05999133d",
+      "use": "SERVING",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "DEMO_POLICY_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": []
+    },
+    {
+      "source_id": "fixture-false-four-year-gratuity-threshold",
+      "relative_path": "corpus_v2/fixtures/adversarial/false_four_year_threshold.md",
+      "content_sha256": "d8d65b33e9dc5a6c8b99d5caeaa5a25681f6c56313ccd5d0fcc62e84b2a34933",
+      "use": "ADVERSARIAL_TEST",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": [
+        "INTENTIONALLY_FALSE",
+        "SERVING_EXCLUSION_TEST"
+      ]
+    },
+    {
+      "source_id": "legacy-india-law-v1",
+      "relative_path": "corpus/tier1_law/india/india_law.md",
+      "content_sha256": "2cc928133115fab6eb959b9778d5badd180a9c883949d875147baef316b8e472",
+      "use": "QUARANTINED",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity",
+        "notice",
+        "probation",
+        "leave"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": [
+        "OUTDATED_AFTER_LABOUR_CODES_COMMENCEMENT",
+        "FALSE_FOUR_YEAR_GRATUITY_THRESHOLD",
+        "NON_AUTHORITATIVE_SOURCE_CITATIONS"
+      ]
+    },
+    {
+      "source_id": "legacy-uae-mainland-law-v1",
+      "relative_path": "corpus/tier1_law/uae/uae_law.md",
+      "content_sha256": "dbe1ed49c3c49db0e14eaff4079e3fedf0bc23f8fc80882d196fdaf04993c8a7",
+      "use": "DEFERRED",
+      "jurisdiction": "UAE",
+      "topics": [
+        "gratuity",
+        "notice",
+        "probation",
+        "leave"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": [
+        "OUTSIDE_ACTIVE_VERTICAL_SLICE",
+        "REQUIRES_CURRENT_PRIMARY_SOURCE_REVIEW"
+      ]
+    },
+    {
+      "source_id": "legacy-difc-law-v1",
+      "relative_path": "corpus/tier1_law/uae/uae_difc_law.md",
+      "content_sha256": "09f5e289f4d54fe9e887a54db8607f696f3273af95f896663f1a33d492ae93de",
+      "use": "DEFERRED",
+      "jurisdiction": "UAE-DIFC",
+      "topics": [
+        "gratuity",
+        "notice",
+        "probation",
+        "leave"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": [
+        "OUTSIDE_ACTIVE_VERTICAL_SLICE",
+        "UNVERIFIED_ARTICLE_LOCATORS",
+        "INCORRECT_VACATION_CARRY_FORWARD_SUMMARY"
+      ]
+    },
+    {
+      "source_id": "legacy-germany-law-v1",
+      "relative_path": "corpus/tier1_law/germany/germany_law.md",
+      "content_sha256": "c4c436868f1a8b85fa24369513437cefc79e1e7bf2fae6a24fe4c30ba0e0b4e9",
+      "use": "DEFERRED",
+      "jurisdiction": "Germany",
+      "topics": [
+        "notice",
+        "probation",
+        "gratuity"
+      ],
+      "normative_tier": "STATUTORY",
+      "synthetic": false,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": [
+        "COUNTRY_DEFERRED_FROM_PORTFOLIO_SCOPE",
+        "NON_PRIMARY_SOURCE_CITATION"
+      ]
+    },
+    {
+      "source_id": "legacy-meridian-global-policy-v1",
+      "relative_path": "corpus/tier2_policy/meridian_global_preamble.md",
+      "content_sha256": "00ea1d84d775eeac45aa06dafdc2cc8f54004005f8611ea7f5a059a6a3be1242",
+      "use": "QUARANTINED",
+      "jurisdiction": "GLOBAL",
+      "topics": [
+        "governing-law"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": [
+        "MIXED_ADVERSARIAL_FIXTURE",
+        "INCOMPLETE_GOVERNING_LAW_RULE"
+      ]
+    },
+    {
+      "source_id": "legacy-meridian-india-policy-v1",
+      "relative_path": "corpus/tier2_policy/india/meridian_india_policy.md",
+      "content_sha256": "da238649d1b26de6be944cca840da71040b24def43f2e1c92209067f990dd637",
+      "use": "QUARANTINED",
+      "jurisdiction": "India",
+      "topics": [
+        "gratuity",
+        "notice",
+        "probation",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": [
+        "MIXED_ADVERSARIAL_FIXTURES",
+        "REFERENCES_QUARANTINED_STATUTORY_BASELINE"
+      ]
+    },
+    {
+      "source_id": "legacy-meridian-uae-policy-v1",
+      "relative_path": "corpus/tier2_policy/uae/meridian_uae_policy.md",
+      "content_sha256": "f5be2a6937f04bc83a0b2f62a28fd82a7cf5ee5254d6f9db3abd20c4ad9c258a",
+      "use": "DEFERRED",
+      "jurisdiction": "UAE",
+      "topics": [
+        "gratuity",
+        "notice",
+        "probation",
+        "leave"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": [
+        "OUTSIDE_ACTIVE_VERTICAL_SLICE",
+        "MIXED_ADVERSARIAL_FIXTURES"
+      ]
+    },
+    {
+      "source_id": "legacy-meridian-germany-policy-v1",
+      "relative_path": "corpus/tier2_policy/germany/meridian_germany_policy.md",
+      "content_sha256": "61b3038b9633a44b842d1bb6e4fa5ab46abe57b673d3b4df4b7d6b4936ab81ca",
+      "use": "DEFERRED",
+      "jurisdiction": "Germany",
+      "topics": [
+        "notice",
+        "probation",
+        "gratuity"
+      ],
+      "normative_tier": "COMPANY_POLICY",
+      "synthetic": true,
+      "certification_level": "NOT_REVIEWED",
+      "official_source_urls": [],
+      "reason_codes": [
+        "COUNTRY_DEFERRED_FROM_PORTFOLIO_SCOPE",
+        "MIXED_ADVERSARIAL_FIXTURES"
+      ]
+    }
+  ]
+}
