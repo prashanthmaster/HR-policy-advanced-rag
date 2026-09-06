@@ -1,44 +1,25 @@
-# T-8.1: single container serving both the FastAPI backend (internal,
-# port 8000) and the Streamlit UI (public, Cloud Run's $PORT). Cloud Run
-# exposes exactly one port per service, so start.sh runs uvicorn in the
-# background and streamlit in the foreground bound to $PORT -- one
-# container, one image, one public URL, matching M8's exit criterion.
-FROM python:3.11-slim
+FROM ghcr.io/astral-sh/uv:0.11.33 AS uv
+
+FROM python:3.12.13-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_NO_DEV=1 \
+    PATH="/app/.venv/bin:$PATH"
 
 WORKDIR /app
 
-# System deps: qdrant-client/flashrank/lxml pull in a few things that need
-# a C toolchain on slim images; kept minimal and removed from the final
-# layer isn't attempted here since this is a portfolio deploy, not a
-# size-optimized production image -- correctness and clarity over a
-# smaller image.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
-        curl \
-    && rm -rf /var/lib/apt/lists/*
+COPY --from=uv /uv /uvx /bin/
+COPY pyproject.toml uv.lock README.md ./
+COPY src ./src
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN uv sync --locked --no-install-project
+RUN uv sync --locked
 
-# Prefetch the FlashRank cross-encoder weights at BUILD time, not at
-# container startup. Two reasons: (1) Cloud Run's request timeout would
-# otherwise start counting during a slow first-request model download,
-# and (2) the weights then live in an image layer, so a cold start never
-# depends on huggingface.co being reachable at that moment. See
-# retrieval/reranker.py's own docstring for the same one-time-download
-# constraint this project already hit locally (Session where
-# scripts/prefetch_reranker_model.py was introduced).
-RUN python -c "from flashrank import Ranker; Ranker(model_name='ms-marco-TinyBERT-L-2-v2', cache_dir='/root/.flashrank_cache')"
-
-# Now the actual application code -- copied after the dependency layers
-# above so an ordinary code change doesn't invalidate the (slow) pip
-# install / model-download layers on the next build.
-COPY . .
-
-ENV PYTHONUNBUFFERED=1 \
-    FLASHRANK_CACHE_DIR=/root/.flashrank_cache
+USER 65532:65532
 
 EXPOSE 8080
 
-RUN chmod +x start.sh
-CMD ["./start.sh"]
+CMD ["uvicorn", "hr_policy_rag.app:app", "--host", "0.0.0.0", "--port", "8080"]

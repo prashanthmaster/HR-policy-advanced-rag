@@ -1,5 +1,11 @@
 # HR-Policy Advanced RAG
 
+> **Brownfield rebuild in progress.** The original implementation is preserved
+> at tag `v1-audit-baseline`. Code under `src/hr_policy_rag` is the only active
+> v2 runtime. The architecture and performance statements below describe v1
+> history and are not v2 capability claims until replaced by a reproducible v2
+> evidence bundle. See `docs/v2/QUALITY_CONTRACT.md`.
+
 > A retrieval system that knows when a policy has been amended and refuses to answer from the superseded version.
 
 Portfolio Slot 4 of 4 (applied AI Engineer portfolio). Domain anchored in multi-country statutory/regulatory update management from prior enterprise HRMS delivery work (India, UAE, Germany scope below).

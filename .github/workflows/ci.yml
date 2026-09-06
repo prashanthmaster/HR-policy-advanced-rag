@@ -1,76 +1,52 @@
-name: CI — eval regression gate
-
-# T-7.1/T-7.2/T-7.3 (Phase 7). Runs on every push and every pull request.
-# Re-runs the same 24-question golden-set evaluation this project has always
-# used, then fails the build if any metric got worse than the last real
-# recorded baseline (eval/baseline/regression_baseline.json) -- never
-# against an invented absolute score. See scripts/check_regression.py for
-# the exact comparison logic and PROJECT_PLAN.md's Phase 7 section for the
-# reasoning.
-#
-# Deliberately scoped to NOT touch Google Drive at all (see PROJECT_PLAN.md
-# Phase 7 Change Log): the freshness/live-sync feature is proven by the
-# T-6.7 manual live demo instead. This keeps CI free of any OAuth token
-# that would otherwise need weekly manual refreshing (Google's "Testing"
-# publishing status expires refresh tokens every 7 days) and keeps CI
-# failures meaningful -- a red build here means the RAG pipeline's answer
-# quality regressed, never "this week's Google token expired."
+name: V2 quality gate
 
 on:
-  push:
-    branches: [main]
   pull_request:
-    branches: [main]
-  workflow_dispatch: {}
+  push:
+    branches: [main, brownfield-v2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v2-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  eval-gate:
+  verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78
         with:
-          python-version: "3.12"
-          cache: "pip"
+          version: "0.11.33"
+          enable-cache: true
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Verify lockfile
+        run: uv lock --check
 
-      - name: Run unit tests
-        run: pytest tests/ -q
+      - name: Install locked environment
+        run: uv sync --locked --all-groups
 
-      - name: Build the vector index (real OpenAI embeddings)
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python scripts/build_vector_index.py --live
+      - name: Lint
+        run: uv run ruff check src tests_v2
 
-      - name: Run RAGAS evaluation
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python eval/run_ragas_eval.py
+      - name: Check formatting
+        run: uv run ruff format --check src tests_v2
 
-      - name: Run citation-accuracy evaluation
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python eval/run_citation_accuracy_eval.py
+      - name: Type check
+        run: uv run pyright
 
-      - name: Run confusion-matrix evaluation
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python eval/run_confusion_matrix.py
+      - name: Test with coverage
+        run: uv run pytest --cov=hr_policy_rag --cov-report=term-missing tests_v2
 
-      - name: Gate on regression vs. recorded baseline
-        run: python scripts/check_regression.py
+      - name: Build package
+        run: uv build
 
-      - name: Publish this run's scorecard as a build artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: eval-scorecard
-          path: |
-            build/ragas_eval_result.json
-            build/citation_accuracy_result.json
-            build/confusion_matrix_result.json
-          retention-days: 90
+      - name: Build container
+        run: docker build --tag hr-policy-rag:${{ github.sha }} .

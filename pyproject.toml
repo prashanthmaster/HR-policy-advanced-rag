@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hr-policy-rag"
+version = "0.1.0"
+description = "Version-aware HR policy retrieval with evidence-linked answers."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.116,<1",
+    "pydantic>=2.11,<3",
+    "pydantic-settings>=2.10,<3",
+    "uvicorn[standard]>=0.35,<1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28,<1",
+    "pyright>=1.1.403,<2",
+    "pytest>=8.4,<9",
+    "pytest-cov>=6.2,<8",
+    "ruff>=0.12,<1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hr_policy_rag"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+filterwarnings = ["error"]
+testpaths = ["tests_v2"]
+
+[tool.coverage.run]
+branch = true
+source = ["hr_policy_rag"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.pyright]
+include = ["src", "tests_v2"]
+pythonVersion = "3.12"
+typeCheckingMode = "strict"
+
+[tool.uv]
+required-version = ">=0.11.0,<0.12"
