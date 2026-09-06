@@ -20,8 +20,8 @@ when evidence or employee facts are insufficient.
 | Phase 2A — certified India-gratuity seed | Accepted | commit `0f5c554`, Actions run `34025628818` |
 | Phase 2B — professional portfolio corpus | Accepted | commit `5c8a02a`, Actions run `34028191410` |
 | Phase 3 — deterministic ingestion | Accepted | commit `94c8b7d`, Actions run `34031374720` |
-| Phase 4A — hybrid retrieval contracts | Local candidate | real-Qdrant CI pending |
-| Phase 4B — measured retrieval quality | Blocked | real embedding evaluation not yet run |
+| Phase 4A — hybrid retrieval contracts | Accepted | commit `ed09532`, Actions workflow run `#15` |
+| Phase 4B — measured retrieval quality | Local accepted | release artifact at commit `01d93a8`; closing CI pending |
 | Phases 5–10 | Not started | no answer-quality or production claim |
 
 ## Phase 2B corpus profile
@@ -100,15 +100,33 @@ The serving path will remain deliberately small:
 No LangChain, LangGraph, separate BM25 store, Redis, or guardrail agent is part
 of the initial serving path.
 
+## Phase 4 measured retrieval
+
+The one authorized release evaluation used real OpenAI
+`text-embedding-3-small` dense embeddings, FastEmbed `Qdrant/bm25` sparse
+vectors, and Qdrant RRF across all 126 checked-in chunks. It evaluated 36
+frozen cases, including 12 untouched holdout cases.
+
+- Full exam: Recall@10 `1.0000`, MRR@10 `0.9484`.
+- Holdout only: Recall@10 `1.0000`, MRR@10 `0.9583`.
+- Temporal accuracy: `1.0000`.
+- Filter leakage, errors, and exclusions: `0`.
+- Every country/topic slice achieved Recall@10 `1.0000`.
+
+These results establish retrieval quality only when jurisdiction, topic, and
+as-of date are supplied as structured facts. They do not yet establish
+automatic fact extraction, legal-policy decision quality, calculation accuracy,
+or generated-answer quality. Those remain later gated phases.
+
 ## Run the current quality gate
 
-Python 3.12 and `uv` 0.11 are required.
+Python 3.12 and `uv` 0.12.9 are required.
 
 ```bash
 uv sync --locked --all-groups
 uv lock --check
-uv run ruff check src tests_v2 scripts/build_corpus_manifest.py scripts/build_ingestion_artifact.py
-uv run ruff format --check src tests_v2 scripts/build_corpus_manifest.py scripts/build_ingestion_artifact.py
+uv run ruff check src tests_v2 scripts/build_corpus_manifest.py scripts/build_ingestion_artifact.py scripts/evaluate_retrieval.py
+uv run ruff format --check src tests_v2 scripts/build_corpus_manifest.py scripts/build_ingestion_artifact.py scripts/evaluate_retrieval.py
 uv run pyright
 uv run pytest --cov=hr_policy_rag --cov-report=term-missing tests_v2
 uv run python scripts/build_corpus_manifest.py --check
@@ -126,6 +144,7 @@ docker build --tag hr-policy-rag:local .
 - `docs/v2/ADR-0004-DETERMINISTIC-INGESTION.md`
 - `docs/v2/PHASE_2B_VERIFICATION.md`
 - `docs/v2/PHASE_3_VERIFICATION.md`
+- `docs/v2/PHASE_4_VERIFICATION.md`
 - `corpus_v2/acquisition_status.json`
 
 No performance number or “production-grade” description should be used in a

@@ -11,6 +11,8 @@ from hr_policy_rag.evaluation.retrieval_cases import (
 from hr_policy_rag.evaluation.retrieval_metrics import (
     RetrievalAggregate,
     RetrievalCaseScore,
+    RetrievalEvaluationMode,
+    RetrievalEvaluationReport,
     aggregate_scores,
     passes_thresholds,
     score_case,
@@ -21,6 +23,8 @@ __all__ = [
     "RetrievalCase",
     "RetrievalCaseScore",
     "RetrievalCaseSet",
+    "RetrievalEvaluationMode",
+    "RetrievalEvaluationReport",
     "RetrievalSplit",
     "RetrievalThresholds",
     "aggregate_scores",

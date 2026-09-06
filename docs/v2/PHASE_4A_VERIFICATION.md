@@ -1,6 +1,6 @@
 # Phase 4A verification: contracts and Qdrant integration
 
-- Status: **CANDIDATE — local code gate passed; remote/server and live-quality gates open**
+- Status: **ACCEPTED — local and pinned network-Qdrant CI gates passed**
 - Date: 2026-09-06
 - Base commit: `94c8b7d`
 
@@ -39,11 +39,13 @@ The project and CI use `uv 0.12.9` exactly. This was corrected after the first
 Windows evaluation attempt demonstrated that the earlier `<0.12` constraint
 rejected the developer's installed stable toolchain.
 
-## Open gates
+## Gate closure
 
-Phase 4A is accepted only after GitHub Actions passes against pinned Qdrant.
+GitHub Actions workflow run `#15` passed against pinned Qdrant `v1.19.1` for
+commit `ed09532`. The live retrieval-quality conditions below were subsequently
+closed by the release evidence recorded in `PHASE_4_VERIFICATION.md`.
 
-Phase 4B remains open until:
+Phase 4B required:
 
 1. a real development/regression run uses OpenAI `text-embedding-3-small` and
    `Qdrant/bm25`;

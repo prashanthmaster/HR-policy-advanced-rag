@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import asyncio
 import datetime as dt
-import json
 import os
 import subprocess
 from collections import defaultdict
@@ -20,6 +19,8 @@ from hr_policy_rag.domain import CaseFacts, PolicyTopic
 from hr_policy_rag.evaluation import (
     RetrievalAggregate,
     RetrievalCaseScore,
+    RetrievalEvaluationMode,
+    RetrievalEvaluationReport,
     RetrievalSplit,
     aggregate_scores,
     canonical_text_sha256,
@@ -126,7 +127,7 @@ async def _run(*, release: bool, output: Path) -> bool:
 
         aggregate = aggregate_scores(scores)
         scores_by_id = {score.case_id: score for score in scores}
-        slices: dict[str, object] = {}
+        slices: dict[str, RetrievalAggregate] = {}
         grouped: defaultdict[tuple[str, str], list[RetrievalCaseScore]] = defaultdict(list)
         for case in cases:
             grouped[(case.jurisdiction, case.topic)].append(scores_by_id[case.case_id])
@@ -134,26 +135,26 @@ async def _run(*, release: bool, output: Path) -> bool:
         for (jurisdiction, topic), values in sorted(grouped.items()):
             slice_aggregate = aggregate_scores(values)
             slice_aggregates.append(slice_aggregate)
-            slices[f"{jurisdiction}:{topic}"] = slice_aggregate.model_dump(mode="json")
+            slices[f"{jurisdiction}:{topic}"] = slice_aggregate
         passed = passes_thresholds(aggregate, case_set.thresholds, slice_aggregates)
-        report = {
-            "schema_version": 1,
-            "mode": "RELEASE" if release else "DEVELOPMENT",
-            "created_at": created_at.isoformat(),
-            "git_sha": _git_sha(),
-            "lockfile_sha256": canonical_text_sha256(LOCKFILE),
-            "case_set_sha256": case_set.cases_sha256,
-            "included_splits": sorted(split.value for split in included_splits),
-            "index_manifest": index_manifest.model_dump(mode="json"),
-            "embedding_tokens": dense.total_tokens,
-            "thresholds": case_set.thresholds.model_dump(mode="json"),
-            "aggregate": aggregate.model_dump(mode="json"),
-            "slices": slices,
-            "passed": passed,
-            "cases": [score.model_dump(mode="json") for score in scores],
-        }
+        report = RetrievalEvaluationReport(
+            schema_version=1,
+            mode=RetrievalEvaluationMode.RELEASE if release else RetrievalEvaluationMode.DEVELOPMENT,
+            created_at=created_at,
+            git_sha=_git_sha(),
+            lockfile_sha256=canonical_text_sha256(LOCKFILE),
+            case_set_sha256=case_set.cases_sha256,
+            included_splits=tuple(sorted(included_splits, key=lambda item: item.value)),
+            index_manifest=index_manifest,
+            embedding_tokens=dense.total_tokens,
+            thresholds=case_set.thresholds,
+            aggregate=aggregate,
+            slices=slices,
+            passed=passed,
+            cases=tuple(scores),
+        )
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        output.write_text(report.model_dump_json(indent=2) + "\n", encoding="utf-8")
         return passed
     finally:
         await client.close()

@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
+import datetime as dt
 from collections.abc import Mapping, Sequence
+from enum import StrEnum
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from hr_policy_rag.corpus import ManifestSource
-from hr_policy_rag.domain import Evidence
-from hr_policy_rag.domain.models import ContractModel, NonEmptyString
-from hr_policy_rag.evaluation.retrieval_cases import RetrievalCase, RetrievalThresholds
+from hr_policy_rag.domain import Evidence, IndexManifest
+from hr_policy_rag.domain.models import ContractModel, NonEmptyString, Sha256
+from hr_policy_rag.evaluation.retrieval_cases import RetrievalCase, RetrievalSplit, RetrievalThresholds
 
 
 class RetrievalCaseScore(ContractModel):
@@ -30,6 +32,48 @@ class RetrievalAggregate(ContractModel):
     filter_leakage: float = Field(ge=0, le=1)
     errors: int = Field(ge=0)
     exclusions: int = Field(ge=0)
+
+
+class RetrievalEvaluationMode(StrEnum):
+    DEVELOPMENT = "DEVELOPMENT"
+    RELEASE = "RELEASE"
+
+
+class RetrievalEvaluationReport(ContractModel):
+    schema_version: int = Field(ge=1)
+    mode: RetrievalEvaluationMode
+    created_at: dt.datetime
+    git_sha: NonEmptyString
+    lockfile_sha256: Sha256
+    case_set_sha256: Sha256
+    included_splits: tuple[RetrievalSplit, ...]
+    index_manifest: IndexManifest
+    embedding_tokens: int = Field(ge=0)
+    thresholds: RetrievalThresholds
+    aggregate: RetrievalAggregate
+    slices: dict[NonEmptyString, RetrievalAggregate]
+    passed: bool
+    cases: tuple[RetrievalCaseScore, ...]
+
+    @model_validator(mode="after")
+    def validate_report(self) -> RetrievalEvaluationReport:
+        if not self.included_splits:
+            raise ValueError("evaluation report requires at least one split")
+        if len(self.included_splits) != len(set(self.included_splits)):
+            raise ValueError("evaluation report splits must be unique")
+        if self.aggregate.case_count != len(self.cases):
+            raise ValueError("aggregate case count does not match row count")
+        if not self.slices:
+            raise ValueError("evaluation report requires slice aggregates")
+        if sum(item.case_count for item in self.slices.values()) != self.aggregate.case_count:
+            raise ValueError("slice case counts do not match aggregate case count")
+        case_ids = [case.case_id for case in self.cases]
+        if len(case_ids) != len(set(case_ids)):
+            raise ValueError("evaluation report case IDs must be unique")
+        expected_pass = passes_thresholds(self.aggregate, self.thresholds, tuple(self.slices.values()))
+        if self.passed != expected_pass:
+            raise ValueError("reported pass status does not match frozen thresholds")
+        return self
 
 
 def score_case(
