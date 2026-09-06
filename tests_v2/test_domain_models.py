@@ -15,6 +15,7 @@ from hr_policy_rag.domain import (
     Decision,
     DecisionStatus,
     NormativeTier,
+    PolicyTopic,
     RunManifest,
     SourceDocument,
     SourceStatus,
@@ -90,6 +91,8 @@ def test_case_facts_require_currency_and_coherent_dates() -> None:
         )
     facts = CaseFacts(monthly_wage=Decimal("12000"), currency="AED")
     assert facts.currency == "AED"
+    scoped = CaseFacts(country="UAE", topic=PolicyTopic.NOTICE, as_of_date=dt.date(2026, 8, 1))
+    assert scoped.topic is PolicyTopic.NOTICE
 
 
 def test_decision_requires_evidence_or_missing_facts_for_its_status() -> None:

@@ -10,9 +10,11 @@ readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.116,<1",
+    "openai>=1.109,<2",
     "pydantic>=2.11,<3",
     "pydantic-settings>=2.10,<3",
     "pypdf>=6.17,<7",
+    "qdrant-client[fastembed]>=1.19,<2",
     "uvicorn[standard]>=0.35,<1",
 ]
 
@@ -31,6 +33,7 @@ packages = ["src/hr_policy_rag"]
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
 filterwarnings = ["error"]
+markers = ["qdrant_server: requires the pinned Qdrant server configured by QDRANT_TEST_URL"]
 testpaths = ["tests_v2"]
 
 [tool.coverage.run]
@@ -50,7 +53,13 @@ target-version = "py312"
 select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
 
 [tool.pyright]
-include = ["src", "tests_v2", "scripts/build_corpus_manifest.py", "scripts/build_ingestion_artifact.py"]
+include = [
+    "src",
+    "tests_v2",
+    "scripts/build_corpus_manifest.py",
+    "scripts/build_ingestion_artifact.py",
+    "scripts/evaluate_retrieval.py",
+]
 pythonVersion = "3.12"
 typeCheckingMode = "strict"
 

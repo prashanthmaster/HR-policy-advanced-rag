@@ -19,8 +19,9 @@ when evidence or employee facts are insufficient.
 | Phase 1 — reproducible foundation | Accepted | commit `50d3998`, Actions run `34022994742` |
 | Phase 2A — certified India-gratuity seed | Accepted | commit `0f5c554`, Actions run `34025628818` |
 | Phase 2B — professional portfolio corpus | Accepted | commit `5c8a02a`, Actions run `34028191410` |
-| Phase 3 — deterministic ingestion | Local candidate | remote CI pending |
-| Phase 4 — hybrid retrieval | Not started | no retrieval metric claim |
+| Phase 3 — deterministic ingestion | Accepted | commit `94c8b7d`, Actions run `34031374720` |
+| Phase 4A — hybrid retrieval contracts | Local candidate | real-Qdrant CI pending |
+| Phase 4B — measured retrieval quality | Blocked | real embedding evaluation not yet run |
 | Phases 5–10 | Not started | no answer-quality or production claim |
 
 ## Phase 2B corpus profile

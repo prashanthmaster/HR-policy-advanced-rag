@@ -30,6 +30,12 @@ class NormativeTier(StrEnum):
     COMPANY_POLICY = "COMPANY_POLICY"
 
 
+class PolicyTopic(StrEnum):
+    GRATUITY = "gratuity"
+    NOTICE = "notice"
+    LEAVE = "leave"
+
+
 class SourceStatus(StrEnum):
     DRAFT = "DRAFT"
     APPROVED = "APPROVED"
@@ -84,7 +90,8 @@ class Clause(ContractModel):
 
 class Evidence(ContractModel):
     evidence_id: NonEmptyString
-    clause_id: NonEmptyString
+    chunk_id: NonEmptyString
+    clause_id: NonEmptyString | None = None
     source_id: NonEmptyString
     corpus_generation: NonEmptyString
     quote: NonEmptyString
@@ -94,6 +101,7 @@ class Evidence(ContractModel):
 
 class CaseFacts(ContractModel):
     country: NonEmptyString | None = None
+    topic: PolicyTopic | None = None
     jurisdiction_scope: NonEmptyString | None = None
     as_of_date: dt.date | None = None
     service_start_date: dt.date | None = None
