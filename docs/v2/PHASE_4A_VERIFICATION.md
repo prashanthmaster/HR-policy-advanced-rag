@@ -15,7 +15,8 @@
 - Generation, jurisdiction, topic, and effective-date filters.
 - Typed invalid-context, unavailable-dependency, and payload-integrity failures.
 - Source-level Recall@10, MRR@10, temporal, leakage, error, and slice metrics.
-- Development/release runner that refuses key files and output overwrites.
+- Development/release runner that reads a local git-ignored `.env`, also supports
+  process environment injection, and refuses output overwrites.
 - Pinned Qdrant `v1.19.1` CI server test for payload indexes and networked RRF.
 
 ## Local evidence
@@ -31,7 +32,8 @@ Other gates:
 - Ruff lint and format: passed;
 - Pyright strict: 0 errors, 0 warnings;
 - `uv lock --check`: passed;
-- missing `OPENAI_API_KEY`: explicit failure and no output artifact.
+- missing `OPENAI_API_KEY`: explicit failure and no output artifact;
+- `.env` and `*.env`: excluded from Git and the Docker build context.
 
 The project and CI use `uv 0.12.9` exactly. This was corrected after the first
 Windows evaluation attempt demonstrated that the earlier `<0.12` constraint

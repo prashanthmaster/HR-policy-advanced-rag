@@ -12,6 +12,7 @@ import subprocess
 from collections import defaultdict
 from pathlib import Path
 
+from dotenv import load_dotenv
 from openai import AsyncOpenAI
 from qdrant_client import AsyncQdrantClient
 
@@ -58,8 +59,9 @@ def _git_sha() -> str:
 async def _run(*, release: bool, output: Path) -> bool:
     if output.exists():
         raise FileExistsError(f"evaluation output is immutable and already exists: {output}")
+    load_dotenv(ROOT / ".env", override=False)
     if not os.getenv("OPENAI_API_KEY"):
-        raise RuntimeError("OPENAI_API_KEY must be set in the local environment; never put it in the repository")
+        raise RuntimeError("OPENAI_API_KEY is missing from the local .env file or process environment")
 
     corpus = load_verified_corpus(CORPUS_MANIFEST, repository_root=ROOT)
     bundle = build_ingestion_bundle(corpus, repository_root=ROOT)

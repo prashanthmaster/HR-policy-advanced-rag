@@ -66,6 +66,11 @@ versioned evaluation cycle.
 - Missing or cross-generation payload becomes `RetrievalIntegrityError`.
 - No dependency failure becomes an ordinary empty result.
 
+For local evaluation, `OPENAI_API_KEY` may be loaded from a repository-root
+`.env` file. `.env` and `*.env` are excluded from Git and Docker; only
+`.env.example` with a non-secret placeholder is tracked. CI and deployment use
+process or secret-manager environment injection.
+
 ## Primary references
 
 - Qdrant hybrid queries and RRF:
