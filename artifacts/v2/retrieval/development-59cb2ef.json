@@ -1,0 +1,573 @@
+{
+  "aggregate": {
+    "case_count": 24,
+    "errors": 0,
+    "exclusions": 0,
+    "filter_leakage": 0.0,
+    "recall_at_10": 1.0,
+    "reciprocal_rank_at_10": 0.9434523809523809,
+    "temporal_accuracy": 1.0
+  },
+  "case_set_sha256": "06d931aec5fcba2b3c6b1f2b33a193397796de4574ae252bfb8198221a76b555",
+  "cases": [
+    {
+      "case_id": "dev-in-grat-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-india-policy-faq-2026",
+        "meridian-india-gratuity-policy-2025",
+        "meridian-india-policy-faq-2026",
+        "meridian-india-payroll-gratuity-procedure-2026",
+        "meridian-india-gratuity-policy-2025",
+        "in-coss-2020-raw",
+        "in-labour-codes-faq-2026-03-16-raw",
+        "meridian-india-policy-faq-2026",
+        "meridian-india-policy-faq-2026",
+        "meridian-india-payroll-gratuity-procedure-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-in-grat-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 0.14285714285714285,
+      "returned_source_ids": [
+        "meridian-india-policy-faq-2026",
+        "meridian-india-payroll-gratuity-procedure-2026",
+        "in-coss-2020-raw",
+        "meridian-india-payroll-gratuity-procedure-2026",
+        "meridian-global-answering-guide-v1",
+        "meridian-global-facts-records-v1",
+        "in-labour-codes-faq-2026-03-16-raw",
+        "meridian-india-gratuity-policy-2025",
+        "meridian-india-gratuity-policy-2025",
+        "meridian-india-payroll-gratuity-procedure-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-in-notice-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-india-notice-policy-2025",
+        "meridian-global-policy-hierarchy-v1",
+        "meridian-global-facts-records-v1",
+        "meridian-global-facts-records-v1",
+        "meridian-global-policy-hierarchy-v1",
+        "meridian-global-answering-guide-v1",
+        "meridian-global-answering-guide-v1",
+        "meridian-global-answering-guide-v1",
+        "meridian-global-policy-hierarchy-v1",
+        "meridian-global-facts-records-v1"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-in-notice-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "in-notice-scope",
+        "in-notice-scope",
+        "meridian-india-policy-faq-2026",
+        "meridian-india-notice-policy-2025",
+        "in-labour-codes-employer-handbook-2026-raw",
+        "meridian-india-policy-faq-2026",
+        "in-labour-codes-employer-handbook-2026-raw",
+        "in-labour-codes-employer-handbook-2026-raw",
+        "meridian-global-facts-records-v1",
+        "in-notice-scope"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-in-leave-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-india-leave-policy-2024",
+        "in-annual-leave-scope",
+        "in-annual-leave-scope",
+        "meridian-global-answering-guide-v1",
+        "in-labour-codes-employer-handbook-2026-raw",
+        "in-annual-leave-scope",
+        "meridian-global-facts-records-v1",
+        "meridian-global-policy-hierarchy-v1",
+        "meridian-global-answering-guide-v1",
+        "meridian-global-policy-hierarchy-v1"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-in-leave-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-india-leave-policy-2024",
+        "in-annual-leave-scope",
+        "meridian-global-policy-hierarchy-v1",
+        "in-annual-leave-scope",
+        "meridian-global-policy-hierarchy-v1",
+        "in-annual-leave-scope",
+        "in-labour-codes-employer-handbook-2026-raw",
+        "meridian-global-facts-records-v1",
+        "meridian-global-answering-guide-v1",
+        "meridian-global-answering-guide-v1"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-ae-grat-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "ae-labour-law-end-of-service-extract",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-uae-policy-faq-2026",
+        "ae-labour-law-end-of-service-extract",
+        "meridian-uae-eos-policy-2025",
+        "meridian-uae-mainland-scope-v1",
+        "ae-labour-law-end-of-service-extract",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-ae-grat-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-uae-policy-faq-2026",
+        "ae-labour-law-end-of-service-extract",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-uae-eos-policy-2025",
+        "meridian-uae-mainland-scope-v1",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-global-answering-guide-v1",
+        "meridian-uae-policy-faq-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-ae-notice-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-uae-notice-policy-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "ae-labour-law-notice-extract",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-mainland-scope-v1",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-global-facts-records-v1"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-ae-notice-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "ae-labour-law-notice-extract",
+        "ae-labour-law-notice-extract",
+        "meridian-uae-mainland-scope-v1",
+        "meridian-uae-notice-policy-2026",
+        "meridian-uae-policy-faq-2026",
+        "ae-executive-regulation-scope",
+        "meridian-global-policy-hierarchy-v1",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "ae-executive-regulation-scope"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-ae-leave-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 0.5,
+      "returned_source_ids": [
+        "meridian-uae-policy-faq-2026",
+        "ae-labour-law-leave-extract",
+        "meridian-uae-leave-policy-2025",
+        "meridian-uae-mainland-scope-v1",
+        "ae-labour-law-leave-extract",
+        "ae-labour-law-leave-extract",
+        "meridian-global-answering-guide-v1",
+        "meridian-global-facts-records-v1",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "dev-ae-leave-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "ae-labour-law-leave-extract",
+        "meridian-uae-leave-policy-2025",
+        "meridian-uae-policy-faq-2026",
+        "ae-labour-law-leave-extract",
+        "ae-labour-law-leave-extract",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-global-policy-hierarchy-v1",
+        "meridian-uae-policy-faq-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-in-grat-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "in-coss-2020-raw",
+        "in-coss-2020-raw",
+        "meridian-india-payroll-gratuity-procedure-2026",
+        "in-coss-2020-raw",
+        "meridian-india-policy-faq-2026",
+        "meridian-india-policy-faq-2026",
+        "meridian-india-gratuity-policy-2025",
+        "meridian-india-gratuity-policy-2025",
+        "in-coss-2020-raw",
+        "in-coss-2020-raw"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-in-grat-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-india-payroll-gratuity-procedure-2026",
+        "meridian-india-payroll-gratuity-procedure-2026",
+        "in-coss-2020-raw",
+        "in-labour-codes-faq-2026-03-16-raw",
+        "meridian-india-gratuity-policy-2025",
+        "meridian-india-policy-faq-2026",
+        "meridian-india-policy-faq-2026",
+        "meridian-global-facts-records-v1",
+        "meridian-india-payroll-gratuity-procedure-2026",
+        "meridian-india-payroll-gratuity-procedure-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-in-notice-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-india-notice-policy-2023",
+        "meridian-global-facts-records-v1",
+        "meridian-global-policy-hierarchy-v1",
+        "meridian-global-answering-guide-v1",
+        "meridian-global-facts-records-v1",
+        "meridian-global-policy-hierarchy-v1",
+        "meridian-global-facts-records-v1",
+        "meridian-global-answering-guide-v1",
+        "meridian-global-facts-records-v1",
+        "meridian-global-answering-guide-v1"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-in-notice-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-india-notice-policy-2025",
+        "meridian-india-policy-faq-2026",
+        "in-notice-scope",
+        "in-notice-scope",
+        "meridian-india-policy-faq-2026",
+        "in-labour-codes-employer-handbook-2026-raw",
+        "meridian-india-policy-faq-2026",
+        "meridian-india-policy-faq-2026",
+        "in-labour-codes-employer-handbook-2026-raw",
+        "meridian-india-policy-faq-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-in-leave-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-india-leave-policy-2023",
+        "meridian-global-policy-hierarchy-2023"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-in-leave-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "in-annual-leave-scope",
+        "in-annual-leave-scope",
+        "meridian-india-leave-policy-2024",
+        "in-annual-leave-scope",
+        "in-labour-codes-commencement-scope",
+        "meridian-india-policy-faq-2026",
+        "in-labour-codes-employer-handbook-2026-raw",
+        "in-labour-codes-commencement-scope",
+        "in-labour-codes-employer-handbook-2026-raw",
+        "in-labour-codes-commencement-scope"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-ae-grat-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-uae-eos-policy-2025",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-mainland-scope-v1",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "ae-labour-law-end-of-service-extract",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-uae-payroll-eos-procedure-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-ae-grat-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "ae-labour-law-end-of-service-extract",
+        "ae-labour-law-end-of-service-extract",
+        "ae-labour-law-end-of-service-extract",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-uae-eos-policy-2025",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-payroll-eos-procedure-2026",
+        "meridian-global-policy-hierarchy-v1"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-ae-notice-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-uae-notice-policy-2022",
+        "meridian-uae-policy-faq-2026",
+        "ae-labour-law-notice-extract",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-mainland-scope-v1",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-global-policy-hierarchy-v1",
+        "meridian-global-facts-records-v1"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-ae-notice-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "ae-labour-law-notice-extract",
+        "ae-labour-law-notice-extract",
+        "meridian-uae-notice-policy-2022",
+        "ae-labour-law-notice-extract",
+        "meridian-uae-policy-faq-2026",
+        "ae-executive-regulation-scope",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-global-facts-records-v1"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-ae-leave-01",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-uae-leave-policy-2022",
+        "meridian-uae-mainland-scope-v1",
+        "ae-labour-law-leave-extract",
+        "meridian-global-policy-hierarchy-v1",
+        "ae-labour-law-leave-extract",
+        "ae-labour-law-leave-extract",
+        "meridian-global-facts-records-v1",
+        "ae-executive-regulation-scope",
+        "ae-executive-regulation-scope",
+        "meridian-global-policy-hierarchy-v1"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    },
+    {
+      "case_id": "reg-ae-leave-02",
+      "error_code": null,
+      "filter_leakage_count": 0,
+      "reciprocal_rank": 1.0,
+      "returned_source_ids": [
+        "meridian-uae-leave-policy-2025",
+        "meridian-uae-policy-faq-2026",
+        "ae-labour-law-leave-extract",
+        "ae-labour-law-leave-extract",
+        "ae-labour-law-leave-extract",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026",
+        "meridian-uae-policy-faq-2026"
+      ],
+      "target_recall": 1.0,
+      "temporal_correct": true
+    }
+  ],
+  "created_at": "2026-09-06T14:37:02.980361+00:00",
+  "embedding_tokens": 22257,
+  "git_sha": "59cb2ef0439c9d9f1762f5cd5144cc589b105249",
+  "included_splits": [
+    "DEVELOPMENT",
+    "REGRESSION"
+  ],
+  "index_manifest": {
+    "collection_name": "phase4_20260906_143702_980361",
+    "corpus_generation": "india-uae-policy-portfolio-2026-09-06-v1",
+    "corpus_sha256": "43f5fbfa14e696713334dab1420b1a3bd5984dfbf241d5f4feda3a4d1f5edb2c",
+    "created_at": "2026-09-06T14:37:02.980361Z",
+    "embedding_dimensions": 1536,
+    "embedding_model": "text-embedding-3-small",
+    "index_generation": "e70437db8c387b53df7b3e6d7158ab13c04ab5c59a533a2a3c9aed4618ab30a2",
+    "point_count": 126,
+    "sparse_model": "Qdrant/bm25"
+  },
+  "lockfile_sha256": "21acc44f024c7b5862dc5ebc4e391bd770f817103effe77a12abe42f21c7b229",
+  "mode": "DEVELOPMENT",
+  "passed": true,
+  "schema_version": 1,
+  "slices": {
+    "India:gratuity": {
+      "case_count": 4,
+      "errors": 0,
+      "exclusions": 0,
+      "filter_leakage": 0.0,
+      "recall_at_10": 1.0,
+      "reciprocal_rank_at_10": 0.7857142857142857,
+      "temporal_accuracy": 1.0
+    },
+    "India:leave": {
+      "case_count": 4,
+      "errors": 0,
+      "exclusions": 0,
+      "filter_leakage": 0.0,
+      "recall_at_10": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "temporal_accuracy": 1.0
+    },
+    "India:notice": {
+      "case_count": 4,
+      "errors": 0,
+      "exclusions": 0,
+      "filter_leakage": 0.0,
+      "recall_at_10": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "temporal_accuracy": 1.0
+    },
+    "UAE:gratuity": {
+      "case_count": 4,
+      "errors": 0,
+      "exclusions": 0,
+      "filter_leakage": 0.0,
+      "recall_at_10": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "temporal_accuracy": 1.0
+    },
+    "UAE:leave": {
+      "case_count": 4,
+      "errors": 0,
+      "exclusions": 0,
+      "filter_leakage": 0.0,
+      "recall_at_10": 1.0,
+      "reciprocal_rank_at_10": 0.875,
+      "temporal_accuracy": 1.0
+    },
+    "UAE:notice": {
+      "case_count": 4,
+      "errors": 0,
+      "exclusions": 0,
+      "filter_leakage": 0.0,
+      "recall_at_10": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "temporal_accuracy": 1.0
+    }
+  },
+  "thresholds": {
+    "maximum_errors": 0,
+    "maximum_exclusions": 0,
+    "maximum_filter_leakage": 0.0,
+    "minimum_slice_recall_at_10": 0.85,
+    "recall_at_10": 0.9,
+    "reciprocal_rank_at_10": 0.75,
+    "temporal_accuracy": 1.0
+  }
+}

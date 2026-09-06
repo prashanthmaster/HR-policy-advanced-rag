@@ -1,3 +1,5 @@
 corpus_v2/** text eol=lf
 corpus_v2/raw/** binary
 artifacts/v2/** text eol=lf
+evaluation/** text eol=lf
+uv.lock text eol=lf

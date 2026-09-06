@@ -2,6 +2,9 @@
 
 from hr_policy_rag.retrieval.embeddings import (
     DenseEncoder,
+    EmbeddingAuthenticationError,
+    EmbeddingError,
+    EmbeddingUnavailableError,
     FastEmbedBm25Encoder,
     OpenAIDenseEncoder,
     SparseEmbedding,
@@ -18,6 +21,9 @@ from hr_policy_rag.retrieval.qdrant_store import (
 
 __all__ = [
     "DenseEncoder",
+    "EmbeddingAuthenticationError",
+    "EmbeddingError",
+    "EmbeddingUnavailableError",
     "FastEmbedBm25Encoder",
     "IndexAlreadyExistsError",
     "OpenAIDenseEncoder",

@@ -5,14 +5,13 @@ from __future__ import annotations
 import argparse
 import asyncio
 import datetime as dt
-import hashlib
 import json
 import os
 import subprocess
 from collections import defaultdict
 from pathlib import Path
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values, load_dotenv
 from openai import AsyncOpenAI
 from qdrant_client import AsyncQdrantClient
 
@@ -23,15 +22,18 @@ from hr_policy_rag.evaluation import (
     RetrievalCaseScore,
     RetrievalSplit,
     aggregate_scores,
+    canonical_text_sha256,
     load_retrieval_case_set,
     passes_thresholds,
     score_case,
 )
 from hr_policy_rag.ingestion import build_ingestion_bundle
 from hr_policy_rag.retrieval import (
+    EmbeddingAuthenticationError,
     FastEmbedBm25Encoder,
     OpenAIDenseEncoder,
     QdrantHybridRetriever,
+    RetrievalUnavailableError,
     build_candidate_index,
 )
 
@@ -41,8 +43,21 @@ CASE_SET = ROOT / "evaluation" / "v2" / "retrieval_cases.json"
 LOCKFILE = ROOT / "uv.lock"
 
 
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+class EvaluationConfigurationError(RuntimeError):
+    """Local evaluation configuration is missing or contradictory."""
+
+
+def _load_openai_key() -> None:
+    env_path = ROOT / ".env"
+    file_key = dotenv_values(env_path).get("OPENAI_API_KEY") if env_path.exists() else None
+    process_key = os.getenv("OPENAI_API_KEY")
+    if file_key and process_key and file_key != process_key:
+        raise EvaluationConfigurationError(
+            "OPENAI_API_KEY differs between the process and .env; remove the stale process variable"
+        )
+    load_dotenv(env_path, override=False)
+    if not os.getenv("OPENAI_API_KEY"):
+        raise EvaluationConfigurationError("OPENAI_API_KEY is missing from the local .env or process environment")
 
 
 def _git_sha() -> str:
@@ -59,15 +74,13 @@ def _git_sha() -> str:
 async def _run(*, release: bool, output: Path) -> bool:
     if output.exists():
         raise FileExistsError(f"evaluation output is immutable and already exists: {output}")
-    load_dotenv(ROOT / ".env", override=False)
-    if not os.getenv("OPENAI_API_KEY"):
-        raise RuntimeError("OPENAI_API_KEY is missing from the local .env file or process environment")
+    _load_openai_key()
 
     corpus = load_verified_corpus(CORPUS_MANIFEST, repository_root=ROOT)
     bundle = build_ingestion_bundle(corpus, repository_root=ROOT)
     case_set = load_retrieval_case_set(CASE_SET)
     if case_set.corpus_generation != bundle.manifest.corpus_generation:
-        raise RuntimeError("retrieval exam and ingestion artifact use different corpus generations")
+        raise EvaluationConfigurationError("retrieval exam and ingestion artifact use different corpus generations")
 
     included_splits = set(RetrievalSplit) if release else {RetrievalSplit.DEVELOPMENT, RetrievalSplit.REGRESSION}
     cases = [case for case in case_set.cases if case.split in included_splits]
@@ -128,7 +141,7 @@ async def _run(*, release: bool, output: Path) -> bool:
             "mode": "RELEASE" if release else "DEVELOPMENT",
             "created_at": created_at.isoformat(),
             "git_sha": _git_sha(),
-            "lockfile_sha256": _sha256(LOCKFILE),
+            "lockfile_sha256": canonical_text_sha256(LOCKFILE),
             "case_set_sha256": case_set.cases_sha256,
             "included_splits": sorted(split.value for split in included_splits),
             "index_manifest": index_manifest.model_dump(mode="json"),
@@ -155,8 +168,14 @@ def main() -> int:
     args = parser.parse_args()
     try:
         passed = asyncio.run(_run(release=args.release, output=args.output))
-    except (FileExistsError, RuntimeError) as exc:
+    except (EvaluationConfigurationError, FileExistsError) as exc:
         parser.error(str(exc))
+    except EmbeddingAuthenticationError:
+        parser.exit(2, "EMBEDDING_AUTH_FAILED: OpenAI rejected the configured API key\n")
+    except RetrievalUnavailableError as exc:
+        cause = exc.__cause__
+        detail = f"; cause={type(cause).__name__}: {cause}" if cause is not None else ""
+        parser.exit(2, f"RETRIEVAL_UNAVAILABLE: {exc}{detail}\n")
     return 0 if passed else 1
 
 

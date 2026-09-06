@@ -7,10 +7,22 @@ from collections.abc import Sequence
 from typing import Protocol, Self, cast, runtime_checkable
 
 from fastembed import SparseTextEmbedding
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, AuthenticationError, OpenAIError
 from pydantic import model_validator
 
 from hr_policy_rag.domain.models import ContractModel, NonEmptyString
+
+
+class EmbeddingError(RuntimeError):
+    """Base class for typed embedding-provider failures."""
+
+
+class EmbeddingAuthenticationError(EmbeddingError):
+    """The embedding provider rejected its credential."""
+
+
+class EmbeddingUnavailableError(EmbeddingError):
+    """The embedding provider was unavailable after its retry policy."""
 
 
 class SparseEmbedding(ContractModel):
@@ -79,12 +91,17 @@ class OpenAIDenseEncoder:
     async def encode(self, texts: Sequence[str]) -> tuple[tuple[float, ...], ...]:
         if not texts or any(not text.strip() for text in texts):
             raise ValueError("embedding input must contain non-empty text")
-        response = await self._client.embeddings.create(
-            input=list(texts),
-            model=self._model_name,
-            dimensions=self._dimensions,
-            encoding_format="float",
-        )
+        try:
+            response = await self._client.embeddings.create(
+                input=list(texts),
+                model=self._model_name,
+                dimensions=self._dimensions,
+                encoding_format="float",
+            )
+        except AuthenticationError as exc:
+            raise EmbeddingAuthenticationError("embedding provider rejected the API key") from exc
+        except OpenAIError as exc:
+            raise EmbeddingUnavailableError("embedding provider request failed") from exc
         self._total_tokens += response.usage.prompt_tokens
         ordered = sorted(response.data, key=lambda item: item.index)
         vectors = tuple(tuple(item.embedding) for item in ordered)

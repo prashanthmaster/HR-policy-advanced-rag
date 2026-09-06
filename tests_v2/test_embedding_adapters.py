@@ -5,12 +5,19 @@ from collections.abc import Sequence
 from types import SimpleNamespace
 from typing import Any, cast
 
+import httpx
 import pytest
-from openai import AsyncOpenAI
+from openai import APIConnectionError, AsyncOpenAI, AuthenticationError
 from pydantic import ValidationError
 
 import hr_policy_rag.retrieval.embeddings as embedding_module
-from hr_policy_rag.retrieval import FastEmbedBm25Encoder, OpenAIDenseEncoder, SparseEmbedding
+from hr_policy_rag.retrieval import (
+    EmbeddingAuthenticationError,
+    EmbeddingUnavailableError,
+    FastEmbedBm25Encoder,
+    OpenAIDenseEncoder,
+    SparseEmbedding,
+)
 
 
 class FakeEmbeddingsResource:
@@ -29,6 +36,19 @@ class FakeEmbeddingsResource:
 class FakeOpenAIClient:
     def __init__(self, vectors: list[list[float]]) -> None:
         self.embeddings = FakeEmbeddingsResource(vectors)
+
+
+class FailingEmbeddingsResource:
+    def __init__(self, error: Exception) -> None:
+        self.error = error
+
+    async def create(self, **kwargs: object) -> Any:
+        raise self.error
+
+
+class FailingOpenAIClient:
+    def __init__(self, error: Exception) -> None:
+        self.embeddings = FailingEmbeddingsResource(error)
 
 
 def test_openai_encoder_preserves_input_order_and_requested_dimensions() -> None:
@@ -64,6 +84,26 @@ def test_openai_encoder_rejects_invalid_inputs_and_provider_batches() -> None:
             await encoder.encode([])
         with pytest.raises(ValueError, match="invalid batch"):
             await encoder.encode(["valid text"])
+
+    asyncio.run(scenario())
+
+
+def test_openai_encoder_classifies_authentication_and_availability_failures() -> None:
+    request = httpx.Request("POST", "https://api.openai.com/v1/embeddings")
+    authentication = AuthenticationError(
+        "invalid key",
+        response=httpx.Response(401, request=request),
+        body={"code": "token_invalidated"},
+    )
+    connection = APIConnectionError(request=request)
+
+    async def scenario() -> None:
+        auth_encoder = OpenAIDenseEncoder(cast(AsyncOpenAI, FailingOpenAIClient(authentication)))
+        with pytest.raises(EmbeddingAuthenticationError, match="rejected"):
+            await auth_encoder.encode(["policy"])
+        unavailable_encoder = OpenAIDenseEncoder(cast(AsyncOpenAI, FailingOpenAIClient(connection)))
+        with pytest.raises(EmbeddingUnavailableError, match="request failed"):
+            await unavailable_encoder.encode(["policy"])
 
     asyncio.run(scenario())
 

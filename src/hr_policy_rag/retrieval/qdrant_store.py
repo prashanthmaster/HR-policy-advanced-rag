@@ -12,7 +12,13 @@ from qdrant_client import AsyncQdrantClient, models
 
 from hr_policy_rag.domain import CaseFacts, Evidence, IndexManifest
 from hr_policy_rag.ingestion import IngestionArtifactManifest, IngestionChunk
-from hr_policy_rag.retrieval.embeddings import DenseEncoder, SparseEmbedding, SparseEncoder
+from hr_policy_rag.retrieval.embeddings import (
+    DenseEncoder,
+    EmbeddingAuthenticationError,
+    EmbeddingUnavailableError,
+    SparseEmbedding,
+    SparseEncoder,
+)
 
 DENSE_VECTOR_NAME = "dense"
 SPARSE_VECTOR_NAME = "bm25"
@@ -135,8 +141,10 @@ async def build_candidate_index(
             for chunk, dense, sparse in zip(chunks, dense_vectors, sparse_vectors, strict=True)
         ]
         await client.upsert(collection_name, points=points, wait=True)
-    except (IndexAlreadyExistsError, RetrievalIntegrityError):
+    except (EmbeddingAuthenticationError, IndexAlreadyExistsError, RetrievalIntegrityError):
         raise
+    except EmbeddingUnavailableError as exc:
+        raise RetrievalUnavailableError("embedding provider unavailable during index build") from exc
     except Exception as exc:
         raise RetrievalUnavailableError("candidate index build failed") from exc
 
@@ -242,8 +250,10 @@ class QdrantHybridRetriever:
                 with_payload=True,
                 with_vectors=False,
             )
-        except RetrievalContextError:
+        except (EmbeddingAuthenticationError, RetrievalContextError):
             raise
+        except EmbeddingUnavailableError as exc:
+            raise RetrievalUnavailableError("embedding provider unavailable during retrieval") from exc
         except Exception as exc:
             raise RetrievalUnavailableError("hybrid retrieval failed") from exc
 
